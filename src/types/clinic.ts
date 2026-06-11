@@ -1,0 +1,100 @@
+export interface Service {
+  id: string;
+  name: string;
+  price: number;
+  durationMin: number;
+  isActive: boolean;
+}
+
+export interface Dentist {
+  id: string;
+  name: string;
+  role: string;
+  avatar: string;
+  room: string;
+}
+
+export interface Patient {
+  id: string;
+  name: string;
+  phone: string;
+  age: number;
+  gender: string;
+  criticalAllergy: string;
+  condition: string;
+  balance: number;
+  tier: 'Platinum' | 'Diamond' | 'Gold' | 'Standard';
+  points: number;
+}
+
+export interface Appointment {
+  id: string;
+  patientId: string;
+  patientName: string;
+  patientPhone: string;
+  serviceName: string;
+  dentistId: string;
+  dentistName: string;
+  time: string;
+  status: 'Confirmed' | 'In-Progress' | 'Pending' | 'Completed' | 'Cancelled';
+}
+
+export interface QueueItem {
+  id: string;
+  patientId: string;
+  patientName: string;
+  dentistId: string;
+  dentistName: string;
+  room: string;
+  status: 'Waiting' | 'In Chair' | 'Completed';
+  checkInTime: string;
+  waitTimeMin: number;
+  elapsedTimeMin?: number;
+}
+
+export interface InvoiceItem {
+  serviceId: string;
+  serviceName: string;
+  price: number;
+}
+
+export interface Invoice {
+  id: string;
+  patientId: string;
+  patientName: string;
+  patientPhone: string;
+  services: InvoiceItem[];
+  totalPrice: number;
+  insuranceDiscount: number; // calculated in currency
+  memberDiscount: number;    // calculated in currency
+  netPrice: number;
+  status: 'Pending' | 'Paid';
+  createdAt: string;
+  paymentMethod?: 'Cash' | 'Card' | 'Transfer';
+}
+
+export interface ToothState {
+  toothNumber: number;
+  condition: 'healthy' | 'decay' | 'missing' | 'crown' | 'bridge';
+  treatment?: string;
+}
+
+export interface MedicalRecord {
+  id: string;
+  patientId: string;
+  title: string;
+  date: string;
+  size: string;
+  type: 'pdf' | 'image' | 'prescription';
+  url?: string;
+  teethMap?: ToothState[];
+  notes?: string;
+}
+
+export interface ClinicLog {
+  id: string;
+  time: string;
+  module: 'RECEPTION' | 'DENTIST' | 'CASHIER' | 'SYSTEM' | 'AUTH';
+  type: 'INFO' | 'SUCCESS' | 'WARN' | 'ERR';
+  message: string;
+}

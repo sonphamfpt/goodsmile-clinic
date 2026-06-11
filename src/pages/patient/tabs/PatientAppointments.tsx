@@ -1,0 +1,457 @@
+import React, { useState } from 'react';
+import { useClinic } from '../../../context/ClinicContext';
+
+const STATUS_CONFIG = {
+  Confirmed: { label: 'Đã xác nhận', color: 'bg-secondary-container text-on-secondary-container border-secondary/20', icon: 'event_available' },
+  'In-Progress': { label: 'Đang khám', color: 'bg-primary-container text-on-primary-container border-primary/20', icon: 'medical_services' },
+  Pending: { label: 'Chờ xác nhận', color: 'bg-amber-100 text-amber-800 border-amber-200', icon: 'pending' },
+  Completed: { label: 'Hoàn thành', color: 'bg-surface-container text-on-surface-variant border-outline-variant', icon: 'check_circle' },
+  Cancelled: { label: 'Đã huỷ', color: 'bg-error-container text-on-error-container border-error/20', icon: 'cancel' },
+} as const;
+
+const UPCOMING_APPOINTMENTS = [
+  {
+    id: 'MY-01',
+    service: 'Tái khám chỉnh nha (Khay 8)',
+    dentist: 'Bác sĩ Nguyễn Hương',
+    room: 'Phòng 110',
+    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBmHutcEoE3mwWFVbj6-D885N2zpuS8LPlvU948W1H-5jeUPhYBnMBB_CRq9-VbH_Lx2DEtBvh4ku53cmX0vzgOAf_phuCv9lM_ZJ0ieExhjUn8f_EApgUXYCQamjHIIfWq6GrNSKfwvIfDZcdwphKG4FzsNk6dxltIaCbUwLe8uaJHakXN06OuYT8CGQVXg3htUAiDYISAWsTkf65jZqZUcMO2oCjZmJKRreWSVBl31EzaZ9VLfzbjmmJrqQcf3t8A8FNsHkGI2Ck',
+    date: 'Thứ Ba, 10/06/2026', // Lịch gần nhất (giả định hôm nay)
+    time: '09:00 AM',
+    status: 'Confirmed' as const,
+    duration: 45,
+    price: 0,
+    notes: 'Mang theo khay niềng cũ và vệ sinh răng trước khi đến',
+    isNext24h: true, // Cờ đánh dấu lịch hẹn trong 24h
+  },
+  {
+    id: 'MY-02',
+    service: 'Lấy cao răng & Vệ sinh',
+    dentist: 'Bác sĩ Mai Lan',
+    room: 'Phòng 108',
+    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDhaw7V_InEw7itBcn2U2FCLbVMfY6ToR72hEQjPoqMMcnnOEzlLAk0vMqxaZ3S8CaOXn9NHrJYN5zAktYjA75RPhrwlXLWM47508ReMq1fm7ZFUvdIoVaDCiVy8RoS9cZs1UkYw7ZHaPPtbghmhluy2nqYXNF8cIKwyf7Yr4hvLSZXWQKMm0ouD5hIuAlFSEFrcoP1pckD5ibmDN6oK2qKoKonjhJWbPs9I2MwXObu0P-vpNncAolr2XOC3bkSZBS9noMehcRJHhY',
+    date: 'Thứ Sáu, 14/06/2026',
+    time: '11:00 AM',
+    status: 'Confirmed' as const,
+    duration: 30,
+    price: 300000,
+    notes: '',
+    isNext24h: false,
+  },
+];
+
+const PAST_APPOINTMENTS = [
+  {
+    id: 'PAST-01',
+    service: 'Tái khám chỉnh nha (Khay 7)',
+    dentist: 'Bác sĩ Nguyễn Hương',
+    date: '27/05/2026',
+    time: '09:00 AM',
+    status: 'Completed' as const,
+    price: 0,
+    rating: 5,
+  },
+  {
+    id: 'PAST-02',
+    service: 'Khám tổng quát & Tư vấn',
+    dentist: 'Bác sĩ Mai Lan',
+    date: '15/05/2026',
+    time: '10:30 AM',
+    status: 'Completed' as const,
+    price: 100000,
+    rating: 4,
+  },
+  {
+    id: 'PAST-03',
+    service: 'Nhổ răng khôn (hàm dưới)',
+    dentist: 'Bác sĩ Hoàng Nam',
+    date: '28/09/2025',
+    time: '02:00 PM',
+    status: 'Completed' as const,
+    price: 1750000,
+    rating: 5,
+  },
+  {
+    id: 'PAST-04',
+    service: 'Tẩy trắng răng thẩm mỹ',
+    dentist: 'Bác sĩ Mai Lan',
+    date: '10/08/2025',
+    time: '03:00 PM',
+    status: 'Cancelled' as const,
+    price: 0,
+    rating: 0,
+  },
+];
+
+export const PatientAppointments: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
+  const [cancelId, setCancelId] = useState<string | null>(null);
+  const [rescheduleId, setRescheduleId] = useState<string | null>(null);
+  const [qrCodeApptId, setQrCodeApptId] = useState<string | null>(null);
+  const [ratingMap, setRatingMap] = useState<Record<string, number>>({});
+  const [historyFilter, setHistoryFilter] = useState<'All' | 'Completed' | 'Cancelled'>('All');
+
+  const tabs = [
+    { key: 'upcoming' as const, label: 'Sắp tới', count: UPCOMING_APPOINTMENTS.length },
+    { key: 'past' as const, label: 'Lịch sử', count: PAST_APPOINTMENTS.length },
+  ];
+
+
+
+  const filteredPastAppointments = PAST_APPOINTMENTS.filter(a => {
+    if (historyFilter === 'All') return true;
+    return a.status === historyFilter;
+  });
+
+  return (
+    <div className="p-stack-lg max-w-[1200px] mx-auto">
+      {/* Header */}
+      <div className="mb-6 flex justify-between items-center">
+        <div>
+          <h2 className="font-headline-md text-headline-md text-on-surface">Lịch hẹn của tôi</h2>
+          <p className="text-body-md text-on-surface-variant mt-1">Quản lý và theo dõi tất cả lịch khám của bạn tại GoodSmile</p>
+        </div>
+      </div>
+
+      {/* Stats Summary */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        {[
+          { label: 'Tổng lịch hẹn', value: UPCOMING_APPOINTMENTS.length + PAST_APPOINTMENTS.length, icon: 'calendar_month', color: 'text-primary bg-primary-container' },
+          { label: 'Sắp tới', value: UPCOMING_APPOINTMENTS.length, icon: 'event_upcoming', color: 'text-secondary bg-secondary-container' },
+          { label: 'Hoàn thành', value: PAST_APPOINTMENTS.filter(a => a.status === 'Completed').length, icon: 'task_alt', color: 'text-on-surface bg-surface-container' },
+        ].map((stat) => (
+          <div key={stat.label} className="bg-white rounded-xl border border-outline-variant p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.color}`}>
+              <span className="material-symbols-outlined text-[24px]">{stat.icon}</span>
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-on-surface">{stat.value}</p>
+              <p className="text-xs text-on-surface-variant font-medium uppercase tracking-wider">{stat.label}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Tab Switch & Filters */}
+      <div className="flex flex-wrap gap-4 mb-6 items-center justify-between">
+        <div className="flex gap-2 bg-surface-container-low p-1 rounded-xl w-fit border border-outline-variant">
+          {tabs.map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`px-6 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer flex items-center gap-2 ${
+                activeTab === tab.key
+                  ? 'bg-white text-on-surface shadow-sm border border-outline-variant'
+                  : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container'
+              }`}
+            >
+              {tab.label}
+              <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${activeTab === tab.key ? 'bg-primary text-on-primary' : 'bg-surface-container-high text-on-surface-variant'}`}>
+                {tab.count}
+              </span>
+            </button>
+          ))}
+        </div>
+
+        {activeTab === 'past' && (
+          <select 
+            value={historyFilter} 
+            onChange={(e) => setHistoryFilter(e.target.value as any)}
+            className="bg-white border border-outline-variant rounded-lg px-4 py-2 text-sm font-bold text-on-surface outline-none focus:border-primary shadow-sm cursor-pointer"
+          >
+            <option value="All">Tất cả trạng thái</option>
+            <option value="Completed">Đã hoàn thành</option>
+            <option value="Cancelled">Đã huỷ</option>
+          </select>
+        )}
+      </div>
+
+      {/* Upcoming Appointments */}
+      {activeTab === 'upcoming' && (
+        <div className="space-y-6">
+          {UPCOMING_APPOINTMENTS.map((appt) => {
+            const status = STATUS_CONFIG[appt.status];
+            return (
+              <div key={appt.id} className="relative bg-white rounded-2xl border border-outline-variant shadow-sm hover:shadow-md transition-all duration-300">
+                {/* 24h Alert Banner */}
+                {appt.isNext24h && (
+                  <div className="bg-amber-100 text-amber-800 px-4 py-2 rounded-t-2xl flex items-center gap-2 text-xs font-bold border-b border-amber-200">
+                    <span className="material-symbols-outlined text-[16px] animate-pulse">notifications_active</span>
+                    Lịch hẹn của bạn sẽ diễn ra trong vòng 24h tới. Vui lòng đến đúng giờ.
+                  </div>
+                )}
+                
+                {/* Top accent bar if no banner */}
+                {!appt.isNext24h && <div className="h-1.5 bg-gradient-to-r from-primary to-secondary rounded-t-2xl" />}
+                
+                <div className="p-6 sm:p-8">
+                  <div className="flex flex-col sm:flex-row gap-6 sm:gap-8">
+                    {/* Left: Date block */}
+                    <div className="flex-shrink-0 flex sm:flex-col items-center sm:w-28 gap-4 sm:gap-0">
+                      <div className="bg-primary/10 border border-primary/20 rounded-2xl p-4 text-center sm:w-full">
+                        <p className="text-[11px] font-bold text-primary uppercase tracking-widest">{appt.date.split(', ')[0]}</p>
+                        <p className="text-3xl font-black text-primary my-1">{appt.date.split('/')[0].split(', ')[1] || appt.date.split('/')[0]}</p>
+                        <p className="text-[10px] font-bold text-primary/70 uppercase">Tháng {appt.date.split('/')[1]}</p>
+                      </div>
+                      <div className="text-center sm:mt-3">
+                        <p className="text-lg font-black text-on-surface">{appt.time}</p>
+                        <p className="text-xs font-bold text-on-surface-variant flex items-center justify-center gap-1 mt-0.5">
+                          <span className="material-symbols-outlined text-[14px]">timer</span>
+                          {appt.duration} phút
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Middle: Info */}
+                    <div className="flex-1 space-y-4">
+                      <div className="flex flex-wrap items-start gap-3 justify-between">
+                        <div>
+                          <h4 className="font-headline-sm text-headline-sm text-on-surface">{appt.service}</h4>
+                          <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full mt-2 border ${status.color}`}>
+                            <span className="material-symbols-outlined text-[14px]">{status.icon}</span>
+                            {status.label}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-4 bg-surface-container-low p-3 rounded-xl border border-outline-variant w-fit">
+                        <img src={appt.avatar} alt={appt.dentist} className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm" />
+                        <div>
+                          <p className="text-sm font-bold text-on-surface flex items-center gap-1">
+                            <span className="material-symbols-outlined text-[16px] text-primary">stethoscope</span>
+                            {appt.dentist}
+                          </p>
+                          <p className="text-xs text-on-surface-variant mt-0.5 font-medium">{appt.room}</p>
+                        </div>
+                      </div>
+
+                      {appt.notes && (
+                        <div className="bg-amber-50/50 border border-amber-200 rounded-xl p-4 flex gap-3 text-sm text-amber-900 leading-relaxed max-w-2xl">
+                          <span className="material-symbols-outlined text-[20px] text-amber-600 shrink-0 mt-0.5">sticky_note_2</span>
+                          <span><strong>Ghi chú:</strong> {appt.notes}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Right: Actions */}
+                    <div className="flex sm:flex-col gap-2 sm:w-40 justify-end sm:justify-start pt-4 sm:pt-0 sm:border-l border-outline-variant sm:pl-6">
+                      <button
+                        onClick={() => setQrCodeApptId(appt.id)}
+                        className="flex-1 sm:flex-none px-4 py-2.5 bg-primary text-on-primary rounded-xl text-xs font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-all cursor-pointer shadow-sm"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">qr_code_2</span>
+                        Mã Check-in
+                      </button>
+                      <button
+                        onClick={() => setRescheduleId(appt.id)}
+                        className="flex-1 sm:flex-none px-4 py-2.5 bg-surface-container text-on-surface rounded-xl text-xs font-bold flex items-center justify-center gap-2 hover:bg-surface-container-high transition-all cursor-pointer border border-outline-variant"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">update</span>
+                        Dời lịch
+                      </button>
+                      <button
+                        onClick={() => setCancelId(appt.id)}
+                        className="flex-1 sm:flex-none px-4 py-2.5 border border-error/30 text-error rounded-xl text-xs font-bold flex items-center justify-center gap-2 hover:bg-error-container/30 transition-all cursor-pointer"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">event_busy</span>
+                        Huỷ lịch
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+
+          {UPCOMING_APPOINTMENTS.length === 0 && (
+            <div className="text-center py-20 bg-white rounded-2xl border border-outline-variant border-dashed">
+              <span className="material-symbols-outlined text-[80px] text-outline">event_busy</span>
+              <p className="text-on-surface-variant mt-4 text-body-lg">Bạn chưa có lịch hẹn nào sắp tới</p>
+              <button className="mt-4 px-6 py-2 bg-primary text-on-primary rounded-xl font-bold cursor-pointer">
+                Đặt lịch khám ngay
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Past Appointments */}
+      {activeTab === 'past' && (
+        <div className="space-y-4">
+          {filteredPastAppointments.map((appt) => {
+            const status = STATUS_CONFIG[appt.status];
+            const userRating = ratingMap[appt.id] ?? appt.rating;
+            return (
+              <div key={appt.id} className="bg-white rounded-xl border border-outline-variant p-6 flex flex-col md:flex-row gap-6 hover:shadow-md transition-shadow">
+                <div className="flex-1">
+                  <div className="flex flex-wrap gap-4 justify-between items-start mb-2">
+                    <div>
+                      <h4 className="font-bold text-lg text-on-surface">{appt.service}</h4>
+                      <p className="text-sm text-on-surface-variant mt-1">
+                        <span className="font-medium text-on-surface">{appt.dentist}</span> • {appt.date} lúc {appt.time}
+                      </p>
+                    </div>
+                    <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full border ${status.color}`}>
+                      <span className="material-symbols-outlined text-[16px]">{status.icon}</span>
+                      {status.label}
+                    </span>
+                  </div>
+
+                  {appt.status === 'Completed' && (
+                    <div className="mt-4 bg-surface-container-low rounded-lg p-3 inline-flex items-center gap-3 border border-outline-variant">
+                      <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Đánh giá chất lượng:</p>
+                      <div className="flex gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            onClick={() => setRatingMap(prev => ({ ...prev, [appt.id]: star }))}
+                            className="text-amber-400 cursor-pointer hover:scale-125 transition-transform"
+                          >
+                            <span className="material-symbols-outlined text-[24px]">
+                              {star <= userRating ? 'star' : 'star_border'}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="flex items-center gap-4 text-right md:border-l border-outline-variant md:pl-6 justify-between md:justify-end">
+                  {appt.price > 0 && (
+                    <div className="text-left md:text-right">
+                      <p className="text-[10px] uppercase font-bold text-on-surface-variant mb-1">Chi phí</p>
+                      <p className="text-lg font-black text-primary">₫{appt.price.toLocaleString()}</p>
+                    </div>
+                  )}
+                  <button
+                    onClick={() => alert(`Đang chuyển tới trang Đặt lịch cho dịch vụ: ${appt.service}`)}
+                    className="px-6 py-2.5 bg-primary-container text-on-primary-container rounded-xl text-sm font-bold hover:opacity-80 transition-all cursor-pointer flex items-center gap-2 border border-primary/20"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">replay</span>
+                    Khám lại
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+          
+          {filteredPastAppointments.length === 0 && (
+            <div className="text-center py-16 text-on-surface-variant">
+              Không tìm thấy lịch sử khám phù hợp.
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Reschedule Modal */}
+      {rescheduleId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6 animate-fade-in border border-outline-variant">
+            <div className="flex justify-between items-center border-b border-outline-variant pb-4">
+              <h3 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+                <span className="material-symbols-outlined text-secondary">update</span>
+                Dời lịch hẹn
+              </h3>
+              <button onClick={() => setRescheduleId(null)} className="text-on-surface-variant hover:text-on-surface cursor-pointer rounded-full p-1 hover:bg-surface-container">
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            
+            <p className="text-sm text-on-surface-variant">
+              Chọn một ngày và giờ mới cho lịch hẹn <strong>{UPCOMING_APPOINTMENTS.find(a => a.id === rescheduleId)?.service}</strong>.
+            </p>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold uppercase text-on-surface-variant mb-2">Ngày mới</label>
+                <input type="date" className="w-full bg-surface-container-low border border-outline-variant rounded-xl p-3 text-body-md focus:ring-2 focus:ring-primary/50 outline-none" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold uppercase text-on-surface-variant mb-2">Giờ mới</label>
+                <input type="time" className="w-full bg-surface-container-low border border-outline-variant rounded-xl p-3 text-body-md focus:ring-2 focus:ring-primary/50 outline-none" />
+              </div>
+            </div>
+
+            <div className="flex gap-3 pt-4">
+              <button
+                onClick={() => setRescheduleId(null)}
+                className="flex-1 py-3 border-2 border-outline-variant text-on-surface rounded-xl font-bold hover:bg-surface-container transition-all cursor-pointer"
+              >
+                Hủy bỏ
+              </button>
+              <button
+                onClick={() => { alert('Yêu cầu dời lịch đã được gửi đến Phòng khám! Bạn sẽ nhận được thông báo xác nhận.'); setRescheduleId(null); }}
+                className="flex-1 py-3 bg-secondary text-on-secondary rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all cursor-pointer shadow-md"
+              >
+                Xác nhận Dời
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Cancel Modal */}
+      {cancelId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-3xl max-w-sm w-full p-8 shadow-2xl space-y-5 animate-fade-in border border-outline-variant">
+            <div className="w-16 h-16 bg-error-container rounded-full flex items-center justify-center mx-auto border border-error/20">
+              <span className="material-symbols-outlined text-error text-3xl">warning</span>
+            </div>
+            <h3 className="font-headline-sm text-headline-sm text-center text-on-surface">Huỷ lịch hẹn?</h3>
+            <p className="text-center text-on-surface-variant text-sm">
+              Bạn có chắc muốn huỷ lịch hẹn này không? Hành động này không thể hoàn tác và bạn sẽ cần đặt lịch lại từ đầu.
+            </p>
+            <div className="flex flex-col gap-3 pt-2">
+              <button
+                onClick={() => { alert('Lịch hẹn đã được huỷ thành công!'); setCancelId(null); }}
+                className="w-full py-3 bg-error text-on-error rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all cursor-pointer shadow-md"
+              >
+                Vâng, Huỷ lịch
+              </button>
+              <button
+                onClick={() => setCancelId(null)}
+                className="w-full py-3 text-on-surface-variant rounded-xl font-bold hover:bg-surface-container transition-all cursor-pointer"
+              >
+                Không, Giữ lại
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* QR Code Modal */}
+      {qrCodeApptId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={() => setQrCodeApptId(null)}>
+          <div className="bg-white rounded-3xl max-w-sm w-full p-8 shadow-2xl space-y-5 animate-fade-in border border-outline-variant text-center" onClick={e => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary">qr_code_scanner</span>
+                Mã Check-in
+              </h3>
+              <button onClick={() => setQrCodeApptId(null)} className="text-on-surface-variant hover:text-on-surface cursor-pointer rounded-full p-1 hover:bg-surface-container">
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            
+            <p className="text-sm text-on-surface-variant">
+              Sử dụng mã QR này để tự động Check-in tại quầy lễ tân hoặc Kiosk của phòng khám.
+            </p>
+
+            <div className="bg-surface-container-low p-4 rounded-2xl border border-outline-variant mx-auto w-fit">
+              <img src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${qrCodeApptId}`} alt="QR Code" className="w-48 h-48 mx-auto mix-blend-multiply" />
+            </div>
+            <p className="text-xs font-bold text-primary tracking-widest mt-2">{qrCodeApptId}</p>
+
+            <button
+              onClick={() => setQrCodeApptId(null)}
+              className="w-full mt-4 py-3 bg-surface-container text-on-surface rounded-xl font-bold hover:bg-surface-container-high transition-all cursor-pointer border border-outline-variant"
+            >
+              Đóng
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
