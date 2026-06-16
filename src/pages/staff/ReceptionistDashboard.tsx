@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useClinic } from '../../context/ClinicContext';
 import { BookingModal } from '../../components/BookingModal';
+import { CheckInModal } from '../../components/CheckInModal';
 
 // Tab imports
 import { ReceptionistQueue } from './receptionist-tabs/ReceptionistQueue';
@@ -10,20 +11,10 @@ import { ReceptionistReminders } from './receptionist-tabs/ReceptionistReminders
 
 // ─── Home: Bàn tiếp nhận ──────────────────────────────────────────────────────
 const ReceptionistHome: React.FC = () => {
-  const { queue, appointments, patients, dentists, checkInPatient, addPatient } = useClinic();
+  const { queue, appointments, checkInPatient } = useClinic();
 
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [showCheckInModal, setShowCheckInModal] = useState(false);
-
-  const [existingPatientId, setExistingPatientId] = useState('');
-  const [checkinMode, setCheckinMode] = useState<'existing' | 'new' | 'qr'>('existing');
-  const [isScanning, setIsScanning] = useState(false);
-  const [newPatientName, setNewPatientName] = useState('');
-  const [newPatientPhone, setNewPatientPhone] = useState('');
-  const [newPatientAge, setNewPatientAge] = useState('30');
-  const [newPatientGender, setNewPatientGender] = useState('Nam');
-  const [selectedDentistId, setSelectedDentistId] = useState('');
-  const [checkinDone, setCheckinDone] = useState(false);
 
   const activeQueue = queue.filter(q => q.status !== 'Completed');
   const waitingPatients = activeQueue.filter(q => q.status === 'Waiting');
@@ -31,43 +22,6 @@ const ReceptionistHome: React.FC = () => {
 
   const [now] = useState(new Date());
   const dayStr = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-
-  const handleCheckInSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    let targetPatientId = existingPatientId;
-    if (checkinMode === 'new') {
-      if (!newPatientName || !newPatientPhone) { alert('Vui lòng điền thông tin bệnh nhân mới!'); return; }
-      const added = addPatient({ name: newPatientName, phone: newPatientPhone, age: parseInt(newPatientAge), gender: newPatientGender, criticalAllergy: 'Không', condition: 'Mới khám đầu' });
-      targetPatientId = added.id;
-    }
-    if (!targetPatientId || !selectedDentistId) { alert('Vui lòng chọn bệnh nhân và bác sĩ chỉ định!'); return; }
-    checkInPatient(targetPatientId, selectedDentistId);
-    setCheckinDone(true);
-    setTimeout(() => {
-      setCheckinDone(false);
-      setShowCheckInModal(false);
-      setCheckinMode('existing');
-      setExistingPatientId('');
-      setNewPatientName('');
-      setNewPatientPhone('');
-      setSelectedDentistId('');
-    }, 2000);
-  };
-
-  const handleScanFake = () => {
-    setIsScanning(true);
-    setTimeout(() => {
-      setIsScanning(false);
-      const patient = patients[0];
-      const dentist = dentists[0];
-      if (patient && dentist) {
-        setExistingPatientId(patient.id);
-        setSelectedDentistId(dentist.id);
-        setCheckinMode('existing');
-        alert(`Đã quét QR thành công!\nBệnh nhân: ${patient.name}\nBác sĩ: ${dentist.name}`);
-      }
-    }, 2000);
-  };
 
   return (
     <div className="p-container-padding-desktop space-y-6 animate-in fade-in duration-200">
@@ -232,7 +186,7 @@ const ReceptionistHome: React.FC = () => {
                       </div>
                       <div>
                         <p className="font-bold text-on-surface">{item.patientName}</p>
-                        <p className="text-xs text-on-surface-variant">{item.room} • {item.dentistName}</p>
+                        <p className="text-xs text-on-surface-variant">BS. <strong className="text-primary">{item.dentistName}</strong> • {item.room}</p>
                       </div>
                     </div>
                     <div className="text-right">
@@ -285,123 +239,11 @@ const ReceptionistHome: React.FC = () => {
         </div>
       </div>
 
-      {/* Check-in Modal */}
-      {showCheckInModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl border border-outline-variant max-w-md w-full overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-150">
-            {checkinDone ? (
-              <div className="p-12 text-center space-y-4">
-                <div className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mx-auto">
-                  <span className="material-symbols-outlined text-4xl text-on-secondary">check_circle</span>
-                </div>
-                <h3 className="font-headline-sm text-headline-sm">Check-in thành công!</h3>
-                <p className="text-on-surface-variant">Bệnh nhân đã vào hàng chờ</p>
-              </div>
-            ) : (
-              <>
-                <div className="px-6 py-4 bg-primary text-on-primary flex justify-between items-center">
-                  <h3 className="font-headline-sm text-headline-sm flex items-center gap-2">
-                    <span className="material-symbols-outlined">how_to_reg</span>
-                    Đón Tiếp & Check-in Bệnh Nhân
-                  </h3>
-                  <button onClick={() => setShowCheckInModal(false)} className="text-on-primary hover:text-white cursor-pointer">
-                    <span className="material-symbols-outlined">close</span>
-                  </button>
-                </div>
-                <form onSubmit={handleCheckInSubmit} className="p-6 space-y-4">
-                  <div className="flex border rounded-lg overflow-hidden border-outline-variant">
-                    {[
-                      { key: 'qr', label: 'Quét QR' },
-                      { key: 'existing', label: 'Bệnh nhân cũ' },
-                      { key: 'new', label: 'Đăng ký mới' },
-                    ].map(opt => (
-                      <button
-                        key={opt.key}
-                        type="button"
-                        onClick={() => setCheckinMode(opt.key as any)}
-                        className={`flex-1 py-2 text-xs font-bold cursor-pointer ${checkinMode === opt.key ? 'bg-primary text-white' : 'bg-surface hover:bg-surface-container-low text-on-surface-variant'}`}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                  </div>
-
-                  {checkinMode === 'qr' && (
-                    <div className="py-8 flex flex-col items-center justify-center border-2 border-dashed border-primary/30 bg-primary/5 rounded-2xl">
-                      <div className="relative">
-                        <span className="material-symbols-outlined text-[64px] text-primary">qr_code_scanner</span>
-                        {isScanning && (
-                          <div className="absolute top-0 left-0 w-full h-full border-t-2 border-secondary animate-bounce pointer-events-none"></div>
-                        )}
-                      </div>
-                      <p className="font-bold text-primary mt-4 mb-2">{isScanning ? 'Đang quét...' : 'Sẵn sàng quét mã QR'}</p>
-                      <p className="text-xs text-on-surface-variant text-center max-w-xs mb-4">
-                        Hướng camera vào mã QR của lịch hẹn trên điện thoại của bệnh nhân.
-                      </p>
-                      <button
-                        type="button"
-                        onClick={handleScanFake}
-                        disabled={isScanning}
-                        className="px-6 py-2 bg-primary text-on-primary rounded-xl font-bold cursor-pointer hover:bg-primary-container hover:text-on-primary-container disabled:opacity-50 flex items-center gap-2"
-                      >
-                        <span className="material-symbols-outlined text-[18px]">camera_alt</span>
-                        Giả lập quét QR
-                      </button>
-                    </div>
-                  )}
-
-                  {checkinMode === 'existing' && (
-                    <div>
-                      <label className="block text-[10px] uppercase font-bold text-on-surface-variant mb-1">Chọn bệnh nhân từ danh sách *</label>
-                      <select value={existingPatientId} onChange={e => setExistingPatientId(e.target.value)} className="w-full bg-surface-container border border-outline-variant rounded-lg p-2 text-body-md focus:ring-1 focus:ring-primary focus:outline-none">
-                        <option value="">-- Chọn bệnh nhân --</option>
-                        {patients.map(p => <option key={p.id} value={p.id}>{p.name} ({p.phone})</option>)}
-                      </select>
-                    </div>
-                  )}
-
-                  {checkinMode === 'new' && (
-                    <div className="space-y-3">
-                      <div>
-                        <label className="block text-[10px] uppercase font-bold text-on-surface-variant mb-1">Họ tên bệnh nhân *</label>
-                        <input type="text" required placeholder="Ví dụ: Lê Văn E" value={newPatientName} onChange={e => setNewPatientName(e.target.value)} className="w-full bg-surface-container border border-outline-variant rounded-lg px-3 py-2 text-body-md focus:ring-1 focus:ring-primary focus:outline-none" />
-                      </div>
-                      <div className="grid grid-cols-3 gap-2">
-                        <div className="col-span-2">
-                          <label className="block text-[10px] uppercase font-bold text-on-surface-variant mb-1">Số điện thoại *</label>
-                          <input type="tel" required placeholder="09XXXXXXXX" value={newPatientPhone} onChange={e => setNewPatientPhone(e.target.value)} className="w-full bg-surface-container border border-outline-variant rounded-lg px-3 py-2 text-body-md" />
-                        </div>
-                        <div>
-                          <label className="block text-[10px] uppercase font-bold text-on-surface-variant mb-1">Tuổi</label>
-                          <input type="number" value={newPatientAge} onChange={e => setNewPatientAge(e.target.value)} className="w-full bg-surface-container border border-outline-variant rounded-lg px-3 py-2 text-body-md" />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {checkinMode !== 'qr' && (
-                    <>
-                      <div>
-                        <label className="block text-[10px] uppercase font-bold text-on-surface-variant mb-1">Bác sĩ khám chỉ định *</label>
-                        <select value={selectedDentistId} onChange={e => setSelectedDentistId(e.target.value)} required className="w-full bg-surface-container border border-outline-variant rounded-lg p-2 text-body-md focus:ring-1 focus:ring-primary focus:outline-none">
-                          <option value="">-- Chọn bác sĩ khám --</option>
-                          {dentists.map(d => <option key={d.id} value={d.id}>{d.name} ({d.room})</option>)}
-                        </select>
-                      </div>
-
-                      <div className="flex justify-end gap-3 pt-4 border-t border-outline-variant">
-                        <button type="button" onClick={() => setShowCheckInModal(false)} className="px-4 py-2 border border-outline text-on-surface rounded-lg text-xs font-bold cursor-pointer">Đóng</button>
-                        <button type="submit" className="px-6 py-2 bg-primary text-on-primary rounded-lg text-xs font-bold hover:bg-primary-container transition-all active:scale-95 cursor-pointer">Xác nhận Check-in</button>
-                      </div>
-                    </>
-                  )}
-                </form>
-              </>
-            )}
-          </div>
-        </div>
-      )}
-
+      <CheckInModal
+        isOpen={showCheckInModal}
+        onClose={() => setShowCheckInModal(false)}
+        title="Đón tiếp & Check-in bệnh nhân"
+      />
       <BookingModal isOpen={isBookingOpen} onClose={() => setIsBookingOpen(false)} />
     </div>
   );

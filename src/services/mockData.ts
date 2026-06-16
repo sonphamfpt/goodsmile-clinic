@@ -1,4 +1,4 @@
-import { Service, Dentist, Patient, Appointment, QueueItem, Invoice, ClinicLog, MedicalRecord } from '../types/clinic';
+import { Service, Dentist, Patient, Appointment, QueueItem, Invoice, ClinicLog, MedicalRecord, DoctorShift } from '../types/clinic';
 
 export const INITIAL_SERVICES: Service[] = [
   { id: 'S-01', name: 'Lấy cao răng & Vệ sinh', price: 300000, durationMin: 30, isActive: true },
@@ -46,7 +46,10 @@ export const INITIAL_QUEUE: QueueItem[] = [
   { id: 'P-8821', patientId: 'P-8821', patientName: 'Trần Nguyễn Minh', dentistId: 'D-04', dentistName: 'Bác sĩ Nguyễn Hương', room: 'Phòng 110', status: 'In Chair', checkInTime: '08:30 AM', waitTimeMin: 15, elapsedTimeMin: 24 },
   { id: 'Q-03', patientId: 'P-4490', patientName: 'Trần Thị B', dentistId: 'D-02', dentistName: 'Bác sĩ Hoàng Nam', room: 'Phòng 105', status: 'In Chair', checkInTime: '08:45 AM', waitTimeMin: 5, elapsedTimeMin: 12 },
   { id: 'Q-04', patientId: 'P-5022', patientName: 'Nguyễn Thùy Linh', dentistId: 'D-01', dentistName: 'Bác sĩ Lê Minh', room: 'X-Quang', status: 'Waiting', checkInTime: '09:10 AM', waitTimeMin: 10 },
-  { id: 'Q-05', patientId: 'P-5023', patientName: 'Lý Kiều Trinh', dentistId: 'D-01', dentistName: 'Bác sĩ Lê Minh', room: 'Phòng 102', status: 'Waiting', checkInTime: '09:15 AM', waitTimeMin: 5 }
+  { id: 'Q-05', patientId: 'P-5023', patientName: 'Lý Kiều Trinh', dentistId: 'D-01', dentistName: 'Bác sĩ Lê Minh', room: 'Phòng 102', status: 'Waiting', checkInTime: '09:15 AM', waitTimeMin: 5 },
+  { id: 'Q-10', patientId: 'P-9902', patientName: 'Nguyễn Thị Lan', dentistId: 'D-04', dentistName: 'Bác sĩ Nguyễn Hương', room: 'Phòng 110', status: 'Waiting', checkInTime: '09:20 AM', waitTimeMin: 5 },
+  { id: 'Q-11', patientId: 'P-0012', patientName: 'Nguyễn Văn A', dentistId: 'D-04', dentistName: 'Bác sĩ Nguyễn Hương', room: 'Phòng 110', status: 'Waiting', checkInTime: '09:25 AM', waitTimeMin: 2 },
+  { id: 'Q-12', patientId: 'P-3129', patientName: 'Lê Quang C', dentistId: 'D-04', dentistName: 'Bác sĩ Nguyễn Hương', room: 'Phòng 110', status: 'Completed', checkInTime: '08:00 AM', waitTimeMin: 10, elapsedTimeMin: 30 }
 ];
 
 export const INITIAL_INVOICES: Invoice[] = [
@@ -66,20 +69,190 @@ export const INITIAL_LOGS: ClinicLog[] = [
 ];
 
 export const INITIAL_MEDICAL_RECORDS: MedicalRecord[] = [
-  { id: 'MR-01', patientId: 'P-8821', title: 'Chụp X-quang Chỉnh nha Toàn cảnh (Panorama)', date: '24 Tháng 10, 2025', size: '4.2 MB', type: 'pdf' },
-  { id: 'MR-02', patientId: 'P-8821', title: 'Ảnh tiến trình niềng răng mặt ngoài', date: '10 Tháng 10, 2025', size: '1.8 MB', type: 'image' },
-  { id: 'MR-03', patientId: 'P-8821', title: 'Đơn thuốc giảm đau hậu phẫu răng khôn', date: '28 Tháng 09, 2025', size: '120 KB', type: 'prescription', notes: 'Uống Paracetamol 500mg, 1 viên mỗi 6 giờ khi đau.' },
+  {
+    id: 'MR-1002',
+    patientId: 'P-8821',
+    title: 'Trám Composite thẩm mỹ răng 46',
+    date: '15/10/2025',
+    size: '2.1 MB',
+    type: 'pdf',
+    dentistName: 'Bác sĩ Mai Lan',
+    room: 'Phòng 105',
+    diagnosis: 'Sâu men rãnh mặt nhai răng 46',
+    treatments: ['Chụp X-Quang chóp răng', 'Trám Composite thẩm mỹ răng 46'],
+    notes: 'Dị ứng: Không | Bệnh lý nền: Nhạy cảm ngà. Bệnh sử: Đau nhức nhẹ khi ăn đồ ngọt - Chẩn đoán: Sâu men rãnh mặt nhai răng 46 | Đơn thuốc: Sensodyne Rapid Relief (1 Tuýp) - Chải răng 2 lần/ngày',
+    prescription: {
+      id: 'RX-9922',
+      medicines: [
+        { name: 'Sensodyne Rapid Relief', dose: 'Chải răng 2 lần/ngày', duration: 'Thường xuyên', note: 'Kem đánh răng chống ê buốt' }
+      ],
+      instructions: 'Hạn chế ăn đồ ngọt, chua, quá nóng hoặc quá lạnh trong 24h đầu sau trám.'
+    },
+    files: [
+      { id: 'F-112', type: 'image', title: 'X-Quang chóp răng 46', size: '2.1 MB' }
+    ],
+    teethMap: [
+      { toothNumber: 46, condition: 'treated', treatment: 'Trám Composite thẩm mỹ răng 46' }
+    ]
+  },
+  {
+    id: 'MR-1001',
+    patientId: 'P-8821',
+    title: 'Tiểu phẫu nhổ răng khôn 38, 48',
+    date: '28/09/2025',
+    size: '4.5 MB',
+    type: 'pdf',
+    dentistName: 'Bác sĩ Hoàng Nam',
+    room: 'Phòng Phẫu Thuật',
+    diagnosis: 'Răng khôn 38, 48 mọc lệch ngầm',
+    treatments: ['Chụp X-Quang toàn hàm (Panorama)', 'Tiểu phẫu nhổ răng khôn 38, 48'],
+    notes: 'Dị ứng: Không | Bệnh lý nền: Nhạy cảm ngà. Bệnh sử: Đau nhức dữ dội vùng hàm dưới trong cùng - Chẩn đoán: Răng khôn 38, 48 mọc lệch ngầm | Đơn thuốc: Augmentin 1g (20 Viên) - Uống 1 viên × 2 lần/ngày sau ăn; Efferalgan 500mg (10 Viên) - Uống 1 viên khi đau, cách ít nhất 4 giờ; Medrol 16mg (3 Viên) - Uống 1 viên × 1 lần/ngày sau ăn sáng',
+    prescription: {
+      id: 'RX-8821',
+      medicines: [
+        { name: 'Augmentin 1g', dose: '1 viên × 2 lần/ngày', duration: '7 ngày', note: 'Uống ngay sau bữa ăn' },
+        { name: 'Efferalgan 500mg', dose: '1 viên khi đau', duration: 'Tối đa 4v/ngày', note: 'Cách nhau ít nhất 4 giờ' },
+        { name: 'Medrol 16mg', dose: '1 viên × 1 lần/ngày', duration: '3 ngày', note: 'Uống sau ăn sáng. Giảm sưng' }
+      ],
+      instructions: 'Cắn chặt gạc 1 giờ. Chườm đá 24h đầu. Không dùng ống hút, không khạc nhổ. Tái khám cắt chỉ sau 7 ngày.'
+    },
+    files: [
+      { id: 'F-111', type: 'image', title: 'Phim X-Quang Panorama Toàn hàm', size: '4.5 MB' },
+      { id: 'F-110', type: 'pdf', title: 'Phiếu cam kết phẫu thuật', size: '1.2 MB' }
+    ],
+    teethMap: [
+      { toothNumber: 38, condition: 'missing', treatment: 'Đã nhổ răng 38' },
+      { toothNumber: 48, condition: 'missing', treatment: 'Đã nhổ răng 48' }
+    ]
+  },
+  {
+    id: 'MR-01',
+    patientId: 'P-8821',
+    title: 'Chụp X-quang Chỉnh nha Toàn cảnh (Panorama)',
+    date: '24/10/2025',
+    size: '4.2 MB',
+    type: 'pdf',
+    dentistName: 'Bác sĩ Nguyễn Hương',
+    room: 'Phòng X-Quang',
+    diagnosis: 'Chụp phim Panorama khảo sát niềng răng',
+    treatments: ['Chụp X-quang Panorama toàn hàm'],
+    files: [
+      { id: 'F-111', type: 'image', title: 'Phim X-Quang Panorama Toàn hàm', size: '4.5 MB' }
+    ]
+  },
+  {
+    id: 'MR-02',
+    patientId: 'P-8821',
+    title: 'Ảnh tiến trình niềng răng mặt ngoài',
+    date: '10/10/2025',
+    size: '1.8 MB',
+    type: 'image',
+    dentistName: 'Bác sĩ Nguyễn Hương',
+    room: 'Phòng 110',
+    diagnosis: 'Ghi hình tiến trình chỉnh nha',
+    treatments: ['Ảnh chụp răng lâm sàng'],
+    files: [
+      { id: 'F-112', type: 'image', title: 'Ảnh tiến trình niềng răng mặt ngoài', size: '1.8 MB' }
+    ]
+  },
+  {
+    id: 'MR-03',
+    patientId: 'P-8821',
+    title: 'Đơn thuốc giảm đau hậu phẫu răng khôn',
+    date: '28/09/2025',
+    size: '120 KB',
+    type: 'prescription',
+    dentistName: 'Bác sĩ Hoàng Nam',
+    room: 'Phòng Phẫu Thuật',
+    diagnosis: 'Đau nhức nhẹ sau nhổ răng khôn',
+    treatments: ['Kê đơn thuốc giảm đau'],
+    notes: 'Dị ứng: Không | Bệnh lý nền: Nhạy cảm ngà. Bệnh sử: Khám răng định kỳ - Chẩn đoán: Đau nhức sau nhổ răng khôn | Đơn thuốc: Paracetamol 500mg (10 Viên) - Uống Paracetamol 500mg, 1 viên mỗi 6 giờ khi đau.',
+    prescription: {
+      id: 'RX-MR03',
+      medicines: [
+        { name: 'Paracetamol 500mg', dose: '1 viên mỗi 6 giờ khi đau', duration: '10 Viên', note: 'Uống sau ăn' }
+      ],
+      instructions: 'Nghỉ ngơi, uống nhiều nước.'
+    }
+  },
   {
     id: 'MR-04',
     patientId: 'P-9902',
     title: 'Hồ sơ bệnh án phục hình răng hàm dưới',
-    date: '12 Tháng 10, 2025',
+    date: '12/10/2025',
     size: '1.2 MB',
     type: 'pdf',
+    dentistName: 'Bác sĩ Nguyễn Hương',
+    room: 'Phòng 110',
+    diagnosis: 'Sâu răng 46 & mất răng 38',
+    treatments: ['Hàn răng Composite', 'Nhổ răng'],
     notes: 'Lấy cao răng toàn hàm. Hàn răng sâu số 46 bằng Composite.',
     teethMap: [
       { toothNumber: 46, condition: 'decay', treatment: 'Hàn răng Composite' },
       { toothNumber: 38, condition: 'missing', treatment: 'Đã nhổ' }
     ]
   }
+];
+
+export const INITIAL_DENTIST_SHIFTS: DoctorShift[] = [
+  { id: 'SH-01', dentistId: 'D-01', dentistName: 'Bác sĩ Lê Minh', date: '2026-06-01', shiftType: 'Morning', room: 'Phòng 102' },
+  { id: 'SH-02', dentistId: 'D-02', dentistName: 'Bác sĩ Hoàng Nam', date: '2026-06-01', shiftType: 'Afternoon', room: 'Phòng 105' },
+  { id: 'SH-03', dentistId: 'D-03', dentistName: 'Bác sĩ Mai Lan', date: '2026-06-02', shiftType: 'Morning', room: 'Phòng 108' },
+  { id: 'SH-04', dentistId: 'D-04', dentistName: 'Bác sĩ Nguyễn Hương', date: '2026-06-02', shiftType: 'Afternoon', room: 'Phòng 110' },
+  { id: 'SH-05', dentistId: 'D-01', dentistName: 'Bác sĩ Lê Minh', date: '2026-06-03', shiftType: 'Morning', room: 'Phòng 102' },
+  { id: 'SH-06', dentistId: 'D-02', dentistName: 'Bác sĩ Hoàng Nam', date: '2026-06-03', shiftType: 'Afternoon', room: 'Phòng 105' },
+  { id: 'SH-07', dentistId: 'D-04', dentistName: 'Bác sĩ Nguyễn Hương', date: '2026-06-03', shiftType: 'Full', room: 'Phòng 110' },
+  { id: 'SH-08', dentistId: 'D-03', dentistName: 'Bác sĩ Mai Lan', date: '2026-06-04', shiftType: 'Morning', room: 'Phòng 108' },
+  { id: 'SH-09', dentistId: 'D-01', dentistName: 'Bác sĩ Lê Minh', date: '2026-06-04', shiftType: 'Afternoon', room: 'Phòng 102' },
+  { id: 'SH-10', dentistId: 'D-02', dentistName: 'Bác sĩ Hoàng Nam', date: '2026-06-05', shiftType: 'Morning', room: 'Phòng 105' },
+  { id: 'SH-11', dentistId: 'D-04', dentistName: 'Bác sĩ Nguyễn Hương', date: '2026-06-05', shiftType: 'Afternoon', room: 'Phòng 110' },
+  { id: 'SH-12', dentistId: 'D-03', dentistName: 'Bác sĩ Mai Lan', date: '2026-06-06', shiftType: 'Full', room: 'Phòng Phẫu Thuật' },
+  { id: 'SH-13', dentistId: 'D-01', dentistName: 'Bác sĩ Lê Minh', date: '2026-06-06', shiftType: 'Afternoon', room: 'Phòng 102' },
+  
+  { id: 'SH-14', dentistId: 'D-01', dentistName: 'Bác sĩ Lê Minh', date: '2026-06-08', shiftType: 'Morning', room: 'Phòng 102' },
+  { id: 'SH-15', dentistId: 'D-02', dentistName: 'Bác sĩ Hoàng Nam', date: '2026-06-08', shiftType: 'Afternoon', room: 'Phòng 105' },
+  { id: 'SH-16', dentistId: 'D-03', dentistName: 'Bác sĩ Mai Lan', date: '2026-06-09', shiftType: 'Morning', room: 'Phòng 108' },
+  { id: 'SH-17', dentistId: 'D-04', dentistName: 'Bác sĩ Nguyễn Hương', date: '2026-06-09', shiftType: 'Afternoon', room: 'Phòng 110' },
+  { id: 'SH-18', dentistId: 'D-01', dentistName: 'Bác sĩ Lê Minh', date: '2026-06-10', shiftType: 'Morning', room: 'Phòng 102' },
+  { id: 'SH-19', dentistId: 'D-02', dentistName: 'Bác sĩ Hoàng Nam', date: '2026-06-10', shiftType: 'Afternoon', room: 'Phòng 105' },
+  { id: 'SH-20', dentistId: 'D-03', dentistName: 'Bác sĩ Mai Lan', date: '2026-06-11', shiftType: 'Morning', room: 'Phòng 108' },
+  { id: 'SH-21', dentistId: 'D-04', dentistName: 'Bác sĩ Nguyễn Hương', date: '2026-06-11', shiftType: 'Afternoon', room: 'Phòng 110' },
+  { id: 'SH-22', dentistId: 'D-01', dentistName: 'Bác sĩ Lê Minh', date: '2026-06-12', shiftType: 'Morning', room: 'Phòng 102' },
+  { id: 'SH-23', dentistId: 'D-02', dentistName: 'Bác sĩ Hoàng Nam', date: '2026-06-12', shiftType: 'Afternoon', room: 'Phòng 105' },
+  { id: 'SH-24', dentistId: 'D-04', dentistName: 'Bác sĩ Nguyễn Hương', date: '2026-06-12', shiftType: 'Full', room: 'Phòng 110' },
+  { id: 'SH-25', dentistId: 'D-03', dentistName: 'Bác sĩ Mai Lan', date: '2026-06-13', shiftType: 'Full', room: 'Phòng Phẫu Thuật' },
+  { id: 'SH-26', dentistId: 'D-01', dentistName: 'Bác sĩ Lê Minh', date: '2026-06-13', shiftType: 'Afternoon', room: 'Phòng 102' },
+
+  { id: 'SH-27', dentistId: 'D-01', dentistName: 'Bác sĩ Lê Minh', date: '2026-06-15', shiftType: 'Morning', room: 'Phòng 102' },
+  { id: 'SH-28', dentistId: 'D-02', dentistName: 'Bác sĩ Hoàng Nam', date: '2026-06-15', shiftType: 'Afternoon', room: 'Phòng 105' },
+  { id: 'SH-29', dentistId: 'D-03', dentistName: 'Bác sĩ Mai Lan', date: '2026-06-16', shiftType: 'Morning', room: 'Phòng 108' },
+  { id: 'SH-30', dentistId: 'D-04', dentistName: 'Bác sĩ Nguyễn Hương', date: '2026-06-16', shiftType: 'Afternoon', room: 'Phòng 110' },
+  { id: 'SH-31', dentistId: 'D-01', dentistName: 'Bác sĩ Lê Minh', date: '2026-06-17', shiftType: 'Morning', room: 'Phòng 102' },
+  { id: 'SH-32', dentistId: 'D-02', dentistName: 'Bác sĩ Hoàng Nam', date: '2026-06-17', shiftType: 'Afternoon', room: 'Phòng 105' },
+  { id: 'SH-33', dentistId: 'D-03', dentistName: 'Bác sĩ Mai Lan', date: '2026-06-18', shiftType: 'Morning', room: 'Phòng 108' },
+  { id: 'SH-34', dentistId: 'D-04', dentistName: 'Bác sĩ Nguyễn Hương', date: '2026-06-18', shiftType: 'Afternoon', room: 'Phòng 110' },
+  { id: 'SH-35', dentistId: 'D-01', dentistName: 'Bác sĩ Lê Minh', date: '2026-06-19', shiftType: 'Morning', room: 'Phòng 102' },
+  { id: 'SH-36', dentistId: 'D-02', dentistName: 'Bác sĩ Hoàng Nam', date: '2026-06-19', shiftType: 'Afternoon', room: 'Phòng 105' },
+  { id: 'SH-37', dentistId: 'D-04', dentistName: 'Bác sĩ Nguyễn Hương', date: '2026-06-19', shiftType: 'Full', room: 'Phòng 110' },
+  { id: 'SH-38', dentistId: 'D-03', dentistName: 'Bác sĩ Mai Lan', date: '2026-06-20', shiftType: 'Full', room: 'Phòng Phẫu Thuật' },
+  { id: 'SH-39', dentistId: 'D-01', dentistName: 'Bác sĩ Lê Minh', date: '2026-06-20', shiftType: 'Afternoon', room: 'Phòng 102' },
+
+  { id: 'SH-40', dentistId: 'D-01', dentistName: 'Bác sĩ Lê Minh', date: '2026-06-22', shiftType: 'Morning', room: 'Phòng 102' },
+  { id: 'SH-41', dentistId: 'D-02', dentistName: 'Bác sĩ Hoàng Nam', date: '2026-06-22', shiftType: 'Afternoon', room: 'Phòng 105' },
+  { id: 'SH-42', dentistId: 'D-03', dentistName: 'Bác sĩ Mai Lan', date: '2026-06-23', shiftType: 'Morning', room: 'Phòng 108' },
+  { id: 'SH-43', dentistId: 'D-04', dentistName: 'Bác sĩ Nguyễn Hương', date: '2026-06-23', shiftType: 'Afternoon', room: 'Phòng 110' },
+  { id: 'SH-44', dentistId: 'D-01', dentistName: 'Bác sĩ Lê Minh', date: '2026-06-24', shiftType: 'Morning', room: 'Phòng 102' },
+  { id: 'SH-45', dentistId: 'D-02', dentistName: 'Bác sĩ Hoàng Nam', date: '2026-06-24', shiftType: 'Afternoon', room: 'Phòng 105' },
+  { id: 'SH-46', dentistId: 'D-03', dentistName: 'Bác sĩ Mai Lan', date: '2026-06-25', shiftType: 'Morning', room: 'Phòng 108' },
+  { id: 'SH-47', dentistId: 'D-04', dentistName: 'Bác sĩ Nguyễn Hương', date: '2026-06-25', shiftType: 'Afternoon', room: 'Phòng 110' },
+  { id: 'SH-48', dentistId: 'D-01', dentistName: 'Bác sĩ Lê Minh', date: '2026-06-26', shiftType: 'Morning', room: 'Phòng 102' },
+  { id: 'SH-49', dentistId: 'D-02', dentistName: 'Bác sĩ Hoàng Nam', date: '2026-06-26', shiftType: 'Afternoon', room: 'Phòng 105' },
+  { id: 'SH-50', dentistId: 'D-04', dentistName: 'Bác sĩ Nguyễn Hương', date: '2026-06-26', shiftType: 'Full', room: 'Phòng 110' },
+  { id: 'SH-51', dentistId: 'D-03', dentistName: 'Bác sĩ Mai Lan', date: '2026-06-27', shiftType: 'Full', room: 'Phòng Phẫu Thuật' },
+  { id: 'SH-52', dentistId: 'D-01', dentistName: 'Bác sĩ Lê Minh', date: '2026-06-27', shiftType: 'Afternoon', room: 'Phòng 102' },
+
+  { id: 'SH-53', dentistId: 'D-01', dentistName: 'Bác sĩ Lê Minh', date: '2026-06-29', shiftType: 'Morning', room: 'Phòng 102' },
+  { id: 'SH-54', dentistId: 'D-02', dentistName: 'Bác sĩ Hoàng Nam', date: '2026-06-29', shiftType: 'Afternoon', room: 'Phòng 105' },
+  { id: 'SH-55', dentistId: 'D-03', dentistName: 'Bác sĩ Mai Lan', date: '2026-06-30', shiftType: 'Morning', room: 'Phòng 108' },
+  { id: 'SH-56', dentistId: 'D-04', dentistName: 'Bác sĩ Nguyễn Hương', date: '2026-06-30', shiftType: 'Afternoon', room: 'Phòng 110' }
 ];

@@ -34,6 +34,8 @@ export const DentalChart: React.FC<DentalChartProps> = ({
         return 'bg-amber-100 text-amber-800 border-amber-500 border-2';
       case 'bridge':
         return 'bg-indigo-50 text-indigo-700 border-indigo-500 border-2';
+      case 'treated':
+        return 'bg-primary-container text-primary border-primary border-2';
       case 'healthy':
       default:
         return 'bg-white text-on-surface border-outline-variant hover:border-primary';
@@ -45,6 +47,16 @@ export const DentalChart: React.FC<DentalChartProps> = ({
     if (num === 11 || num === 12 || num === 21 || num === 22 || num === 31 || num === 32 || num === 41 || num === 42) return 'Răng cửa';
     if (num === 13 || num === 23 || num === 33 || num === 43) return 'Răng nanh';
     return 'Răng hàm';
+  };
+
+  const getToothIcon = (condition: ToothState['condition']) => {
+    switch (condition) {
+      case 'missing': return 'block';
+      case 'treated': return 'healing';
+      case 'decay': return 'coronavirus';
+      case 'crown': return 'diamond';
+      default: return 'dentistry';
+    }
   };
 
   const renderTooth = (num: number) => {
@@ -63,12 +75,13 @@ export const DentalChart: React.FC<DentalChartProps> = ({
         <span className="text-[10px] font-bold block">{num}</span>
         {/* Simple visual tooth icon */}
         <span className="material-symbols-outlined text-[18px]">
-          {tooth.condition === 'missing' ? 'block' : 'dentistry'}
+          {getToothIcon(tooth.condition)}
         </span>
         <span className="text-[8px] font-medium leading-none truncate max-w-full">
           {tooth.condition === 'decay' && 'Sâu'}
           {tooth.condition === 'crown' && 'Sứ'}
           {tooth.condition === 'bridge' && 'Cầu'}
+          {tooth.condition === 'treated' && 'Trám'}
           {tooth.condition === 'healthy' && 'Khỏe'}
           {tooth.condition === 'missing' && 'Rụng'}
         </span>
@@ -88,6 +101,7 @@ export const DentalChart: React.FC<DentalChartProps> = ({
         <div className="flex flex-wrap gap-3 text-xs font-semibold">
           <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-white border border-outline-variant"></span> Khỏe</span>
           <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-error-container border border-error"></span> Sâu răng</span>
+          <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-primary-container border border-primary"></span> Đã trám</span>
           <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-amber-100 border border-amber-500"></span> Bọc sứ</span>
           <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-indigo-50 border border-indigo-500"></span> Cầu răng</span>
           <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-surface-variant border border-outline border-dashed"></span> Mất răng</span>

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { Service, Dentist, Patient, Appointment, QueueItem, Invoice, ClinicLog, MedicalRecord, ToothState, InvoiceItem } from '../types/clinic';
+import { Service, Dentist, Patient, Appointment, QueueItem, Invoice, ClinicLog, MedicalRecord, ToothState, InvoiceItem, DoctorShift } from '../types/clinic';
 import {
   INITIAL_SERVICES,
   INITIAL_DENTISTS,
@@ -8,7 +8,8 @@ import {
   INITIAL_QUEUE,
   INITIAL_INVOICES,
   INITIAL_LOGS,
-  INITIAL_MEDICAL_RECORDS
+  INITIAL_MEDICAL_RECORDS,
+  INITIAL_DENTIST_SHIFTS
 } from '../services/mockData';
 
 interface ClinicContextType {
@@ -35,6 +36,10 @@ interface ClinicContextType {
   updateServicePrice: (serviceId: string, newPrice: number) => void;
   addPatient: (patient: Omit<Patient, 'id' | 'points' | 'tier' | 'balance'>) => Patient;
   rechargeWallet: (patientId: string, amount: number) => void;
+  doctorShifts: DoctorShift[];
+  swapShifts: (shiftId1: string, shiftId2: string) => void;
+  transferShift: (shiftId: string, targetDentistId: string) => void;
+  changeShiftRoom: (shiftId: string, newRoom: string) => void;
 }
 
 const ClinicContext = createContext<ClinicContextType | undefined>(undefined);
@@ -48,6 +53,7 @@ export const ClinicProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const [invoices, setInvoices] = useState<Invoice[]>(INITIAL_INVOICES);
   const [logs, setLogs] = useState<ClinicLog[]>(INITIAL_LOGS);
   const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[]>(INITIAL_MEDICAL_RECORDS);
+  const [doctorShifts, setDoctorShifts] = useState<DoctorShift[]>(INITIAL_DENTIST_SHIFTS);
 
   // Auto-increment elapsed time for active treatments in queue to simulate real-time updates
   useEffect(() => {
@@ -201,7 +207,9 @@ export const ClinicProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       size: '150 KB',
       type: treatments.length > 0 ? 'pdf' : 'prescription',
       notes,
-      teethMap: treatments
+      teethMap: treatments,
+      dentistName: queueItem.dentistName,
+      room: queueItem.room
     };
 
     setMedicalRecords((prev) => [newRecord, ...prev]);
@@ -335,6 +343,79 @@ export const ClinicProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     );
   };
 
+  const swapShifts = (shiftId1: string, shiftId2: string) => {
+    setDoctorShifts((prevShifts) => {
+      const shift1 = prevShifts.find((s) => s.id === shiftId1);
+      const shift2 = prevShifts.find((s) => s.id === shiftId2);
+      if (!shift1 || !shift2) return prevShifts;
+
+      const updatedShifts = prevShifts.map((s) => {
+        if (s.id === shiftId1) {
+          return { ...s, dentistId: shift2.dentistId, dentistName: shift2.dentistName };
+        }
+        if (s.id === shiftId2) {
+          return { ...s, dentistId: shift1.dentistId, dentistName: shift1.dentistName };
+        }
+        return s;
+      });
+
+      addLog(
+        'SYSTEM',
+        'SUCCESS',
+        `Đổi ca thành công: ${shift1.dentistName} (${shift1.date}) hoán đổi ca với ${shift2.dentistName} (${shift2.date})`
+      );
+
+      return updatedShifts;
+    });
+  };
+
+  const transferShift = (shiftId: string, targetDentistId: string) => {
+    const dentist = dentists.find((d) => d.id === targetDentistId);
+    if (!dentist) return;
+
+    setDoctorShifts((prevShifts) => {
+      const shift = prevShifts.find((s) => s.id === shiftId);
+      if (!shift) return prevShifts;
+
+      const updatedShifts = prevShifts.map((s) => {
+        if (s.id === shiftId) {
+          return { ...s, dentistId: targetDentistId, dentistName: dentist.name };
+        }
+        return s;
+      });
+
+      addLog(
+        'SYSTEM',
+        'SUCCESS',
+        `Chuyển ca thành công: ${shift.dentistName} chuyển ca ngày ${shift.date} cho ${dentist.name}`
+      );
+
+      return updatedShifts;
+    });
+  };
+
+  const changeShiftRoom = (shiftId: string, newRoom: string) => {
+    setDoctorShifts((prevShifts) => {
+      const shift = prevShifts.find((s) => s.id === shiftId);
+      if (!shift) return prevShifts;
+
+      const updatedShifts = prevShifts.map((s) => {
+        if (s.id === shiftId) {
+          return { ...s, room: newRoom };
+        }
+        return s;
+      });
+
+      addLog(
+        'SYSTEM',
+        'SUCCESS',
+        `Đổi phòng trực thành công: Ca trực ngày ${shift.date} của ${shift.dentistName} chuyển sang phòng ${newRoom}`
+      );
+
+      return updatedShifts;
+    });
+  };
+
   return (
     <ClinicContext.Provider
       value={{
@@ -355,7 +436,11 @@ export const ClinicProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         addService,
         updateServicePrice,
         addPatient,
-        rechargeWallet
+        rechargeWallet,
+        doctorShifts,
+        swapShifts,
+        transferShift,
+        changeShiftRoom
       }}
     >
       {children}

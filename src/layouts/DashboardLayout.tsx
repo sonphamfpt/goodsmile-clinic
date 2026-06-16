@@ -65,9 +65,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
         ];
       case 'dentist':
         return [
-          { label: 'Bàn khám lâm sàng', icon: 'dashboard', path: '/dashboard/dentist' },
-          { label: 'Hàng chờ bác sĩ', icon: 'pending_actions', path: '/dashboard/dentist?tab=queue' },
+          { label: 'Hàng chờ bác sĩ', icon: 'pending_actions', path: '/dashboard/dentist' },
+          { label: 'Bàn khám lâm sàng', icon: 'dashboard', path: '/dashboard/dentist?tab=workspace' },
           { label: 'Hồ sơ bệnh án EMR', icon: 'folder_shared', path: '/dashboard/dentist?tab=records' },
+          // { label: 'Lịch làm việc bác sĩ', icon: 'calendar_month', path: '/dashboard/dentist?tab=schedule' },
         ];
       case 'cashier':
         return [

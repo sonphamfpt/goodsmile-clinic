@@ -214,7 +214,7 @@ export const PatientQueue: React.FC = () => {
                       {isMe ? 'Lượt của bạn' : maskName(item.patientName)}
                     </p>
                     <p className={`text-xs mt-0.5 ${isMe ? 'text-on-primary/80' : 'text-on-surface-variant'}`}>
-                      Cùng {item.dentistName} • {item.room}
+                      BS. {item.dentistName} • {item.room}
                     </p>
                   </div>
                   
@@ -270,7 +270,7 @@ export const PatientQueue: React.FC = () => {
                       {isMe && <span className="bg-amber-500 text-white text-[9px] px-1.5 py-0.5 rounded-sm uppercase tracking-wider">Bạn</span>}
                     </p>
                     <p className={`text-xs mt-0.5 ${isMe ? 'text-amber-700' : 'text-on-surface-variant'}`}>
-                      Chờ {item.dentistName}
+                      Chờ BS. {item.dentistName}
                     </p>
                   </div>
                   
