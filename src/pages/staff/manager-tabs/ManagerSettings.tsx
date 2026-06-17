@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useClinic } from '../../../context/ClinicContext';
 
 export const ManagerSettings: React.FC = () => {
-  const { services, updateServicePrice, addService } = useClinic();
+  const { services, updateServicePrice, addService, toggleServiceActive } = useClinic();
 
   // Price Edit states
   const [editingServiceId, setEditingServiceId] = useState<string | null>(null);
@@ -80,9 +80,13 @@ export const ManagerSettings: React.FC = () => {
           {services.map((service) => (
             <div
               key={service.id}
-              className="bg-slate-50 p-4 rounded-xl border border-outline-variant/50 relative overflow-hidden flex flex-col justify-between hover:border-purple-600 transition-all"
+              className={`bg-slate-50 p-4 rounded-xl border relative overflow-hidden flex flex-col justify-between transition-all ${
+                service.isActive
+                  ? 'border-outline-variant/50 hover:border-purple-600'
+                  : 'border-outline-variant/30 opacity-50'
+              }`}
             >
-              <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-purple-600"></div>
+              <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${service.isActive ? 'bg-purple-600' : 'bg-slate-300'}`}></div>
               <div className="space-y-2">
                 <span className="text-[9px] font-bold text-outline-variant font-data-mono uppercase">ID: {service.id}</span>
                 <h4 className="font-bold text-xs text-on-surface leading-snug min-h-8">{service.name}</h4>
@@ -105,19 +109,31 @@ export const ManagerSettings: React.FC = () => {
                 ) : (
                   <div className="flex justify-between items-baseline pt-1">
                     <p className="text-xs font-extrabold text-purple-700">₫{service.price.toLocaleString()}</p>
-                    <button
-                      onClick={() => handleEditPriceClick(service.id, service.price)}
-                      className="text-[9px] text-primary hover:underline font-bold cursor-pointer"
-                    >
-                      Sửa giá
-                    </button>
+                    {service.isActive && (
+                      <button
+                        onClick={() => handleEditPriceClick(service.id, service.price)}
+                        className="text-[9px] text-primary hover:underline font-bold cursor-pointer"
+                      >
+                        Sửa giá
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
 
-              <div className="pt-3 border-t border-outline-variant/30 mt-3 text-[9px] text-on-surface-variant flex justify-between">
+              <div className="pt-3 border-t border-outline-variant/30 mt-3 text-[9px] text-on-surface-variant flex justify-between items-center">
                 <span>Thời gian: {service.durationMin} phút</span>
-                <span className="text-secondary font-bold">Đang bật</span>
+                <button
+                  onClick={() => toggleServiceActive(service.id)}
+                  className={`font-bold cursor-pointer px-1.5 py-0.5 rounded text-[9px] transition-all ${
+                    service.isActive
+                      ? 'text-secondary bg-secondary/10 hover:bg-error/10 hover:text-error'
+                      : 'text-slate-500 bg-slate-200 hover:bg-secondary/10 hover:text-secondary'
+                  }`}
+                  title={service.isActive ? 'Click để tắt dịch vụ' : 'Click để bật dịch vụ'}
+                >
+                  {service.isActive ? 'Đang bật' : 'Đã tắt'}
+                </button>
               </div>
             </div>
           ))}

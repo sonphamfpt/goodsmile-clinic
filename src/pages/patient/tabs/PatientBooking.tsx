@@ -385,7 +385,7 @@ export const PatientBooking: React.FC = () => {
           <div className="bg-surface-container-low rounded-xl p-4 flex gap-3 border border-outline-variant">
             <span className="material-symbols-outlined text-secondary shrink-0">info</span>
             <p className="text-xs text-on-surface-variant">
-              Bạn sẽ nhận SMS xác nhận lịch hẹn trong vòng 5 phút. Vui lòng đến trước 10 phút và mang theo CCCD/BHYT nếu có.
+              Bạn sẽ nhận SMS xác nhận lịch hẹn trong vòng 5 phút. Vui lòng đến trước 10 phút và mang theo CCCD/Thẻ thành viên nếu có.
             </p>
           </div>
 

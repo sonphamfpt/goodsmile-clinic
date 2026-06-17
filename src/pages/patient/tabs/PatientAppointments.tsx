@@ -88,7 +88,13 @@ export const PatientAppointments: React.FC = () => {
   const [cancelId, setCancelId] = useState<string | null>(null);
   const [rescheduleId, setRescheduleId] = useState<string | null>(null);
   const [qrCodeApptId, setQrCodeApptId] = useState<string | null>(null);
-  const [ratingMap, setRatingMap] = useState<Record<string, number>>({});
+  const [reviewMap, setReviewMap] = useState<Record<string, { rating: number; comment: string }>>({
+    'PAST-01': { rating: 5, comment: 'Bác sĩ Hương rất nhẹ nhàng, tư vấn kỹ lưỡng, chỉnh nha không đau!' },
+    'PAST-03': { rating: 5, comment: 'Nhổ răng khôn rất nhanh, không đau như tưởng tượng. Bác sĩ dặn dò chu đáo.' }
+  });
+  const [activeReviewId, setActiveReviewId] = useState<string | null>(null);
+  const [modalRating, setModalRating] = useState<number>(5);
+  const [modalComment, setModalComment] = useState<string>('');
   const [historyFilter, setHistoryFilter] = useState<'All' | 'Completed' | 'Cancelled'>('All');
 
   const tabs = [
@@ -280,7 +286,8 @@ export const PatientAppointments: React.FC = () => {
         <div className="space-y-4">
           {filteredPastAppointments.map((appt) => {
             const status = STATUS_CONFIG[appt.status];
-            const userRating = ratingMap[appt.id] ?? appt.rating;
+            const currentReview = reviewMap[appt.id];
+            const userRating = currentReview ? currentReview.rating : appt.rating;
             return (
               <div key={appt.id} className="bg-white rounded-xl border border-outline-variant p-6 flex flex-col md:flex-row gap-6 hover:shadow-md transition-shadow">
                 <div className="flex-1">
@@ -298,21 +305,53 @@ export const PatientAppointments: React.FC = () => {
                   </div>
 
                   {appt.status === 'Completed' && (
-                    <div className="mt-4 bg-surface-container-low rounded-lg p-3 inline-flex items-center gap-3 border border-outline-variant">
-                      <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Đánh giá chất lượng:</p>
-                      <div className="flex gap-1">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <button
-                            key={star}
-                            onClick={() => setRatingMap(prev => ({ ...prev, [appt.id]: star }))}
-                            className="text-amber-400 cursor-pointer hover:scale-125 transition-transform"
-                          >
-                            <span className="material-symbols-outlined text-[24px]">
-                              {star <= userRating ? 'star' : 'star_border'}
-                            </span>
-                          </button>
-                        ))}
+                    <div className="mt-4 flex flex-col gap-3">
+                      <div className="flex flex-wrap items-center gap-3">
+                        <div className="bg-surface-container-low rounded-lg p-2.5 inline-flex items-center gap-3 border border-outline-variant">
+                          <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Đánh giá:</p>
+                          <div className="flex gap-1">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <button
+                                key={star}
+                                onClick={() => {
+                                  setModalRating(star);
+                                  setModalComment(reviewMap[appt.id]?.comment || '');
+                                  setActiveReviewId(appt.id);
+                                }}
+                                className="text-amber-400 cursor-pointer hover:scale-125 transition-transform border-none bg-transparent"
+                                title="Đánh giá chất lượng"
+                              >
+                                <span className="material-symbols-outlined text-[24px]">
+                                  {star <= userRating ? 'star' : 'star_border'}
+                                </span>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={() => {
+                            setModalRating(userRating || 5);
+                            setModalComment(reviewMap[appt.id]?.comment || '');
+                            setActiveReviewId(appt.id);
+                          }}
+                          className="px-3 py-2 bg-primary/10 text-primary border border-primary/20 rounded-lg text-xs font-bold hover:bg-primary hover:text-white transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
+                        >
+                          <span className="material-symbols-outlined text-[16px]">rate_review</span>
+                          <span>{reviewMap[appt.id] ? 'Sửa nhận xét' : 'Nhận xét chi tiết'}</span>
+                        </button>
                       </div>
+
+                      {/* Display comment if present */}
+                      {reviewMap[appt.id]?.comment && (
+                        <div className="bg-primary/5 border border-primary/10 rounded-xl p-3.5 flex gap-3 text-sm text-on-surface leading-relaxed max-w-2xl animate-fade-in mt-1">
+                          <span className="material-symbols-outlined text-[20px] text-primary shrink-0 mt-0.5">chat_bubble</span>
+                          <div>
+                            <p className="text-[10px] font-bold text-primary mb-1 uppercase tracking-wider">Ý kiến phản hồi từ bạn:</p>
+                            <p className="italic text-on-surface-variant">"{reviewMap[appt.id].comment}"</p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -449,6 +488,91 @@ export const PatientAppointments: React.FC = () => {
             >
               Đóng
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Review & Feedback Modal */}
+      {activeReviewId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6 animate-fade-in border border-outline-variant text-left">
+            <div className="flex justify-between items-center border-b border-outline-variant pb-4">
+              <h3 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary">rate_review</span>
+                Đánh giá ca khám
+              </h3>
+              <button onClick={() => setActiveReviewId(null)} className="text-on-surface-variant hover:text-on-surface cursor-pointer rounded-full p-1 hover:bg-surface-container border-none bg-transparent">
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm font-bold text-on-surface">
+                  {PAST_APPOINTMENTS.find(a => a.id === activeReviewId)?.service}
+                </p>
+                <p className="text-xs text-on-surface-variant mt-0.5">
+                  Bác sĩ: {PAST_APPOINTMENTS.find(a => a.id === activeReviewId)?.dentist} • Ngày {PAST_APPOINTMENTS.find(a => a.id === activeReviewId)?.date}
+                </p>
+              </div>
+
+              {/* Rating Star Selector */}
+              <div className="flex flex-col items-center py-4 bg-surface-container-low rounded-2xl border border-outline-variant/60">
+                <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Chất lượng dịch vụ</p>
+                <div className="flex gap-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      onClick={() => setModalRating(star)}
+                      className="text-amber-400 cursor-pointer hover:scale-125 transition-transform border-none bg-transparent"
+                    >
+                      <span className="material-symbols-outlined text-[36px]">
+                        {star <= modalRating ? 'star' : 'star_border'}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-amber-700 font-bold mt-2">
+                  {modalRating === 5 ? 'Cực kỳ hài lòng' :
+                   modalRating === 4 ? 'Rất hài lòng' :
+                   modalRating === 3 ? 'Bình thường' :
+                   modalRating === 2 ? 'Không hài lòng' : 'Rất tệ'}
+                </p>
+              </div>
+
+              {/* Comment Textarea */}
+              <div>
+                <label className="block text-xs font-bold uppercase text-on-surface-variant mb-2">Nhận xét chi tiết</label>
+                <textarea
+                  value={modalComment}
+                  onChange={(e) => setModalComment(e.target.value)}
+                  placeholder="Chia sẻ trải nghiệm của bạn về ca khám này (thái độ phục vụ, tay nghề bác sĩ, cơ sở vật chất...)"
+                  rows={4}
+                  className="w-full bg-surface-container-low border border-outline-variant rounded-xl p-3 text-body-md focus:ring-2 focus:ring-primary/50 outline-none resize-none"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={() => setActiveReviewId(null)}
+                className="flex-1 py-3 border border-outline-variant hover:bg-slate-100 text-on-surface rounded-xl font-bold transition-all cursor-pointer text-xs"
+              >
+                Hủy bỏ
+              </button>
+              <button
+                onClick={() => {
+                  setReviewMap(prev => ({
+                    ...prev,
+                    [activeReviewId]: { rating: modalRating, comment: modalComment }
+                  }));
+                  setActiveReviewId(null);
+                }}
+                className="flex-1 py-3 bg-primary text-on-primary rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all cursor-pointer shadow-md text-xs"
+              >
+                Gửi Đánh Giá
+              </button>
+            </div>
           </div>
         </div>
       )}

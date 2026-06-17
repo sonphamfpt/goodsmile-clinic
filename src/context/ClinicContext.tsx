@@ -22,20 +22,25 @@ interface ClinicContextType {
   logs: ClinicLog[];
   medicalRecords: MedicalRecord[];
   addLog: (module: ClinicLog['module'], type: ClinicLog['type'], message: string) => void;
-  checkInPatient: (patientId: string, dentistId: string, customRoom?: string) => void;
+  checkInPatient: (patientId: string, dentistId: string, customRoom?: string, serviceName?: string) => void;
   addAppointment: (appointment: Omit<Appointment, 'id' | 'status'>) => Appointment;
   startTreatment: (queueId: string) => void;
   completeTreatment: (
     queueId: string,
     treatments: ToothState[],
     notes: string,
-    performedServices: string[] // service ids
+    performedServices: string[], // service ids
+    treatmentType?: 'independent' | 'plan_init' | 'plan_session',
+    selectedPlanId?: string
   ) => void;
-  processPayment: (invoiceId: string, paymentMethod: Invoice['paymentMethod']) => void;
+  processPayment: (invoiceId: string, paymentMethod: Invoice['paymentMethod'], payAmount?: number) => void;
   addService: (service: Omit<Service, 'id' | 'isActive'>) => void;
   updateServicePrice: (serviceId: string, newPrice: number) => void;
+  toggleServiceActive: (serviceId: string) => void;
   addPatient: (patient: Omit<Patient, 'id' | 'points' | 'tier' | 'balance'>) => Patient;
   rechargeWallet: (patientId: string, amount: number) => void;
+  confirmAppointment: (appointmentId: string) => void;
+  cancelAppointment: (appointmentId: string) => void;
   doctorShifts: DoctorShift[];
   swapShifts: (shiftId1: string, shiftId2: string) => void;
   transferShift: (shiftId: string, targetDentistId: string) => void;
@@ -119,7 +124,7 @@ export const ClinicProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     );
   };
 
-  const checkInPatient = (patientId: string, dentistId: string, customRoom?: string) => {
+  const checkInPatient = (patientId: string, dentistId: string, customRoom?: string, serviceName?: string) => {
     const patient = patients.find((p) => p.id === patientId);
     const dentist = dentists.find((d) => d.id === dentistId);
     if (!patient || !dentist) return;
@@ -142,7 +147,8 @@ export const ClinicProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       room,
       status: 'Waiting',
       checkInTime,
-      waitTimeMin: 0
+      waitTimeMin: 0,
+      serviceName: serviceName || undefined,
     };
 
     setQueue((prev) => [...prev, newQueueItem]);
@@ -177,7 +183,9 @@ export const ClinicProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     queueId: string,
     treatments: ToothState[],
     notes: string,
-    performedServices: string[]
+    performedServices: string[],
+    treatmentType: 'independent' | 'plan_init' | 'plan_session' = 'independent',
+    selectedPlanId?: string
   ) => {
     const queueItem = queue.find((q) => q.id === queueId);
     if (!queueItem) return;
@@ -197,16 +205,30 @@ export const ClinicProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     const dateStr = new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
     const recordId = `MR-${Math.floor(1000 + Math.random() * 9000)}`;
 
+    let recordTitle = performedServices.length > 0
+      ? `Điều trị: ${services.find(s => s.id === performedServices[0])?.name || 'Khám tổng quát'}`
+      : 'Khám lâm sàng';
+
+    if (treatmentType === 'plan_init') {
+      recordTitle = `[Khởi tạo phác đồ] ${recordTitle}`;
+    } else if (treatmentType === 'plan_session') {
+      recordTitle = `[Phiên điều trị] ${recordTitle}`;
+    }
+
+    const prefixedNotes = treatmentType === 'plan_session'
+      ? `[PHIÊN ĐIỀU TRỊ - PHÁC ĐỒ #${selectedPlanId}] ${notes}`
+      : treatmentType === 'plan_init'
+      ? `[PHÁC ĐỒ ĐIỀU TRỊ] ${notes}`
+      : notes;
+
     const newRecord: MedicalRecord = {
       id: recordId,
       patientId: queueItem.patientId,
-      title: performedServices.length > 0
-        ? `Điều trị: ${services.find(s => s.id === performedServices[0])?.name || 'Khám tổng quát'}`
-        : 'Khám lâm sàng',
+      title: recordTitle,
       date: dateStr,
       size: '150 KB',
       type: treatments.length > 0 ? 'pdf' : 'prescription',
-      notes,
+      notes: prefixedNotes,
       teethMap: treatments,
       dentistName: queueItem.dentistName,
       room: queueItem.room
@@ -214,88 +236,113 @@ export const ClinicProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
     setMedicalRecords((prev) => [newRecord, ...prev]);
 
-    // 3. Compile invoice items
-    const invoiceItems: InvoiceItem[] = performedServices.map((id) => {
-      const service = services.find((s) => s.id === id);
-      return {
-        serviceId: id,
-        serviceName: service?.name || 'Dịch vụ nha khoa',
-        price: service?.price || 0
+    // 3. Compile invoice items and create invoice if not a plan session
+    if (treatmentType !== 'plan_session') {
+      const invoiceItems: InvoiceItem[] = performedServices.map((id) => {
+        const service = services.find((s) => s.id === id);
+        return {
+          serviceId: id,
+          serviceName: service?.name || 'Dịch vụ nha khoa',
+          price: service?.price || 0
+        };
+      });
+
+      const totalPrice = invoiceItems.reduce((sum, item) => sum + item.price, 0);
+
+      // Apply discount logic
+      // Phòng khám không áp dụng giảm trừ BHYT và không bán thuốc trực tiếp
+      const insuranceDiscount = 0;
+      
+      // Tier discounts: Platinum (5%), Gold (2%), Diamond (10%)
+      let tierDiscountPercent = 0;
+      if (patient?.tier === 'Diamond') tierDiscountPercent = 0.10;
+      else if (patient?.tier === 'Platinum') tierDiscountPercent = 0.05;
+      else if (patient?.tier === 'Gold') tierDiscountPercent = 0.02;
+
+      const memberDiscount = Math.round(totalPrice * tierDiscountPercent);
+      const netPrice = totalPrice - memberDiscount;
+
+      const invoiceId = `INV-${Math.floor(1000 + Math.random() * 9000)}`;
+      const newInvoice: Invoice = {
+        id: invoiceId,
+        patientId: queueItem.patientId,
+        patientName: queueItem.patientName,
+        patientPhone: patient?.phone || 'Chưa cập nhật',
+        services: invoiceItems,
+        totalPrice,
+        insuranceDiscount,
+        memberDiscount,
+        netPrice,
+        status: 'Pending',
+        createdAt: new Date().toISOString(),
+        room: queueItem.room,
+        dentistName: queueItem.dentistName,
+        paidAmount: 0,
+        remainingAmount: netPrice,
+        payments: []
       };
-    });
 
-    const totalPrice = invoiceItems.reduce((sum, item) => sum + item.price, 0);
+      setInvoices((prev) => [newInvoice, ...prev]);
 
-    // Apply discount logic
-    // 15% insurance if patient has conditions or mock insurance
-    const insuranceDiscount = patient?.condition ? Math.round(totalPrice * 0.15) : 0;
-    
-    // Tier discounts: Platinum (5%), Gold (2%), Diamond (10%)
-    let tierDiscountPercent = 0;
-    if (patient?.tier === 'Diamond') tierDiscountPercent = 0.10;
-    else if (patient?.tier === 'Platinum') tierDiscountPercent = 0.05;
-    else if (patient?.tier === 'Gold') tierDiscountPercent = 0.02;
-
-    const memberDiscount = Math.round(totalPrice * tierDiscountPercent);
-    const netPrice = totalPrice - insuranceDiscount - memberDiscount;
-
-    const invoiceId = `INV-${Math.floor(1000 + Math.random() * 9000)}`;
-    const newInvoice: Invoice = {
-      id: invoiceId,
-      patientId: queueItem.patientId,
-      patientName: queueItem.patientName,
-      patientPhone: patient?.phone || 'Chưa cập nhật',
-      services: invoiceItems,
-      totalPrice,
-      insuranceDiscount,
-      memberDiscount,
-      netPrice,
-      status: 'Pending',
-      createdAt: new Date().toISOString()
-    };
-
-    setInvoices((prev) => [newInvoice, ...prev]);
-
-    addLog(
-      'DENTIST',
-      'SUCCESS',
-      `Bác sĩ ${queueItem.dentistName} hoàn tất ca khám của ${queueItem.patientName}. Chuyển hóa đơn ${invoiceId} (₫${netPrice.toLocaleString()}) sang thu ngân.`
-    );
+      addLog(
+        'DENTIST',
+        'SUCCESS',
+        `Bác sĩ ${queueItem.dentistName} hoàn tất ca khám của ${queueItem.patientName}. Chuyển hóa đơn ${invoiceId} (₫${netPrice.toLocaleString()}) sang thu ngân.`
+      );
+    } else {
+      addLog(
+        'DENTIST',
+        'SUCCESS',
+        `Bác sĩ ${queueItem.dentistName} hoàn tất phiên điều trị (Phác đồ #${selectedPlanId}) cho ${queueItem.patientName}. Không sinh hóa đơn mới.`
+      );
+    }
   };
 
-  const processPayment = (invoiceId: string, paymentMethod: Invoice['paymentMethod']) => {
+  const processPayment = (invoiceId: string, paymentMethod: Invoice['paymentMethod'], payAmount?: number) => {
     const invoice = invoices.find((inv) => inv.id === invoiceId);
     if (!invoice) return;
 
-    // Deduct from wallet if patient is using wallet
-    if (paymentMethod === 'Card' && invoice.patientId) {
-      // In our mock, if they use "Membership Wallet" (which falls under card/POS or we can trigger wallet logic):
-      // Let's implement actual wallet check: if patient has wallet balance, let's allow wallet pay.
-      // We will check if patient has enough balance:
+    const currentRemaining = invoice.remainingAmount !== undefined ? invoice.remainingAmount : invoice.netPrice;
+    const currentPaid = invoice.paidAmount !== undefined ? invoice.paidAmount : 0;
+
+    const amountToPay = payAmount !== undefined ? Math.min(payAmount, currentRemaining) : currentRemaining;
+    const newPaidAmount = currentPaid + amountToPay;
+    const newRemainingAmount = Math.max(0, invoice.netPrice - newPaidAmount);
+
+    let newStatus: Invoice['status'] = 'Paid';
+    if (newRemainingAmount > 0) {
+      newStatus = 'Partially Paid';
     }
+
+    const newPayment = {
+      date: new Date().toISOString(),
+      amount: amountToPay,
+      method: paymentMethod || 'Cash'
+    };
 
     setInvoices((prevInvoices) =>
       prevInvoices.map((inv) => {
         if (inv.id === invoiceId) {
-          return { ...inv, status: 'Paid', paymentMethod };
+          const updatedPayments = [...(inv.payments || []), newPayment];
+          return {
+            ...inv,
+            status: newStatus,
+            paymentMethod,
+            paidAmount: newPaidAmount,
+            remainingAmount: newRemainingAmount,
+            payments: updatedPayments
+          };
         }
         return inv;
       })
     );
 
-    // Reward points to patient: 1 point for every 10,000đ spent
+    // Reward points to patient: 1 point for every 10,000đ spent on the actual paid amount this time
     setPatients((prevPatients) =>
       prevPatients.map((p) => {
         if (p.id === invoice.patientId) {
-          let updatedBalance = p.balance;
-          if (paymentMethod === 'Card') {
-            // Deduct from wallet if they pay from membership wallet
-            // Let's check if we want to deduct from wallet balance
-            if (p.balance >= invoice.netPrice) {
-              updatedBalance = p.balance - invoice.netPrice;
-            }
-          }
-          const addedPoints = Math.floor(invoice.netPrice / 10000);
+          const updatedBalance = p.balance;
+          const addedPoints = Math.floor(amountToPay / 10000);
           const newPoints = p.points + addedPoints;
           let tier = p.tier;
           if (newPoints >= 8000) tier = 'Diamond';
@@ -316,12 +363,13 @@ export const ClinicProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     addLog(
       'CASHIER',
       'SUCCESS',
-      `Hóa đơn ${invoiceId} đã được thanh toán thành công bằng [${paymentMethod}] cho bệnh nhân ${invoice.patientName}.`
+      `Thanh toán ₫${amountToPay.toLocaleString()} thành công bằng [${paymentMethod}] cho hóa đơn ${invoiceId} (Còn nợ: ₫${newRemainingAmount.toLocaleString()}).`
     );
   };
 
   const addService = (newServiceData: Omit<Service, 'id' | 'isActive'>) => {
-    const id = `S-${Math.floor(10 + Math.random() * 90)}`;
+    // Dùng timestamp để tránh trùng ID
+    const id = `S-${Date.now().toString(36).toUpperCase().slice(-5)}`;
     const newService: Service = {
       ...newServiceData,
       id,
@@ -329,6 +377,19 @@ export const ClinicProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     };
     setServices((prev) => [...prev, newService]);
     addLog('SYSTEM', 'SUCCESS', `Cấu hình thêm dịch vụ mới: ${newServiceData.name} - Giá: ₫${newServiceData.price.toLocaleString()}`);
+  };
+
+  const toggleServiceActive = (serviceId: string) => {
+    setServices((prevServices) =>
+      prevServices.map((s) => {
+        if (s.id === serviceId) {
+          const nextActive = !s.isActive;
+          addLog('SYSTEM', nextActive ? 'SUCCESS' : 'WARN', `Dịch vụ "${s.name}" đã được ${nextActive ? 'kích hoạt' : 'vô hiệu hóa'}.`);
+          return { ...s, isActive: nextActive };
+        }
+        return s;
+      })
+    );
   };
 
   const updateServicePrice = (serviceId: string, newPrice: number) => {
@@ -394,6 +455,30 @@ export const ClinicProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     });
   };
 
+  const confirmAppointment = (appointmentId: string) => {
+    setAppointments((prev) =>
+      prev.map((a) => {
+        if (a.id === appointmentId && a.status === 'Pending') {
+          addLog('RECEPTION', 'SUCCESS', `Xác nhận lịch hẹn ${appointmentId} cho bệnh nhân ${a.patientName}.`);
+          return { ...a, status: 'Confirmed' as const };
+        }
+        return a;
+      })
+    );
+  };
+
+  const cancelAppointment = (appointmentId: string) => {
+    setAppointments((prev) =>
+      prev.map((a) => {
+        if (a.id === appointmentId && a.status !== 'Completed') {
+          addLog('RECEPTION', 'WARN', `Hủy lịch hẹn ${appointmentId} của bệnh nhân ${a.patientName}.`);
+          return { ...a, status: 'Cancelled' as const };
+        }
+        return a;
+      })
+    );
+  };
+
   const changeShiftRoom = (shiftId: string, newRoom: string) => {
     setDoctorShifts((prevShifts) => {
       const shift = prevShifts.find((s) => s.id === shiftId);
@@ -435,8 +520,11 @@ export const ClinicProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         processPayment,
         addService,
         updateServicePrice,
+        toggleServiceActive,
         addPatient,
         rechargeWallet,
+        confirmAppointment,
+        cancelAppointment,
         doctorShifts,
         swapShifts,
         transferShift,

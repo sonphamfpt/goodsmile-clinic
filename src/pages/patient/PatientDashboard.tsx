@@ -31,6 +31,44 @@ const PatientHome: React.FC = () => {
 
   const [isBookingOpen, setIsBookingOpen] = useState(false);
 
+  // Extract prescription from latest record
+  const latestRecordWithPrescription = records.find(r => r.prescription || r.notes?.includes('| Đơn thuốc:'));
+  
+  const activeMedicines = React.useMemo(() => {
+    if (!latestRecordWithPrescription) return [];
+    
+    if (latestRecordWithPrescription.prescription?.medicines) {
+      return latestRecordWithPrescription.prescription.medicines;
+    }
+    
+    const notes = latestRecordWithPrescription.notes || '';
+    const rxIndex = notes.indexOf('| Đơn thuốc:');
+    if (rxIndex !== -1) {
+      const rxPart = notes.substring(rxIndex + 12).trim();
+      const drugs = rxPart.split(';');
+      return drugs.map(drug => {
+        const trimmedDrug = drug.trim();
+        if (!trimmedDrug) return null;
+        const match = trimmedDrug.match(/(.*?)\s*\(\s*(\d+)\s*([^)]*)\)\s*-\s*(.*)/);
+        if (match) {
+          return {
+            name: match[1].trim(),
+            dose: match[4].trim(),
+            duration: `${match[2]} ${match[3].trim()}`,
+            note: ''
+          };
+        }
+        return {
+          name: trimmedDrug,
+          dose: 'Theo chỉ dẫn của bác sĩ',
+          duration: 'Đang điều trị',
+          note: ''
+        };
+      }).filter(Boolean) as Array<{ name: string; dose: string; duration: string; note: string }>;
+    }
+    return [];
+  }, [latestRecordWithPrescription]);
+
   // AI Chatbot State
   const [messages, setMessages] = useState<Array<{ sender: 'bot' | 'user'; text: string }>>([
     { sender: 'bot', text: 'Chào bạn! Tôi là trợ lý AI nha khoa. Tôi có thể giúp gì cho sức khỏe răng miệng của bạn hôm nay?' },
@@ -247,20 +285,36 @@ const PatientHome: React.FC = () => {
 
         {/* Reminders & Notifications */}
         <section className="bg-white rounded-xl border border-outline-variant p-4 space-y-3">
-          <h4 className="font-bold text-on-surface text-label-md uppercase tracking-wider">Lịch nhắc & Thông báo</h4>
+          <h4 className="font-bold text-on-surface text-label-md uppercase tracking-wider flex items-center gap-1">
+            <span className="material-symbols-outlined text-primary text-[18px]">notifications</span>
+            Lịch nhắc & Thông báo
+          </h4>
           <div className="space-y-2">
-            <div className="flex items-start gap-3 p-3 bg-error-container/20 rounded-lg">
-              <span className="material-symbols-outlined text-error mt-0.5">medication</span>
-              <div>
-                <p className="text-label-md font-bold text-on-error-container">Thuốc: Amoxicillin 500mg</p>
-                <p className="text-[11px] text-on-error-container/70">Uống 1 viên sau bữa trưa (12:30 PM)</p>
+            {activeMedicines.length > 0 ? (
+              activeMedicines.map((med, index) => (
+                <div key={index} className="flex items-start gap-3 p-3 bg-error-container/15 rounded-xl border border-error/10">
+                  <span className="material-symbols-outlined text-error mt-0.5">medication</span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-black text-on-error-container truncate">Thuốc: {med.name}</p>
+                    <p className="text-[11px] text-on-error-container/85 font-bold mt-0.5">{med.dose}</p>
+                    <p className="text-[9px] text-on-error-container/60 mt-0.5 font-medium">Liệu trình: {med.duration}</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="flex items-start gap-3 p-3 bg-emerald-50 rounded-xl border border-emerald-100/50">
+                <span className="material-symbols-outlined text-emerald-600 mt-0.5">verified</span>
+                <div>
+                  <p className="text-xs font-bold text-emerald-800">Không có đơn thuốc hiện tại</p>
+                  <p className="text-[11px] text-emerald-700/85 mt-0.5 font-medium">Bạn không có lịch uống thuốc trong thời gian này. Hãy luôn giữ gìn vệ sinh răng miệng nhé!</p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-start gap-3 p-3 bg-surface-container rounded-lg">
+            )}
+            <div className="flex items-start gap-3 p-3 bg-surface-container rounded-xl border border-outline-variant/40">
               <span className="material-symbols-outlined text-primary mt-0.5">event</span>
-              <div>
-                <p className="text-label-md font-bold text-on-surface">Lịch hẹn tái khám chỉnh nha</p>
-                <p className="text-[11px] text-on-surface-variant">Ngày mai lúc 09:00 AM - Bác sĩ Nguyễn Hương</p>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-black text-on-surface">Lịch hẹn tái khám chỉnh nha</p>
+                <p className="text-[11px] text-on-surface-variant mt-0.5 font-medium">Khám ngày mai lúc 09:00 AM — Bác sĩ Nguyễn Hương</p>
               </div>
             </div>
           </div>

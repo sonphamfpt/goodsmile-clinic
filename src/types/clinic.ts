@@ -50,12 +50,19 @@ export interface QueueItem {
   checkInTime: string;
   waitTimeMin: number;
   elapsedTimeMin?: number;
+  serviceName?: string; // Dịch vụ cần khám (walk-in hoặc từ lịch hẹn)
 }
 
 export interface InvoiceItem {
   serviceId: string;
   serviceName: string;
   price: number;
+}
+
+export interface InvoicePayment {
+  date: string;
+  amount: number;
+  method: 'Cash' | 'Card' | 'Transfer';
 }
 
 export interface Invoice {
@@ -68,9 +75,14 @@ export interface Invoice {
   insuranceDiscount: number; // calculated in currency
   memberDiscount: number;    // calculated in currency
   netPrice: number;
-  status: 'Pending' | 'Paid';
+  status: 'Pending' | 'Partially Paid' | 'Paid';
   createdAt: string;
   paymentMethod?: 'Cash' | 'Card' | 'Transfer';
+  room?: string;
+  dentistName?: string;
+  paidAmount?: number;
+  remainingAmount?: number;
+  payments?: InvoicePayment[];
 }
 
 export interface ToothState {

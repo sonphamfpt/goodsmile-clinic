@@ -6,16 +6,28 @@ export const CashierReport: React.FC = () => {
 
   // Shift details
   const initialCash = 15200000; // 15.2M VND starter fund
-  const paidInvoices = invoices.filter((inv) => inv.status === 'Paid');
+  const paidInvoices = invoices.filter((inv) => inv.status === 'Paid' || inv.status === 'Partially Paid');
 
   // Calculate shift income per payment method
-  const cashIncome = paidInvoices
-    .filter((inv) => inv.paymentMethod === 'Cash')
-    .reduce((sum, item) => sum + item.netPrice, 0);
+  const cashIncome = invoices.reduce((sum, inv) => {
+    if (inv.payments && inv.payments.length > 0) {
+      return sum + inv.payments.filter(p => p.method === 'Cash').reduce((s, p) => s + p.amount, 0);
+    }
+    if (inv.status === 'Paid' && inv.paymentMethod === 'Cash') {
+      return sum + inv.netPrice;
+    }
+    return sum;
+  }, 0);
 
-  const nonCashIncome = paidInvoices
-    .filter((inv) => inv.paymentMethod !== 'Cash')
-    .reduce((sum, item) => sum + item.netPrice, 0);
+  const nonCashIncome = invoices.reduce((sum, inv) => {
+    if (inv.payments && inv.payments.length > 0) {
+      return sum + inv.payments.filter(p => p.method !== 'Cash').reduce((s, p) => s + p.amount, 0);
+    }
+    if (inv.status === 'Paid' && inv.paymentMethod && inv.paymentMethod !== 'Cash') {
+      return sum + inv.netPrice;
+    }
+    return sum;
+  }, 0);
 
   const totalCollected = cashIncome + nonCashIncome;
   const expectedPhysicalCash = initialCash + cashIncome;

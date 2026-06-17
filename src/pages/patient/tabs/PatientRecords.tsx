@@ -189,6 +189,14 @@ export const PatientRecords: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'chart' | 'timeline'>('chart');
   const [selectedTooth, setSelectedTooth] = useState<number | null>(null);
   const [viewRecord, setViewRecord] = useState<any>(null); // For viewing files
+  const [zoomScale, setZoomScale] = useState<number>(1);
+  const [rotateDegree, setRotateDegree] = useState<number>(0);
+
+  const handleOpenRecord = (file: any) => {
+    setViewRecord(file);
+    setZoomScale(1);
+    setRotateDegree(0);
+  };
   const [printVisit, setPrintVisit] = useState<any>(null); // For printing visit record
   const [viewEMRRecord, setViewEMRRecord] = useState<any | null>(null); // For EMR A4 replica detail view
   const [searchQuery, setSearchQuery] = useState('');
@@ -266,6 +274,7 @@ export const PatientRecords: React.FC = () => {
               }))}
               selectedTooth={selectedTooth}
               onSelectTooth={(toothNum) => setSelectedTooth(selectedTooth === toothNum ? null : toothNum)}
+              patientAge={currentPatient?.age}
             />
           </div>
 
@@ -466,11 +475,11 @@ export const PatientRecords: React.FC = () => {
 
                         {/* Files Area */}
                         {visit.files && visit.files.length > 0 && (
-                          <div className="flex-1 min-w-[250px] space-y-2">
-                            {visit.files.map(file => (
+                          <div className="flex flex-wrap gap-4 mt-2">
+                            {visit.files.map((file: any) => (
                               <div 
                                 key={file.id} 
-                                onClick={() => setViewRecord(file)}
+                                onClick={() => handleOpenRecord(file)}
                                 className="bg-surface-container-low border border-outline-variant p-3 rounded-xl flex items-center gap-3 hover:bg-surface-container cursor-pointer transition-colors group"
                               >
                                 <div className="w-10 h-10 bg-zinc-800 text-white rounded-lg flex items-center justify-center shrink-0 overflow-hidden relative">
@@ -517,41 +526,109 @@ export const PatientRecords: React.FC = () => {
 
       {/* File Viewer Modal */}
       {viewRecord && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in" onClick={() => setViewRecord(null)}>
-          <div className="bg-white rounded-3xl max-w-xl w-full shadow-2xl overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
-            <div className="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
-              <h3 className="font-headline-sm text-headline-sm flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary">visibility</span>
-                Chi tiết tệp tin
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4 animate-fade-in" onClick={() => setViewRecord(null)}>
+          <div className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden flex flex-col max-h-[90vh]" onClick={(e) => e.stopPropagation()}>
+            <div className="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-slate-900 text-white">
+              <h3 className="font-bold text-sm flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary text-[20px]">photo_camera_back</span>
+                {viewRecord.type === 'image' ? 'Trình xem ảnh y khoa X-Quang' : 'Tài liệu EMR đính kèm'}
               </h3>
-              <button onClick={() => setViewRecord(null)} className="p-2 hover:bg-surface-container rounded-full cursor-pointer transition-colors">
+              <button onClick={() => setViewRecord(null)} className="p-1.5 hover:bg-white/10 rounded-full cursor-pointer text-white flex items-center justify-center">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
             
-            <div className="p-6 flex flex-col items-center text-center">
-              <div className="w-full bg-zinc-900 rounded-2xl h-[250px] flex flex-col items-center justify-center relative overflow-hidden mb-6 shadow-inner">
-                {viewRecord.type === 'image' ? (
-                  <img 
-                    src={viewRecord.id === 'F-112' || viewRecord.title?.toLowerCase().includes('niềng răng') ? '/braces_progress.png' : '/xray_panorama.png'} 
-                    alt={viewRecord.title} 
-                    className="w-full h-full object-cover" 
-                  />
-                ) : (
-                  <span className="material-symbols-outlined text-white/20 text-[100px]">description</span>
-                )}
-              </div>
-              
-              <h4 className="font-bold text-on-surface text-xl mb-1">{viewRecord.title}</h4>
-              <p className="text-sm text-on-surface-variant font-bold uppercase tracking-wider mb-6">{viewRecord.size}</p>
+            <div className="p-6 flex flex-col items-center flex-1 overflow-y-auto custom-scrollbar">
+              {viewRecord.type === 'image' ? (
+                <div className="w-full space-y-4">
+                  {/* Medical tools bar */}
+                  <div className="flex justify-between items-center bg-slate-100 p-2 rounded-xl border border-outline-variant/60">
+                    <span className="text-[11px] font-bold text-slate-600 pl-2">Công cụ phim chụp:</span>
+                    <div className="flex gap-2">
+                      <button 
+                        onClick={() => setZoomScale(prev => Math.min(prev + 0.2, 2.5))}
+                        className="p-1 bg-white hover:bg-slate-200 border border-outline-variant rounded text-slate-800 flex items-center gap-1 text-[10px] font-bold cursor-pointer animate-none"
+                        title="Phóng to"
+                      >
+                        <span className="material-symbols-outlined text-[14px]">zoom_in</span>
+                        Phóng to
+                      </button>
+                      <button 
+                        onClick={() => setZoomScale(prev => Math.max(prev - 0.2, 0.6))}
+                        className="p-1 bg-white hover:bg-slate-200 border border-outline-variant rounded text-slate-800 flex items-center gap-1 text-[10px] font-bold cursor-pointer animate-none"
+                        title="Thu nhỏ"
+                      >
+                        <span className="material-symbols-outlined text-[14px]">zoom_out</span>
+                        Thu nhỏ
+                      </button>
+                      <button 
+                        onClick={() => setRotateDegree(prev => (prev + 90) % 360)}
+                        className="p-1 bg-white hover:bg-slate-200 border border-outline-variant rounded text-slate-800 flex items-center gap-1 text-[10px] font-bold cursor-pointer animate-none"
+                        title="Xoay ảnh"
+                      >
+                        <span className="material-symbols-outlined text-[14px]">rotate_right</span>
+                        Xoay 90°
+                      </button>
+                      <button 
+                        onClick={() => { setZoomScale(1); setRotateDegree(0); }}
+                        className="p-1 bg-white hover:bg-slate-200 border border-outline-variant rounded text-slate-800 flex items-center gap-1 text-[10px] font-bold cursor-pointer animate-none"
+                        title="Đặt lại"
+                      >
+                        <span className="material-symbols-outlined text-[14px]">restart_alt</span>
+                        Đặt lại
+                      </button>
+                    </div>
+                  </div>
 
-              <button
-                onClick={() => alert(`Tải xuống: ${viewRecord.title}`)}
-                className="w-full py-3 bg-primary text-on-primary rounded-xl font-bold cursor-pointer hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-2 shadow-md"
-              >
-                <span className="material-symbols-outlined text-[20px]">download</span>
-                Tải File Về Máy
-              </button>
+                  {/* Lightbox canvas */}
+                  <div className="w-full bg-slate-955 rounded-2xl h-[300px] flex items-center justify-center relative overflow-hidden border border-slate-800 shadow-inner select-none">
+                    <img 
+                      src={viewRecord.id === 'F-112' || viewRecord.title?.toLowerCase().includes('niềng răng') ? '/braces_progress.png' : '/xray_panorama.png'} 
+                      alt={viewRecord.title} 
+                      style={{ 
+                        transform: `scale(${zoomScale}) rotate(${rotateDegree}deg)`,
+                        transition: 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                      }}
+                      className="max-w-full max-h-full object-contain cursor-grab active:cursor-grabbing" 
+                    />
+                    
+                    {/* Corner overlay info */}
+                    <div className="absolute top-3 left-3 bg-black/70 px-2.5 py-1 rounded text-[9px] text-white/80 font-mono tracking-wider flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-505 inline-block"></span>
+                      IMAGING SCAN SOURCE: GOODSMILE DENTAL
+                    </div>
+                    <div className="absolute bottom-3 right-3 bg-black/70 px-2.5 py-1 rounded text-[9px] text-white/80 font-mono">
+                      SCALE: {Math.round(zoomScale * 100)}%
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="w-full bg-slate-900 rounded-2xl h-[250px] flex flex-col items-center justify-center relative overflow-hidden mb-6 shadow-inner">
+                  <span className="material-symbols-outlined text-white/20 text-[100px]">description</span>
+                </div>
+              )}
+              
+              <div className="w-full text-left mt-4">
+                <h4 className="font-extrabold text-on-surface text-base">{viewRecord.title}</h4>
+                <p className="text-xs text-on-surface-variant font-bold uppercase tracking-wider mt-1">Dung lượng: {viewRecord.size} • Định dạng: {viewRecord.type.toUpperCase()}</p>
+                <p className="text-[11px] text-on-surface-variant mt-2 italic">Ghi chú: Đây là phim chụp X-quang chẩn đoán y khoa chính thức, dùng để đánh giá lộ trình xương răng trong bệnh án EMR của bệnh nhân.</p>
+              </div>
+
+              <div className="flex gap-2 w-full mt-6">
+                <button
+                  onClick={() => alert(`Tải xuống: ${viewRecord.title}`)}
+                  className="flex-1 py-3 bg-primary text-on-primary rounded-xl font-bold cursor-pointer hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2 shadow-md text-xs"
+                >
+                  <span className="material-symbols-outlined text-[18px]">download</span>
+                  Tải File Về Máy
+                </button>
+                <button
+                  onClick={() => setViewRecord(null)}
+                  className="px-6 py-3 border border-outline-variant text-slate-700 hover:bg-slate-100 rounded-xl font-bold cursor-pointer active:scale-95 transition-all text-xs"
+                >
+                  Đóng
+                </button>
+              </div>
             </div>
           </div>
         </div>

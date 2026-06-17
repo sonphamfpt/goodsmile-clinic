@@ -1,65 +1,14 @@
 import React, { useState } from 'react';
-
-// Cập nhật Mock Data với chi tiết dịch vụ đầy đủ
-const MOCK_INVOICES = [
-  {
-    id: 'INV-20250928-01',
-    patientId: 'P-8821',
-    patientName: 'Trần Nguyễn Minh',
-    createdAt: '2025-09-28T10:30:00Z',
-    status: 'Pending', // Chờ thanh toán
-    cashierName: 'Nguyễn Thị Thu',
-    services: [
-      { serviceName: 'Chụp X-Quang Panorama toàn hàm', unitPrice: 200000, quantity: 1, total: 200000 },
-      { serviceName: 'Tiểu phẫu nhổ răng khôn mọc lệch ngầm', unitPrice: 1500000, quantity: 2, total: 3000000 },
-    ],
-    totalPrice: 3200000,
-    insuranceDiscount: 500000, // Thẻ bảo hiểm giảm 500k
-    netPrice: 2700000,
-    paymentMethod: null,
-  },
-  {
-    id: 'INV-20250527-02',
-    patientId: 'P-8821',
-    patientName: 'Trần Nguyễn Minh',
-    createdAt: '2025-05-27T14:15:00Z',
-    status: 'Paid',
-    cashierName: 'Lê Văn B',
-    services: [
-      { serviceName: 'Điều trị tủy răng hàm', unitPrice: 1200000, quantity: 1, total: 1200000 },
-      { serviceName: 'Trám Composite xoang II', unitPrice: 300000, quantity: 1, total: 300000 },
-    ],
-    totalPrice: 1500000,
-    insuranceDiscount: 0,
-    netPrice: 1500000,
-    paymentMethod: 'Chuyển khoản (VNPay)',
-    paidAt: '2025-05-27T14:20:00Z',
-  },
-  {
-    id: 'INV-20250515-05',
-    patientId: 'P-8821',
-    patientName: 'Trần Nguyễn Minh',
-    createdAt: '2025-05-15T09:00:00Z',
-    status: 'Paid',
-    cashierName: 'Lê Văn B',
-    services: [
-      { serviceName: 'Khám tổng quát & Tư vấn', unitPrice: 100000, quantity: 1, total: 100000 },
-      { serviceName: 'Cạo vôi răng siêu âm mức độ 2', unitPrice: 200000, quantity: 1, total: 200000 },
-    ],
-    totalPrice: 300000,
-    insuranceDiscount: 0,
-    netPrice: 300000,
-    paymentMethod: 'Tiền mặt',
-    paidAt: '2025-05-15T09:30:00Z',
-  }
-];
+import { useClinic } from '../../../context/ClinicContext';
 
 export const PatientBilling: React.FC = () => {
+  const { invoices } = useClinic();
   const patientId = 'P-8821';
   const patientName = 'Trần Nguyễn Minh';
   
-  const pendingInvoices = MOCK_INVOICES.filter(i => i.status === 'Pending');
-  const paidInvoices = MOCK_INVOICES.filter(i => i.status === 'Paid');
+  const patientInvoices = invoices.filter(i => i.patientId === patientId);
+  const pendingInvoices = patientInvoices.filter(i => i.status === 'Pending' || i.status === 'Partially Paid');
+  const paidInvoices = patientInvoices.filter(i => i.status === 'Paid');
 
   const [printInvoice, setPrintInvoice] = useState<any>(null); // State quản lý việc mở modal in
 
@@ -92,40 +41,77 @@ export const PatientBilling: React.FC = () => {
               <p className="text-xs mt-1">Bạn không có khoản nợ nào.</p>
             </div>
           ) : (
-            pendingInvoices.map((inv) => (
-              <div key={inv.id} className="bg-amber-50 border border-amber-200 rounded-2xl p-5 shadow-sm relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
-                
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wider bg-amber-200/50 px-2 py-1 rounded">Chưa thanh toán</span>
-                    <p className="text-xs text-amber-900 mt-2 font-mono">#{inv.id}</p>
+            pendingInvoices.map((inv) => {
+              const isPartiallyPaid = inv.status === 'Partially Paid';
+              const paidAmount = inv.paidAmount || 0;
+              const paidPercent = inv.netPrice > 0 ? Math.round((paidAmount / inv.netPrice) * 100) : 0;
+              const remainingAmount = inv.remainingAmount !== undefined ? inv.remainingAmount : inv.netPrice - paidAmount;
+
+              return (
+                <div key={inv.id} className={`border rounded-2xl p-5 shadow-sm relative overflow-hidden ${
+                  isPartiallyPaid ? 'bg-gradient-to-br from-emerald-50/20 to-blue-50/20 border-blue-200' : 'bg-amber-50/50 border-amber-200'
+                }`}>
+                  <div className={`absolute top-0 left-0 w-1 h-full ${isPartiallyPaid ? 'bg-blue-500' : 'bg-amber-500'}`}></div>
+                  
+                  <div className="flex justify-between items-start mb-3">
+                    <div>
+                      <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
+                        isPartiallyPaid ? 'bg-blue-100 text-blue-800' : 'bg-amber-200/50 text-amber-800'
+                      }`}>
+                        {isPartiallyPaid ? 'Trả góp / Tạm ứng' : 'Chưa thanh toán'}
+                      </span>
+                      <p className="text-xs text-on-surface-variant mt-2 font-mono font-bold">#{inv.id}</p>
+                    </div>
+                    {isPartiallyPaid && (
+                      <span className="text-[11px] font-black text-blue-700">{paidPercent}% đã đóng</span>
+                    )}
                   </div>
-                </div>
 
-                <div className="space-y-2 mb-4 text-sm text-amber-900">
-                  {inv.services.map((s, i) => (
-                     <div key={i} className="flex justify-between">
-                       <span className="line-clamp-1 flex-1 pr-2">• {s.serviceName}</span>
-                     </div>
-                  ))}
-                </div>
+                  {isPartiallyPaid && (
+                    <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mb-4 border border-slate-200/50">
+                      <div className="bg-gradient-to-r from-emerald-500 to-blue-500 h-full transition-all duration-500" style={{ width: `${paidPercent}%` }}></div>
+                    </div>
+                  )}
 
-                <div className="border-t border-amber-200/50 pt-3 flex justify-between items-end">
-                   <div>
-                     <p className="text-[10px] font-bold uppercase text-amber-800/70">Tổng thanh toán</p>
-                     <p className="text-2xl font-black text-amber-700">₫{inv.netPrice.toLocaleString()}</p>
-                   </div>
-                </div>
+                  <div className="space-y-1.5 mb-4 text-xs font-semibold text-on-surface-variant">
+                    {inv.services.map((s, i) => (
+                       <div key={i} className="flex justify-between">
+                         <span className="line-clamp-1 flex-1 pr-2">• {s.serviceName}</span>
+                       </div>
+                    ))}
+                  </div>
 
-                <button
-                  onClick={() => alert('Vui lòng đến quầy thu ngân để quẹt thẻ hoặc quét mã QR.')}
-                  className="w-full mt-4 py-2.5 bg-amber-600 text-white rounded-xl text-sm font-bold shadow-md hover:bg-amber-700 transition-colors"
-                >
-                  Hướng dẫn thanh toán
-                </button>
-              </div>
-            ))
+                  <div className="border-t border-slate-200/60 pt-3 space-y-2">
+                     {isPartiallyPaid ? (
+                       <div className="grid grid-cols-2 gap-2 text-xs font-bold text-on-surface-variant">
+                         <div>
+                           <p className="text-[9px] uppercase tracking-wider opacity-70">Đã đóng lũy kế</p>
+                           <p className="text-sm text-emerald-700 font-black">₫{paidAmount.toLocaleString()}</p>
+                         </div>
+                         <div className="text-right">
+                           <p className="text-[9px] uppercase tracking-wider opacity-70">Còn nợ</p>
+                           <p className="text-sm text-blue-700 font-black">₫{remainingAmount.toLocaleString()}</p>
+                         </div>
+                       </div>
+                     ) : (
+                       <div>
+                         <p className="text-[10px] font-bold uppercase text-amber-800/70">Tổng thanh toán</p>
+                         <p className="text-2xl font-black text-amber-700">₫{inv.netPrice.toLocaleString()}</p>
+                       </div>
+                     )}
+                  </div>
+
+                  <button
+                    onClick={() => alert(`Hướng dẫn đóng phí:\nVui lòng tới quầy Thu ngân và cung cấp mã hóa đơn ${inv.id} để quét mã thanh toán VietQR động hoặc quẹt thẻ POS.`)}
+                    className={`w-full mt-4 py-2.5 text-white rounded-xl text-xs font-bold shadow-md transition-all active:scale-95 cursor-pointer ${
+                      isPartiallyPaid ? 'bg-blue-600 hover:bg-blue-700' : 'bg-amber-600 hover:bg-amber-700'
+                    }`}
+                  >
+                    {isPartiallyPaid ? 'Đóng tiền đợt tiếp theo' : 'Hướng dẫn thanh toán'}
+                  </button>
+                </div>
+              );
+            })
           )}
         </div>
 
@@ -139,7 +125,7 @@ export const PatientBilling: React.FC = () => {
           <div className="bg-white rounded-3xl border border-outline-variant shadow-sm overflow-hidden">
             {paidInvoices.length === 0 ? (
               <div className="text-center py-16">
-                <span className="material-symbols-outlined text-[64px] text-outline">receipt_long</span>
+                <span className="material-symbols-outlined text-[64px] text-outline opacity-40">receipt_long</span>
                 <p className="text-on-surface-variant mt-4 font-bold">Chưa có giao dịch nào</p>
               </div>
             ) : (
@@ -155,7 +141,7 @@ export const PatientBilling: React.FC = () => {
                         </div>
                         <div>
                           <p className="font-bold text-on-surface text-lg">₫{inv.netPrice.toLocaleString()}</p>
-                          <p className="text-xs text-on-surface-variant font-medium mt-0.5">{new Date(inv.paidAt || inv.createdAt).toLocaleString('vi-VN')} • {inv.paymentMethod}</p>
+                          <p className="text-xs text-on-surface-variant font-medium mt-0.5">{new Date(inv.createdAt).toLocaleString('vi-VN')} • {inv.paymentMethod || 'Chuyển khoản'}</p>
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-2">
@@ -164,7 +150,7 @@ export const PatientBilling: React.FC = () => {
                          </span>
                          <button 
                            onClick={() => setPrintInvoice(inv)}
-                           className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
+                           className="text-xs font-bold text-primary hover:underline flex items-center gap-1 cursor-pointer"
                          >
                            <span className="material-symbols-outlined text-[16px]">receipt</span>
                            Xem biên lai
@@ -174,19 +160,13 @@ export const PatientBilling: React.FC = () => {
 
                     {/* Invoice Items Summary */}
                     <div className="pl-16">
-                      <div className="bg-surface-container rounded-xl p-4 text-sm text-on-surface-variant space-y-2">
+                      <div className="bg-surface-container rounded-xl p-4 text-xs text-on-surface-variant space-y-2">
                         {inv.services.map((s, i) => (
                            <div key={i} className="flex justify-between items-center">
-                             <span className="flex-1 truncate pr-4">{i + 1}. {s.serviceName} (x{s.quantity})</span>
-                             <span className="font-medium">₫{s.total.toLocaleString()}</span>
+                             <span className="flex-1 truncate pr-4">{i + 1}. {s.serviceName}</span>
+                             <span className="font-bold text-on-surface">₫{s.price.toLocaleString()}</span>
                            </div>
                         ))}
-                        {inv.insuranceDiscount > 0 && (
-                          <div className="flex justify-between items-center text-secondary pt-2 border-t border-outline-variant">
-                            <span>Giảm giá bảo hiểm</span>
-                            <span className="font-bold">-₫{inv.insuranceDiscount.toLocaleString()}</span>
-                          </div>
-                        )}
                       </div>
                     </div>
                   </div>
@@ -207,111 +187,113 @@ export const PatientBilling: React.FC = () => {
         <div className="absolute top-4 right-4 z-[60] flex gap-3 print:hidden">
           <button 
             onClick={() => window.print()}
-            className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-full font-bold shadow-lg hover:scale-105 transition-transform"
+            className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-full font-bold shadow-lg hover:scale-105 transition-transform cursor-pointer"
           >
             <span className="material-symbols-outlined">print</span>
             Xuất Ra Máy In
           </button>
           <button 
             onClick={() => setPrintInvoice(null)}
-            className="flex items-center justify-center w-12 h-12 bg-white text-on-surface rounded-full font-bold shadow-lg hover:scale-105 transition-transform"
+            className="flex items-center justify-center w-12 h-12 bg-white text-on-surface rounded-full font-bold shadow-lg hover:scale-105 transition-transform cursor-pointer"
           >
             <span className="material-symbols-outlined">close</span>
           </button>
         </div>
 
         {/* Receipt Container - Thiết kế mô phỏng Bill in nhiệt (Receipt/Invoice) */}
-        {/* Style: Trắng đen, viền răng cưa mờ, font chữ đơn giản */}
         <div className="bg-white w-full max-w-[400px] max-h-[90vh] sm:rounded-md shadow-2xl overflow-y-auto print:shadow-none print:w-[80mm] print:max-w-[80mm] print:h-auto print:overflow-visible relative text-black">
           
-          {/* CSS Trick: Zigzag border at top and bottom for web view */}
           <div className="absolute top-0 left-0 right-0 h-2 bg-[radial-gradient(circle,transparent_4px,#fff_4px)] bg-[length:10px_10px] -mt-1.5 rotate-180 drop-shadow-sm print:hidden"></div>
           
-          <div className="p-6 font-mono text-sm leading-tight">
+          <div className="p-6 font-mono text-xs leading-tight">
              
              {/* Header */}
              <div className="text-center mb-6">
-                <h1 className="text-xl font-black uppercase tracking-wider mb-1">GoodSmile Clinic</h1>
-                <p className="text-xs">123 Hàm Nghi, Quận 1, TP.HCM</p>
-                <p className="text-xs">ĐT: 1900 8888 - MST: 0312345678</p>
-                <div className="my-4 border-b-2 border-dashed border-gray-400"></div>
-                <h2 className="text-lg font-bold uppercase mt-2 mb-1">Biên Lai Thu Tiền</h2>
-                <p className="text-[10px]">Số: {printInvoice.id}</p>
-                <p className="text-[10px]">Ngày in: {new Date().toLocaleString('vi-VN')}</p>
+                <h1 className="text-sm font-black uppercase tracking-wider mb-1">GoodSmile Clinic</h1>
+                <p className="text-[10px]">123 Đường Ba Tháng Hai, Quận 10, TP.HCM</p>
+                <p className="text-[10px]">ĐT: 1900 6789 - MST: 0312345678</p>
+                <div className="my-3 border-b border-dashed border-gray-400"></div>
+                <h2 className="text-sm font-bold uppercase mt-1 mb-1">Biên Lai Thu Tiền</h2>
+                <p className="text-[9px]">Số: {printInvoice.id}</p>
+                <p className="text-[9px]">Ngày lập: {new Date(printInvoice.createdAt).toLocaleString('vi-VN')}</p>
              </div>
 
              {/* Patient Info */}
-             <div className="mb-4">
-               <div className="flex justify-between mb-1">
+             <div className="mb-3 space-y-0.5 text-[10px]">
+               <div className="flex justify-between">
                  <span>Khách hàng:</span>
                  <span className="font-bold">{printInvoice.patientName}</span>
                </div>
-               <div className="flex justify-between mb-1">
+               <div className="flex justify-between">
                  <span>Mã BN:</span>
                  <span>{printInvoice.patientId}</span>
                </div>
-               <div className="flex justify-between mb-1">
-                 <span>Thu ngân:</span>
-                 <span>{printInvoice.cashierName}</span>
+               <div className="flex justify-between">
+                 <span>Bác sĩ chỉ định:</span>
+                 <span>{printInvoice.dentistName || 'Bác sĩ điều trị'}</span>
                </div>
              </div>
 
-             <div className="border-b-2 border-dashed border-gray-400 mb-4"></div>
+             <div className="border-b border-dashed border-gray-400 mb-3"></div>
 
              {/* Services Table */}
-             <div className="mb-4">
-               <div className="flex font-bold border-b border-gray-300 pb-1 mb-2">
+             <div className="mb-3">
+               <div className="flex font-bold border-b border-gray-300 pb-1 mb-1.5 text-[10px]">
                  <span className="flex-1">Tên Dịch Vụ</span>
-                 <span className="w-10 text-center">SL</span>
-                 <span className="w-24 text-right">Thành Tiền</span>
+                 <span className="w-20 text-right">Đơn giá</span>
                </div>
                
                {printInvoice.services.map((s: any, i: number) => (
-                 <div key={i} className="flex mb-2 items-start text-xs">
-                   <div className="flex-1 pr-2">
-                      <p>{s.serviceName}</p>
-                      <p className="text-[10px] text-gray-500">Đơn giá: {s.unitPrice.toLocaleString()}</p>
-                   </div>
-                   <span className="w-10 text-center">{s.quantity}</span>
-                   <span className="w-24 text-right">{s.total.toLocaleString()}</span>
+                 <div key={i} className="flex mb-1 items-start text-[9px]">
+                   <span className="flex-1 pr-2">{s.serviceName}</span>
+                   <span className="w-20 text-right">{s.price.toLocaleString()}</span>
                  </div>
                ))}
              </div>
 
-             <div className="border-b-2 border-dashed border-gray-400 mb-4"></div>
+             <div className="border-b border-dashed border-gray-400 mb-3"></div>
 
              {/* Total calculations */}
-             <div className="space-y-1 mb-6">
+             <div className="space-y-1 text-[10px]">
                 <div className="flex justify-between">
                   <span>Tổng tiền dịch vụ:</span>
-                  <span>{printInvoice.totalPrice.toLocaleString()}</span>
+                  <span>₫{printInvoice.totalPrice.toLocaleString()}</span>
                 </div>
-                {printInvoice.insuranceDiscount > 0 && (
+                {printInvoice.memberDiscount > 0 && (
                   <div className="flex justify-between">
-                    <span>Giảm giá / BH:</span>
-                    <span>-{printInvoice.insuranceDiscount.toLocaleString()}</span>
+                    <span>Chiết khấu thành viên VIP:</span>
+                    <span>-₫{printInvoice.memberDiscount.toLocaleString()}</span>
                   </div>
                 )}
-                <div className="flex justify-between font-black text-lg mt-2 border-t border-gray-300 pt-2">
-                  <span>TỔNG THANH TOÁN:</span>
-                  <span>{printInvoice.netPrice.toLocaleString()}</span>
+                <div className="flex justify-between font-black text-xs border-t border-gray-350 pt-1.5 mt-1.5">
+                  <span>TỔNG THỰC THU:</span>
+                  <span>₫{printInvoice.netPrice.toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between mt-2 text-xs">
-                  <span>Hình thức TT:</span>
-                  <span>{printInvoice.paymentMethod}</span>
-                </div>
-                {printInvoice.paidAt && (
-                   <div className="flex justify-between text-xs">
-                     <span>Thời gian TT:</span>
-                     <span>{new Date(printInvoice.paidAt).toLocaleString('vi-VN')}</span>
-                   </div>
+
+                {/* Listing detailed installment payments history if available */}
+                {printInvoice.payments && printInvoice.payments.length > 0 && (
+                  <div className="mt-3 pt-2 border-t border-dotted border-gray-400 space-y-0.5 text-[9px]">
+                    <p className="font-bold text-black uppercase mb-1">Nhật ký đóng tiền trả góp:</p>
+                    {printInvoice.payments.map((p: any, idx: number) => (
+                      <div key={idx} className="flex justify-between text-gray-700">
+                        <span>Đợt {idx + 1} ({new Date(p.date).toLocaleDateString('vi-VN')} - {p.method === 'Cash' ? 'Tiền mặt' : p.method === 'Card' ? 'Thẻ/POS' : 'Chuyển khoản'}):</span>
+                        <span className="font-bold text-black">₫{p.amount.toLocaleString()}</span>
+                      </div>
+                    ))}
+                    {printInvoice.remainingAmount !== undefined && (
+                      <div className="flex justify-between border-t border-dotted border-gray-400 pt-1 font-bold text-black mt-1.5">
+                        <span>DƯ NỢ CÒN LẠI:</span>
+                        <span>₫{printInvoice.remainingAmount.toLocaleString()}</span>
+                      </div>
+                    )}
+                  </div>
                 )}
              </div>
 
              {/* Footer */}
-             <div className="text-center mt-8 border-t-2 border-dashed border-gray-400 pt-4">
-                <p className="font-bold mb-1">CẢM ƠN QUÝ KHÁCH!</p>
-                <p className="text-[10px] italic">Vui lòng kiểm tra kỹ biên lai trước khi rời quầy.<br/>Biên lai có giá trị xuất hóa đơn đỏ trong ngày.</p>
+             <div className="text-center mt-6 border-t border-dashed border-gray-400 pt-3 text-[9px]">
+                <p className="font-bold mb-0.5">CẢM ƠN QUÝ KHÁCH!</p>
+                <p className="italic text-gray-500">Vui lòng kiểm tra kỹ hóa đơn trước khi rời quầy.<br/>GoodSmile Clinic luôn đồng hành cùng nụ cười của bạn.</p>
              </div>
           </div>
           

@@ -370,6 +370,7 @@ export const DentistRecords: React.FC = () => {
                   }))}
                   selectedTooth={selectedTooth}
                   onSelectTooth={(toothNum) => setSelectedTooth(selectedTooth === toothNum ? null : toothNum)}
+                  patientAge={selectedPatient?.age}
                 />
               </div>
 

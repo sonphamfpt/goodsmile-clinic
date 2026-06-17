@@ -13,7 +13,7 @@ export const CashierHistory: React.FC = () => {
 
   // Filter paid invoices
   const paidInvoices = invoices.filter((inv) => {
-    const isPaid = inv.status === 'Paid';
+    const isPaid = inv.status === 'Paid' || inv.status === 'Partially Paid';
     const matchesSearch =
       inv.patientName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       inv.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -131,11 +131,23 @@ export const CashierHistory: React.FC = () => {
                           <p className="font-bold text-on-surface">{inv.patientName}</p>
                           <p className="text-[10px] text-on-surface-variant">{inv.patientPhone}</p>
                         </td>
-                        <td className="px-6 py-4 font-bold text-amber-700">₫{inv.netPrice.toLocaleString()}</td>
+                        <td className="px-6 py-4">
+                          <p className="font-bold text-amber-700">₫{(inv.paidAmount || 0).toLocaleString()}</p>
+                          {inv.status === 'Partially Paid' && (
+                            <p className="text-[9px] text-slate-500 mt-0.5">Dư nợ: ₫{(inv.remainingAmount || 0).toLocaleString()}</p>
+                          )}
+                        </td>
                         <td className="px-6 py-4 text-center">
-                          <span className={`px-2.5 py-0.5 rounded text-[9px] font-extrabold uppercase border ${getMethodBadge(inv.paymentMethod)}`}>
-                            {getMethodLabel(inv.paymentMethod)}
-                          </span>
+                          <div className="flex flex-col gap-1 items-center">
+                            <span className={`px-2.5 py-0.5 rounded text-[9px] font-extrabold uppercase border ${getMethodBadge(inv.paymentMethod)}`}>
+                              {getMethodLabel(inv.paymentMethod)}
+                            </span>
+                            {inv.status === 'Partially Paid' && (
+                              <span className="px-1.5 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-250 text-[8px] font-bold rounded">
+                                Trả góp / Tạm ứng
+                              </span>
+                            )}
+                          </div>
                         </td>
                         <td className="px-6 py-4 text-on-surface-variant font-medium">
                           {new Date(inv.createdAt).toLocaleDateString('vi-VN')} {new Date(inv.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
@@ -221,21 +233,33 @@ export const CashierHistory: React.FC = () => {
                     <span>Tổng tiền niêm yết:</span>
                     <span>₫{selectedInvoice.totalPrice.toLocaleString()}</span>
                   </div>
-                  {selectedInvoice.insuranceDiscount > 0 && (
-                    <div className="flex justify-between text-secondary">
-                      <span>BHYT giảm (15%):</span>
-                      <span>-₫{selectedInvoice.insuranceDiscount.toLocaleString()}</span>
-                    </div>
-                  )}
                   {selectedInvoice.memberDiscount > 0 && (
                     <div className="flex justify-between text-secondary">
                       <span>Giảm giá thành viên:</span>
                       <span>-₫{selectedInvoice.memberDiscount.toLocaleString()}</span>
                     </div>
                   )}
-                  <div className="flex justify-between text-sm font-bold text-amber-700 border-t border-dashed border-outline-variant pt-2 mt-1">
-                    <span>Tổng thực thu:</span>
+                  <div className="flex justify-between text-xs font-semibold text-on-surface border-t border-outline-variant/20 pt-2 mt-1">
+                    <span>Tổng thực thu chỉ định:</span>
                     <span>₫{selectedInvoice.netPrice.toLocaleString()}</span>
+                  </div>
+                  {selectedInvoice.payments && selectedInvoice.payments.length > 0 && (
+                    <div className="space-y-1 text-[11px] pt-1">
+                      {selectedInvoice.payments.map((p, idx) => (
+                        <div key={idx} className="flex justify-between text-emerald-650">
+                          <span>Đợt {idx + 1} ({new Date(p.date).toLocaleDateString('vi-VN')} - {p.method === 'Cash' ? 'Tiền mặt' : p.method === 'Transfer' ? 'Chuyển khoản' : 'Thẻ'}):</span>
+                          <span>₫{p.amount.toLocaleString()}</span>
+                        </div>
+                      ))}
+                      <div className="flex justify-between text-emerald-750 font-bold bg-emerald-50/50 px-1.5 py-0.5 rounded mt-1">
+                        <span>Tổng lũy kế đã thu:</span>
+                        <span>₫{(selectedInvoice.paidAmount || 0).toLocaleString()}</span>
+                      </div>
+                    </div>
+                  )}
+                  <div className="flex justify-between text-sm font-bold text-amber-700 border-t border-dashed border-outline-variant pt-2 mt-1">
+                    <span>Còn nợ chưa thu:</span>
+                    <span>₫{(selectedInvoice.remainingAmount !== undefined ? selectedInvoice.remainingAmount : selectedInvoice.netPrice).toLocaleString()}</span>
                   </div>
                 </div>
 

@@ -3,9 +3,9 @@ import { useClinic } from '../../../context/ClinicContext';
 import { CheckInModal } from '../../../components/CheckInModal';
 
 const STATUS_CONFIG = {
-  Waiting: { label: 'Đang chờ', bg: 'bg-amber-50', border: 'border-amber-300', badge: 'bg-amber-100 text-amber-800', dot: 'bg-amber-500', priority: 2 },
-  'In Chair': { label: 'Đang khám', bg: 'bg-primary-container/20', border: 'border-primary/40', badge: 'bg-primary-container text-on-primary-container', dot: 'bg-primary', priority: 1 },
-  Completed: { label: 'Hoàn tất', bg: 'bg-surface-container-low', border: 'border-outline-variant', badge: 'bg-surface-container text-on-surface-variant', dot: 'bg-outline', priority: 3 },
+  Waiting:   { label: 'Đang chờ',  bg: 'bg-amber-50',              border: 'border-amber-300',      badge: 'bg-amber-100 text-amber-800',                        dot: 'bg-amber-500',  priority: 2 },
+  'In Chair':{ label: 'Đang khám', bg: 'bg-primary-container/20',  border: 'border-primary/40',     badge: 'bg-primary-container text-on-primary-container',     dot: 'bg-primary',    priority: 1 },
+  Completed: { label: 'Hoàn tất',  bg: 'bg-surface-container-low', border: 'border-outline-variant',badge: 'bg-surface-container text-on-surface-variant',       dot: 'bg-outline',    priority: 3 },
 };
 
 export const ReceptionistQueue: React.FC = () => {
@@ -22,15 +22,16 @@ export const ReceptionistQueue: React.FC = () => {
       return pa - pb;
     });
 
-  const waitingCount = queue.filter(q => q.status === 'Waiting').length;
-  const inChairCount = queue.filter(q => q.status === 'In Chair').length;
-  const completedCount = queue.filter(q => q.status === 'Completed').length;
+  const waitingCount  = queue.filter(q => q.status === 'Waiting').length;
+  const inChairCount  = queue.filter(q => q.status === 'In Chair').length;
+  const completedCount= queue.filter(q => q.status === 'Completed').length;
   const avgWait = queue.filter(q => q.status === 'Waiting').reduce((s, q) => s + q.waitTimeMin, 0) / (waitingCount || 1);
+
   const stats: Array<{ label: string; value: number | string; icon: string; color: string; pulse?: boolean }> = [
-    { label: 'Đang chờ', value: waitingCount, icon: 'hourglass_top', color: 'text-amber-700 bg-amber-50 border-amber-200', pulse: true },
-    { label: 'Đang khám', value: inChairCount, icon: 'medical_services', color: 'text-primary bg-primary-container border-primary/20', pulse: true },
-    { label: 'Hoàn tất hôm nay', value: completedCount, icon: 'task_alt', color: 'text-secondary bg-secondary-container border-secondary/20' },
-    { label: 'Chờ TB', value: `${avgWait.toFixed(0)} phút`, icon: 'avg_pace', color: 'text-on-surface bg-surface-container border-outline-variant' },
+    { label: 'Đang chờ',        value: waitingCount,             icon: 'hourglass_top',   color: 'text-amber-700 bg-amber-50 border-amber-200',             pulse: true },
+    { label: 'Đang khám',       value: inChairCount,             icon: 'medical_services',color: 'text-primary bg-primary-container border-primary/20',      pulse: true },
+    { label: 'Hoàn tất hôm nay',value: completedCount,           icon: 'task_alt',        color: 'text-secondary bg-secondary-container border-secondary/20' },
+    { label: 'Chờ TB',          value: `${avgWait.toFixed(0)} phút`, icon: 'avg_pace',    color: 'text-on-surface bg-surface-container border-outline-variant' },
   ];
 
   const [now] = useState(new Date());
@@ -38,19 +39,20 @@ export const ReceptionistQueue: React.FC = () => {
 
   return (
     <div className="p-stack-lg">
-      {/* Header */}
+      {/* ── Header ── */}
       <div className="flex justify-between items-start flex-wrap gap-4 mb-6">
         <div>
           <h2 className="font-headline-md text-headline-md text-on-surface">Hàng chờ trực tiếp</h2>
           <p className="text-body-md text-on-surface-variant mt-1">
             Quản lý hàng chờ phòng khám theo thời gian thực •
             <span className="inline-flex items-center gap-1 ml-2 text-secondary font-bold">
-              <span className="w-2 h-2 bg-secondary rounded-full animate-pulse inline-block"></span>
+              <span className="w-2 h-2 bg-secondary rounded-full animate-pulse inline-block" />
               {timeStr}
             </span>
           </p>
         </div>
         <button
+          id="btn-checkin-queue"
           onClick={() => setShowCheckinModal(true)}
           className="flex items-center gap-2 px-5 py-3 bg-primary text-on-primary rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all cursor-pointer shadow-md"
         >
@@ -59,14 +61,14 @@ export const ReceptionistQueue: React.FC = () => {
         </button>
       </div>
 
-      {/* Stats bar */}
+      {/* ── Stats Bar ── */}
       <div className="grid grid-cols-4 gap-4 mb-6">
         {stats.map(s => (
           <div key={s.label} className={`rounded-xl border p-4 flex items-center gap-3 ${s.color}`}>
-            <div className="relative">
+            <div className="relative shrink-0">
               <span className="material-symbols-outlined text-[26px]">{s.icon}</span>
               {s.pulse && typeof s.value === 'number' && s.value > 0 && (
-                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-500 rounded-full animate-ping"></span>
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-500 rounded-full animate-ping" />
               )}
             </div>
             <div>
@@ -77,25 +79,30 @@ export const ReceptionistQueue: React.FC = () => {
         ))}
       </div>
 
-      {/* Filter tabs */}
+      {/* ── Filter Tabs ── */}
       <div className="flex gap-2 mb-5">
         {[
-          { key: 'all' as const, label: `Tất cả (${queue.length})` },
-          { key: 'Waiting' as const, label: `Đang chờ (${waitingCount})` },
-          { key: 'In Chair' as const, label: `Đang khám (${inChairCount})` },
+          { key: 'all' as const,       label: `Tất cả (${queue.length})` },
+          { key: 'Waiting' as const,   label: `Đang chờ (${waitingCount})` },
+          { key: 'In Chair' as const,  label: `Đang khám (${inChairCount})` },
           { key: 'Completed' as const, label: `Hoàn tất (${completedCount})` },
         ].map(f => (
           <button
             key={f.key}
+            id={`btn-queue-filter-${f.key}`}
             onClick={() => setFilterStatus(f.key)}
-            className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${filterStatus === f.key ? 'bg-primary text-on-primary border-primary' : 'bg-white border-outline-variant text-on-surface-variant hover:border-primary/40'}`}
+            className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+              filterStatus === f.key
+                ? 'bg-primary text-on-primary border-primary'
+                : 'bg-white border-outline-variant text-on-surface-variant hover:border-primary/40'
+            }`}
           >
             {f.label}
           </button>
         ))}
       </div>
 
-      {/* Queue table */}
+      {/* ── Queue Table ── */}
       <div className="bg-white rounded-2xl border border-outline-variant shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -123,9 +130,14 @@ export const ReceptionistQueue: React.FC = () => {
                         <div>
                           <p className="font-bold text-on-surface text-sm">{item.patientName}</p>
                           <p className="text-xs text-on-surface-variant">{patient?.phone || item.patientId}</p>
-                          {patient && patient.criticalAllergy !== 'Không' && (
-                            <span className="text-[10px] bg-error-container text-error px-1.5 py-0.5 rounded-full font-bold">⚠ {patient.criticalAllergy}</span>
-                          )}
+                          <div className="flex gap-1 flex-wrap mt-0.5">
+                            {item.serviceName && (
+                              <span className="text-[10px] bg-primary-fixed text-primary px-1.5 py-0.5 rounded font-bold">{item.serviceName}</span>
+                            )}
+                            {patient && patient.criticalAllergy !== 'Không' && (
+                              <span className="text-[10px] bg-error-container text-error px-1.5 py-0.5 rounded-full font-bold">⚠ {patient.criticalAllergy}</span>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </td>
@@ -149,14 +161,14 @@ export const ReceptionistQueue: React.FC = () => {
                     </td>
                     <td className="px-4 py-3">
                       <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full ${conf.badge}`}>
-                        <span className={`w-1.5 h-1.5 rounded-full ${conf.dot} ${item.status !== 'Completed' ? 'animate-pulse' : ''}`}></span>
+                        <span className={`w-1.5 h-1.5 rounded-full ${conf.dot} ${item.status !== 'Completed' ? 'animate-pulse' : ''}`} />
                         {conf.label}
                       </span>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex gap-1.5">
                         <button
-                          onClick={() => alert(`Chi tiết bệnh nhân: ${item.patientName}\nPhòng: ${item.room}\nBác sĩ: ${item.dentistName}`)}
+                          onClick={() => alert(`Chi tiết bệnh nhân: ${item.patientName}\nPhòng: ${item.room}\nBác sĩ: ${item.dentistName}${item.serviceName ? `\nDịch vụ: ${item.serviceName}` : ''}`)}
                           className="px-2.5 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-bold hover:bg-surface-container-high transition-all cursor-pointer"
                           title="Xem chi tiết"
                         >
@@ -188,7 +200,7 @@ export const ReceptionistQueue: React.FC = () => {
         </div>
       </div>
 
-      {/* Dentist room load overview */}
+      {/* ── Dentist room load overview ── */}
       <div className="mt-6 bg-white rounded-2xl border border-outline-variant shadow-sm p-5">
         <h4 className="font-headline-sm text-headline-sm mb-4 flex items-center gap-2">
           <span className="material-symbols-outlined text-primary">meeting_room</span>
@@ -198,15 +210,19 @@ export const ReceptionistQueue: React.FC = () => {
           {dentists.map(d => {
             const dQueue = queue.filter(q => q.dentistId === d.id && q.status !== 'Completed');
             const inChair = dQueue.some(q => q.status === 'In Chair');
+            const currentPatient = dQueue.find(q => q.status === 'In Chair');
             return (
               <div key={d.id} className={`rounded-xl border p-4 ${inChair ? 'border-primary/30 bg-primary-container/10' : 'border-outline-variant bg-surface-container-low'}`}>
                 <div className="flex items-center gap-2 mb-2">
-                  <div className={`w-2.5 h-2.5 rounded-full ${inChair ? 'bg-primary animate-pulse' : dQueue.length > 0 ? 'bg-amber-500' : 'bg-outline'}`}></div>
+                  <div className={`w-2.5 h-2.5 rounded-full ${inChair ? 'bg-primary animate-pulse' : dQueue.length > 0 ? 'bg-amber-500' : 'bg-outline'}`} />
                   <p className="text-xs font-bold text-on-surface-variant uppercase">{d.room}</p>
                 </div>
                 <p className="text-sm font-bold text-on-surface truncate">{d.name}</p>
                 <p className="text-xs text-on-surface-variant mt-0.5 truncate">{d.role.split('&')[0]}</p>
-                <div className="mt-3 flex items-center justify-between">
+                {currentPatient && (
+                  <p className="text-[10px] text-primary font-bold mt-1 truncate">🦷 {currentPatient.patientName}</p>
+                )}
+                <div className="mt-2 flex items-center justify-between">
                   <span className={`text-xs font-bold ${inChair ? 'text-primary' : dQueue.length > 0 ? 'text-amber-700' : 'text-secondary'}`}>
                     {inChair ? '🟢 Đang khám' : dQueue.length > 0 ? `⏳ ${dQueue.length} chờ` : '⚪ Rảnh'}
                   </span>

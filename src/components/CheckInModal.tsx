@@ -14,7 +14,7 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
   onClose,
   title = 'Đón tiếp & Check-in',
 }) => {
-  const { queue, patients, dentists, checkInPatient, addPatient } = useClinic();
+  const { queue, patients, dentists, services, checkInPatient, addPatient } = useClinic();
 
   const [mode, setMode] = useState<CheckInMode>('existing');
   const [isScanning, setIsScanning] = useState(false);
@@ -25,6 +25,7 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
   const [newAge, setNewAge] = useState('30');
   const [newGender, setNewGender] = useState('Nam');
   const [isSuccess, setIsSuccess] = useState(false);
+  const [selectedServiceId, setSelectedServiceId] = useState('');
 
   if (!isOpen) return null;
 
@@ -38,6 +39,7 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
     setNewAge('30');
     setNewGender('Nam');
     setIsSuccess(false);
+    setSelectedServiceId('');
     onClose();
   };
 
@@ -89,7 +91,7 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
       return;
     }
 
-    checkInPatient(patientId, selectedDentistId);
+    checkInPatient(patientId, selectedDentistId, undefined, selectedServiceId ? services.find(s => s.id === selectedServiceId)?.name : undefined);
     setIsSuccess(true);
     setTimeout(resetAndClose, 1400);
   };
@@ -229,6 +231,20 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
 
               {mode !== 'qr' && (
                 <>
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-on-surface-variant mb-1.5">Dịch vụ cần khám</label>
+                    <select
+                      value={selectedServiceId}
+                      onChange={(e) => setSelectedServiceId(e.target.value)}
+                      className="w-full bg-surface-container-low border border-outline-variant rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none"
+                    >
+                      <option value="">-- Chưa rõ / Tư vấn tổng quát --</option>
+                      {services.filter(s => s.isActive).map((s) => (
+                        <option key={s.id} value={s.id}>{s.name} — {s.price.toLocaleString('vi-VN')}₫</option>
+                      ))}
+                    </select>
+                  </div>
+
                   <div>
                     <label className="block text-xs font-bold uppercase text-on-surface-variant mb-1.5">Bác sĩ khám chỉ định *</label>
                     <div className="grid grid-cols-2 gap-2">

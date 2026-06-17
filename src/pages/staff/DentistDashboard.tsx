@@ -71,6 +71,45 @@ const DentistHome: React.FC = () => {
   const activePatientRecords = activePatient ? medicalRecords.filter(r => r.patientId === activePatient.id) : [];
   const filteredServices = services.filter(s => s.name.toLowerCase().includes(serviceSearch.toLowerCase()));
 
+  const [treatmentType, setTreatmentType] = useState<'independent' | 'plan_init' | 'plan_session'>('independent');
+  const [selectedPlanId, setSelectedPlanId] = useState<string>('');
+
+  const patientPlans = React.useMemo(() => {
+    return activePatientRecords.filter(r => r.title.includes('Khởi tạo phác đồ') || r.notes?.includes('[PHÁC ĐỒ]'));
+  }, [activePatientRecords]);
+
+  const hasAllergyConflict = React.useMemo(() => {
+    if (!activePatient || !activePatient.criticalAllergy || activePatient.criticalAllergy === 'Không') return false;
+    const patientAllergy = activePatient.criticalAllergy.toLowerCase().trim();
+    return prescriptionDrugs.some(drug => {
+      const drugName = drug.name.toLowerCase();
+      if (drugName.includes(patientAllergy) || patientAllergy.includes(drugName)) return true;
+      if (patientAllergy === 'penicillin' && drugName.includes('amoxicillin')) return true;
+      if (patientAllergy === 'amoxicillin' && drugName.includes('penicillin')) return true;
+      return false;
+    });
+  }, [activePatient, prescriptionDrugs]);
+
+  const hasServiceMismatch = React.useMemo(() => {
+    if (performedServices.length === 0) return null;
+    const lowerIcd = icdCode.toLowerCase();
+    
+    const isSauRang = lowerIcd.includes('sâu');
+    const isNhoRang = performedServices.some(id => id === 'S-04');
+    const isTramRang = performedServices.some(id => id === 'S-03');
+    
+    if (isSauRang && isNhoRang && !isTramRang) {
+      return 'Cảnh báo lâm sàng: Chẩn đoán là sâu răng nhưng đang chỉ định Nhổ răng khôn (không có dịch vụ Trám răng).';
+    }
+    
+    const isTuy = lowerIcd.includes('tủy');
+    const isTieuPhauTuy = performedServices.some(id => id === 'S-05' || id === 'S-11');
+    if (isTuy && !isTieuPhauTuy) {
+      return 'Cảnh báo lâm sàng: Chẩn đoán bệnh lý tủy răng nhưng chưa chỉ định dịch vụ Điều trị tủy hoặc Tiểu phẫu cắt chóp.';
+    }
+    return null;
+  }, [icdCode, performedServices]);
+
   React.useEffect(() => {
     if (activePatient) {
       setFormAllergy(activePatient.criticalAllergy || 'Không');
@@ -99,6 +138,8 @@ const DentistHome: React.FC = () => {
     setServiceSearch('');
     setPrescriptionDrugs(JSON.parse(JSON.stringify(TEMPLATE_PRESETS['Sau điều trị sâu răng / Hàn răng'])));
     setRxTemplate('Sau điều trị sâu răng / Hàn răng');
+    setTreatmentType('independent');
+    setSelectedPlanId('');
     setActiveTab('teeth');
   };
 
@@ -160,13 +201,23 @@ const DentistHome: React.FC = () => {
       selectedQueueId,
       activeTeethState,
       finalNotes,
-      performedServices.length > 0 ? performedServices : ['S-08']
+      performedServices.length > 0 ? performedServices : ['S-08'],
+      treatmentType,
+      selectedPlanId
     );
-    alert('Đã hoàn tất ca điều trị lâm sàng và gửi hóa đơn thanh toán thành công!');
+    if (treatmentType === 'plan_session') {
+      alert(`Đã hoàn tất phiên điều trị thuộc Phác đồ #${selectedPlanId} thành công (Không sinh thêm hóa đơn)!`);
+    } else if (treatmentType === 'plan_init') {
+      alert('Đã khởi tạo phác đồ điều trị thành công và gửi hóa đơn tổng sang quầy Thu ngân!');
+    } else {
+      alert('Đã hoàn tất ca điều trị lâm sàng và gửi hóa đơn thanh toán thành công!');
+    }
     setSelectedQueueId(null);
     setPerformedServices([]);
     setServiceSearch('');
     setPrescriptionDrugs([]);
+    setTreatmentType('independent');
+    setSelectedPlanId('');
   };
 
   return (
@@ -304,6 +355,7 @@ const DentistHome: React.FC = () => {
                     teethState={activeTeethState}
                     selectedTooth={selectedToothNum}
                     onSelectTooth={handleToothClick}
+                    patientAge={activePatient?.age}
                   />
                   {selectedToothNum && (
                     <div className="p-4 bg-primary/5 rounded-lg border border-primary/20 space-y-3 animate-in fade-in duration-200">
@@ -364,6 +416,72 @@ const DentistHome: React.FC = () => {
                       className="w-full bg-slate-50 border border-outline-variant/65 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary focus:bg-white focus:outline-none transition-all" 
                     />
                   </div>
+
+                  {/* Phác đồ & Lộ trình điều trị */}
+                  <div className="bg-slate-50 border border-outline-variant/60 rounded-xl p-4 space-y-3">
+                    <label className="block text-xs font-bold uppercase text-on-surface-variant flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-[16px] text-primary">route</span>
+                      Phác đồ & Lộ trình điều trị
+                    </label>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <div 
+                        onClick={() => setTreatmentType('independent')}
+                        className={`p-3 rounded-xl border-2 cursor-pointer transition-all flex flex-col gap-1 select-none ${treatmentType === 'independent' ? 'border-primary bg-primary/5' : 'border-outline-variant hover:border-slate-305 bg-white'}`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className={`material-symbols-outlined text-base ${treatmentType === 'independent' ? 'text-primary' : 'text-slate-400'}`}>medical_services</span>
+                          <span className="text-xs font-bold">Điều trị độc lập</span>
+                        </div>
+                        <p className="text-[10px] text-on-surface-variant leading-relaxed">Sinh hóa đơn mới cho các dịch vụ thực hiện trong ngày.</p>
+                      </div>
+
+                      <div 
+                        onClick={() => setTreatmentType('plan_init')}
+                        className={`p-3 rounded-xl border-2 cursor-pointer transition-all flex flex-col gap-1 select-none ${treatmentType === 'plan_init' ? 'border-teal-600 bg-teal-50/30' : 'border-outline-variant hover:border-slate-305 bg-white'}`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className={`material-symbols-outlined text-base ${treatmentType === 'plan_init' ? 'text-teal-600' : 'text-slate-400'}`}>assignment_add</span>
+                          <span className="text-xs font-bold text-teal-950">Khởi tạo phác đồ</span>
+                        </div>
+                        <p className="text-[10px] text-on-surface-variant leading-relaxed">Lập lộ trình dài hạn (Niềng răng, Implant...). Xuất hóa đơn tổng 1 lần.</p>
+                      </div>
+
+                      <div 
+                        onClick={() => {
+                          if (patientPlans.length > 0) {
+                            setTreatmentType('plan_session');
+                            if (!selectedPlanId) setSelectedPlanId(patientPlans[0].id);
+                          } else {
+                            alert('Bệnh nhân này hiện chưa có Phác đồ điều trị dài hạn nào để chọn phiên tiếp theo!');
+                          }
+                        }}
+                        className={`p-3 rounded-xl border-2 cursor-pointer transition-all flex flex-col gap-1 select-none ${patientPlans.length === 0 ? 'opacity-50 cursor-not-allowed bg-slate-100 border-slate-200' : treatmentType === 'plan_session' ? 'border-amber-600 bg-amber-50/30' : 'border-outline-variant hover:border-slate-305 bg-white'}`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className={`material-symbols-outlined text-base ${treatmentType === 'plan_session' ? 'text-amber-600' : 'text-slate-400'}`}>calendar_today</span>
+                          <span className="text-xs font-bold text-amber-950">Phiên điều trị tiếp</span>
+                        </div>
+                        <p className="text-[10px] text-on-surface-variant leading-relaxed">Ghi nhận tiến trình của phác đồ hiện tại. Không sinh thêm hóa đơn mới.</p>
+                      </div>
+                    </div>
+
+                    {treatmentType === 'plan_session' && patientPlans.length > 0 && (
+                      <div className="pt-2 flex flex-col sm:flex-row gap-2 items-center animate-in fade-in duration-200">
+                        <label className="text-xs font-bold text-slate-600 shrink-0">Chọn Phác đồ áp dụng:</label>
+                        <select 
+                          value={selectedPlanId}
+                          onChange={e => setSelectedPlanId(e.target.value)}
+                          className="w-full bg-white border border-outline-variant rounded-lg p-2 text-xs font-medium focus:ring-1 focus:ring-amber-500 focus:outline-none"
+                        >
+                          {patientPlans.map(plan => (
+                            <option key={plan.id} value={plan.id}>
+                              [{plan.date}] {plan.title} (ID: {plan.id})
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
 
@@ -381,6 +499,12 @@ const DentistHome: React.FC = () => {
                   
                   {/* Search and Filters */}
                   <div className="space-y-2">
+                    {hasServiceMismatch && (
+                      <div className="p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-xl text-xs font-semibold flex items-start gap-2 animate-pulse">
+                        <span className="material-symbols-outlined text-amber-600 text-[18px] shrink-0">info</span>
+                        <p>{hasServiceMismatch}</p>
+                      </div>
+                    )}
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-[18px] text-on-surface-variant">search</span>
                       <input
@@ -600,6 +724,20 @@ const DentistHome: React.FC = () => {
                     </div>
                   </div>
 
+                  {hasAllergyConflict && (
+                    <div className="p-3 bg-red-50 border border-red-200 text-red-900 rounded-xl text-xs font-semibold flex items-start gap-2.5 shadow-sm border-dashed">
+                      <span className="material-symbols-outlined text-red-600 text-[18px] shrink-0">warning</span>
+                      <div>
+                        <p className="uppercase text-[9px] font-black text-red-700 tracking-wider">CẢNH BÁO AN TOÀN DỊ ỨNG THUỐC!</p>
+                        <p className="mt-0.5 leading-relaxed font-semibold">
+                          Bệnh nhân có tiền sử dị ứng với "{activePatient?.criticalAllergy}". 
+                          Hoạt chất của thuốc trong đơn có nguy cơ gây phản ứng dị ứng nghiêm trọng! 
+                          Hệ thống đã khóa nút lưu bệnh án cho đến khi đổi sang thuốc khác.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="p-3 bg-amber-50 border border-amber-200 text-amber-800 rounded-lg text-xs font-semibold flex items-start gap-2">
                     <span className="material-symbols-outlined text-amber-600 text-[16px] shrink-0 mt-0.5">warning</span>
                     <p>Lưu ý: Bệnh nhân tự mang đơn thuốc ra ngoài mua. Phòng khám hiện tại không trực tiếp bán thuốc.</p>
@@ -623,9 +761,11 @@ const DentistHome: React.FC = () => {
                 </div>
                 <button
                   onClick={() => setShowSignModal(true)}
-                  disabled={performedServices.length === 0}
+                  disabled={performedServices.length === 0 || hasAllergyConflict}
                   className={`px-8 py-3 rounded-lg font-bold text-xs flex items-center gap-2 active:scale-95 transition-all shadow-lg cursor-pointer ${
-                    performedServices.length > 0 ? 'bg-secondary hover:bg-secondary/90 text-white' : 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
+                    performedServices.length > 0 && !hasAllergyConflict
+                      ? 'bg-secondary hover:bg-secondary/90 text-white'
+                      : 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
                   }`}
                 >
                   <span className="material-symbols-outlined">border_color</span>
@@ -673,6 +813,15 @@ const DentistHome: React.FC = () => {
                   <div className="text-right">
                     <p className="font-bold text-slate-600">MÃ HỒ SƠ: #EMR-{activeQueueItem?.id}</p>
                     <p className="text-[10px] text-slate-400">Ngày lập: {new Date().toLocaleDateString('vi-VN')}</p>
+                    <span className={`inline-block text-[9px] font-black uppercase px-2 py-0.5 rounded mt-1.5 ${
+                      treatmentType === 'plan_init' ? 'bg-teal-100 text-teal-800 border border-teal-200' :
+                      treatmentType === 'plan_session' ? 'bg-amber-100 text-amber-800 border border-amber-200' :
+                      'bg-slate-100 text-slate-800 border border-slate-200'
+                    }`}>
+                      {treatmentType === 'plan_init' ? 'Khởi tạo phác đồ' :
+                       treatmentType === 'plan_session' ? `Phiên của phác đồ #${selectedPlanId}` :
+                       'Điều trị độc lập'}
+                    </span>
                   </div>
                 </div>
 

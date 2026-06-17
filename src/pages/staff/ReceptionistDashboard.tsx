@@ -11,229 +11,264 @@ import { ReceptionistReminders } from './receptionist-tabs/ReceptionistReminders
 
 // ─── Home: Bàn tiếp nhận ──────────────────────────────────────────────────────
 const ReceptionistHome: React.FC = () => {
-  const { queue, appointments, checkInPatient } = useClinic();
+  const { queue, appointments, confirmAppointment, dentists } = useClinic();
 
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [showCheckInModal, setShowCheckInModal] = useState(false);
 
-  const activeQueue = queue.filter(q => q.status !== 'Completed');
-  const waitingPatients = activeQueue.filter(q => q.status === 'Waiting');
-  const averageWaitTime = 12.5;
-
   const [now] = useState(new Date());
+  const hour = now.getHours();
+  const greeting = hour < 12 ? 'Chào buổi sáng' : hour < 18 ? 'Chào buổi chiều' : 'Chào buổi tối';
   const dayStr = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+  // KPI
+  const waitingCount = queue.filter(q => q.status === 'Waiting').length;
+  const inChairCount = queue.filter(q => q.status === 'In Chair').length;
+  const completedToday = queue.filter(q => q.status === 'Completed').length;
+  const pendingAppts = appointments.filter(a => a.status === 'Pending');
+  const confirmedAppts = appointments.filter(a => a.status === 'Confirmed');
+  const avgWait = waitingCount > 0
+    ? (queue.filter(q => q.status === 'Waiting').reduce((s, q) => s + q.waitTimeMin, 0) / waitingCount).toFixed(0)
+    : '0';
 
   return (
     <div className="p-container-padding-desktop space-y-6 animate-in fade-in duration-200">
 
-      {/* Hero greeting */}
-      <div className="premium-glow rounded-xl p-6 text-on-primary flex items-center justify-between relative overflow-hidden">
+      {/* ── Hero Banner ── */}
+      <div className="premium-glow rounded-2xl p-7 text-white relative overflow-hidden">
         <div className="relative z-10">
-          <p className="text-sm opacity-80 text-white">{dayStr}</p>
-          <h2 className="font-headline-lg text-headline-lg text-white mt-1">Chào buổi sáng, Lễ tân!</h2>
-          <p className="text-sm opacity-80 mt-1 text-white/80">Có <strong>{appointments.length}</strong> lịch hẹn và <strong>{waitingPatients.length}</strong> bệnh nhân đang chờ hôm nay</p>
+          <p className="text-sm opacity-75">{dayStr}</p>
+          <h2 className="font-headline-lg text-headline-lg mt-1">{greeting}, Lễ tân! 👋</h2>
+          <p className="text-sm opacity-80 mt-1">
+            Hôm nay có <strong>{appointments.length}</strong> lịch hẹn •{' '}
+            <strong>{waitingCount}</strong> bệnh nhân đang chờ •{' '}
+            {pendingAppts.length > 0 && (
+              <span className="bg-amber-400/30 text-amber-200 font-bold px-2 py-0.5 rounded-full">
+                ⚠ {pendingAppts.length} lịch chờ xác nhận
+              </span>
+            )}
+          </p>
         </div>
-        <div className="absolute right-0 top-0 bottom-0 opacity-10 flex items-center pr-6 pointer-events-none">
-          <span className="material-symbols-outlined text-[120px] text-white">support_agent</span>
+        <div className="absolute right-0 top-0 bottom-0 opacity-10 flex items-center pr-8 pointer-events-none">
+          <span className="material-symbols-outlined text-[130px]">support_agent</span>
         </div>
       </div>
 
-      {/* Quick Actions & Stats */}
-      <div className="grid grid-cols-12 gap-6">
-        {/* Large Action Buttons */}
-        <div className="col-span-12 md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <button
-            onClick={() => setShowCheckInModal(true)}
-            className="h-32 bg-primary-container text-white rounded-xl p-6 flex items-center gap-6 hover:scale-[1.01] transition-transform shadow-xl shadow-primary-container/20 cursor-pointer text-left"
-          >
-            <div className="bg-white/20 p-4 rounded-full">
-              <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>how_to_reg</span>
-            </div>
-            <div>
-              <h3 className="text-headline-sm font-bold text-white">Đón Tiếp Bệnh Nhân</h3>
-              <p className="text-body-md opacity-80">Check-in đưa bệnh nhân vào hàng khám</p>
-            </div>
-          </button>
-
-          <button
-            onClick={() => setIsBookingOpen(true)}
-            className="h-32 bg-tertiary-container text-white rounded-xl p-6 flex items-center gap-6 hover:scale-[1.01] transition-transform shadow-xl shadow-tertiary-container/20 cursor-pointer text-left"
-          >
-            <div className="bg-white/20 p-4 rounded-full">
-              <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>description</span>
-            </div>
-            <div>
-              <h3 className="text-headline-sm font-bold text-white">Đặt Lịch Hẹn Mới</h3>
-              <p className="text-body-md opacity-80">Tạo lịch khám mới cho khách hàng</p>
-            </div>
-          </button>
-        </div>
-
-        {/* Analytics card */}
-        <div className="col-span-12 md:col-span-4 space-y-4">
-          <div className="bg-white rounded-xl p-5 border-l-4 border-secondary shadow-sm flex flex-col justify-between border border-outline-variant">
-            <div className="flex justify-between items-start">
-              <p className="text-label-md font-bold text-on-surface-variant uppercase tracking-wider">Thời gian chờ TB</p>
-              <span className="material-symbols-outlined text-secondary font-bold">trending_down</span>
-            </div>
-            <div className="flex items-baseline gap-2 my-2">
-              <span className="text-headline-lg font-headline-lg text-on-surface">{averageWaitTime}</span>
-              <span className="text-body-md text-on-surface-variant">phút</span>
-            </div>
-            <div className="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
-              <div className="bg-secondary h-full" style={{ width: '65%' }}></div>
-            </div>
-            <p className="text-label-md text-secondary font-medium mt-1">Tốt hơn 4% so với hôm qua</p>
+      {/* ── 2 Action Buttons Primary ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <button
+          id="btn-checkin-home"
+          onClick={() => setShowCheckInModal(true)}
+          className="h-28 bg-primary-container text-white rounded-2xl px-6 flex items-center gap-5 hover:scale-[1.02] transition-transform shadow-xl shadow-primary-container/30 cursor-pointer text-left"
+        >
+          <div className="bg-white/20 p-4 rounded-xl shrink-0">
+            <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>how_to_reg</span>
           </div>
+          <div>
+            <h3 className="text-headline-sm font-bold text-white">Đón Tiếp Bệnh Nhân</h3>
+            <p className="text-sm opacity-80 mt-0.5">Check-in • Bệnh nhân cũ / Mới / Quét QR</p>
+          </div>
+        </button>
 
-          {/* Quick stats row */}
-          <div className="grid grid-cols-3 gap-2">
-            {[
-              { label: 'Chờ khám', value: waitingPatients.length, color: 'text-amber-700' },
-              { label: 'Đang khám', value: activeQueue.filter(q => q.status === 'In Chair').length, color: 'text-primary' },
-              { label: 'Lịch hẹn', value: appointments.length, color: 'text-secondary' },
-            ].map(s => (
-              <div key={s.label} className="bg-white rounded-xl border border-outline-variant p-3 text-center shadow-sm">
-                <p className={`text-xl font-bold ${s.color}`}>{s.value}</p>
-                <p className="text-[10px] text-on-surface-variant font-medium mt-0.5">{s.label}</p>
+        <button
+          id="btn-booking-home"
+          onClick={() => setIsBookingOpen(true)}
+          className="h-28 bg-tertiary-container text-white rounded-2xl px-6 flex items-center gap-5 hover:scale-[1.02] transition-transform shadow-xl shadow-tertiary-container/30 cursor-pointer text-left"
+        >
+          <div className="bg-white/20 p-4 rounded-xl shrink-0">
+            <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>calendar_add_on</span>
+          </div>
+          <div>
+            <h3 className="text-headline-sm font-bold text-white">Đặt Lịch Hẹn Mới</h3>
+            <p className="text-sm opacity-80 mt-0.5">Tạo lịch khám mới cho khách hàng</p>
+          </div>
+        </button>
+      </div>
+
+      {/* ── KPI Row ── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {[
+          { label: 'Đang chờ khám', value: waitingCount, icon: 'hourglass_top', color: 'text-amber-700 bg-amber-50 border-amber-200', pulse: waitingCount > 0 },
+          { label: 'Đang khám', value: inChairCount, icon: 'medical_services', color: 'text-primary bg-primary-container border-primary/20', pulse: inChairCount > 0 },
+          { label: 'Hoàn tất hôm nay', value: completedToday, icon: 'task_alt', color: 'text-secondary bg-secondary-container border-secondary/20', pulse: false },
+          { label: 'Thời gian chờ TB', value: `${avgWait} phút`, icon: 'avg_pace', color: 'text-on-surface bg-surface-container border-outline-variant', pulse: false },
+        ].map(s => (
+          <div key={s.label} className={`rounded-xl border p-4 flex items-center gap-3 ${s.color}`}>
+            <div className="relative shrink-0">
+              <span className="material-symbols-outlined text-[26px]">{s.icon}</span>
+              {s.pulse && (
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-current rounded-full animate-ping opacity-60" />
+              )}
+            </div>
+            <div>
+              <p className="text-xl font-bold">{s.value}</p>
+              <p className="text-xs font-medium opacity-70">{s.label}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Main Content Grid ── */}
+      <div className="grid grid-cols-12 gap-6">
+
+        {/* LEFT: Pending Alert + Confirmed appointments */}
+        <div className="col-span-12 lg:col-span-8 space-y-5">
+
+          {/* Pending Alert Panel */}
+          {pendingAppts.length > 0 && (
+            <div className="bg-amber-50 border border-amber-300 rounded-2xl overflow-hidden shadow-sm">
+              <div className="px-5 py-3.5 bg-amber-100 border-b border-amber-200 flex items-center gap-2">
+                <span className="material-symbols-outlined text-amber-700">notification_important</span>
+                <h3 className="font-bold text-amber-800">
+                  {pendingAppts.length} lịch hẹn chờ xác nhận
+                </h3>
+                <span className="ml-auto text-xs text-amber-700 font-medium">Cần xử lý sớm</span>
               </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Main Grid content */}
-      <div className="grid grid-cols-12 gap-6">
-
-        {/* Left: Appointments Table */}
-        <div className="col-span-12 lg:col-span-8 bg-white rounded-xl border border-outline-variant overflow-hidden shadow-sm">
-          <div className="p-5 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
-            <h3 className="font-headline-sm text-primary flex items-center gap-2">
-              <span className="material-symbols-outlined">calendar_today</span>
-              Danh Sách Lịch Hẹn Trong Ngày
-            </h3>
-            <span className="bg-primary-fixed text-primary px-3 py-1 rounded-full text-xs font-bold">
-              {appointments.length} Lịch hẹn
-            </span>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead className="bg-surface-container-low text-label-md text-on-surface-variant uppercase">
-                <tr>
-                  {['Giờ hẹn', 'Bệnh nhân', 'Dịch vụ', 'Bác sĩ phụ trách', 'Trạng thái', ''].map(h => (
-                    <th key={h} className="px-6 py-3 font-semibold">{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="text-body-md divide-y divide-outline-variant">
-                {appointments.map(appt => (
-                  <tr key={appt.id} className="hover:bg-primary/5 transition-colors">
-                    <td className="px-6 py-4 font-bold text-primary">{appt.time.split(' @ ').pop() || appt.time}</td>
-                    <td className="px-6 py-4">
-                      <div className="font-semibold text-on-surface">{appt.patientName}</div>
-                      <div className="text-xs text-on-surface-variant">{appt.patientPhone}</div>
-                    </td>
-                    <td className="px-6 py-4">{appt.serviceName}</td>
-                    <td className="px-6 py-4 text-on-surface-variant">{appt.dentistName}</td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
-                        appt.status === 'Confirmed' ? 'bg-secondary-container text-on-secondary-container' :
-                        appt.status === 'In-Progress' ? 'bg-primary-container text-on-primary-container' :
-                        'bg-amber-100 text-amber-800'
-                      }`}>
-                        {appt.status === 'Confirmed' ? 'Đã xác nhận' : appt.status === 'In-Progress' ? 'Đang khám' : 'Chờ xác nhận'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-right">
+              <div className="divide-y divide-amber-100">
+                {pendingAppts.map(appt => (
+                  <div key={appt.id} className="px-5 py-3 flex items-center gap-4 hover:bg-amber-50/80 transition-colors">
+                    <div className="w-10 h-10 rounded-full bg-amber-200 text-amber-800 flex items-center justify-center font-bold text-sm shrink-0">
+                      {appt.patientName.split(' ').pop()?.charAt(0)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-on-surface text-sm truncate">{appt.patientName}</p>
+                      <p className="text-xs text-on-surface-variant truncate">{appt.serviceName} • {appt.dentistName} • {appt.time}</p>
+                    </div>
+                    <div className="flex gap-2 shrink-0">
                       <button
-                        onClick={() => checkInPatient(appt.patientId, appt.dentistId)}
-                        className="px-3 py-1 bg-primary text-on-primary rounded text-xs font-bold hover:bg-primary-container transition-all cursor-pointer active:scale-95"
+                        id={`btn-confirm-appt-${appt.id}`}
+                        onClick={() => confirmAppointment(appt.id)}
+                        className="px-3 py-1.5 bg-secondary text-on-secondary rounded-lg text-xs font-bold hover:opacity-90 cursor-pointer flex items-center gap-1 transition-all active:scale-95"
                       >
-                        Vào khám
+                        <span className="material-symbols-outlined text-[14px]">check</span>
+                        Xác nhận
                       </button>
-                    </td>
-                  </tr>
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
+              </div>
+            </div>
+          )}
+
+          {/* Confirmed Appointments for Today */}
+          <div className="bg-white rounded-2xl border border-outline-variant overflow-hidden shadow-sm">
+            <div className="px-5 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+              <h3 className="font-headline-sm text-primary flex items-center gap-2">
+                <span className="material-symbols-outlined">event_available</span>
+                Lịch Hẹn Đã Xác Nhận Hôm Nay
+              </h3>
+              <span className="bg-primary-fixed text-primary px-3 py-1 rounded-full text-xs font-bold">
+                {confirmedAppts.length} lịch hẹn
+              </span>
+            </div>
+            {confirmedAppts.length > 0 ? (
+              <div className="divide-y divide-outline-variant">
+                {confirmedAppts.map(appt => (
+                  <div key={appt.id} className="px-5 py-3.5 flex items-center gap-4 hover:bg-surface-container-low transition-colors">
+                    <div className="text-center shrink-0 w-14">
+                      <p className="font-bold text-primary text-sm">{appt.time}</p>
+                    </div>
+                    <div className="w-px h-10 bg-outline-variant shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-on-surface text-sm truncate">{appt.patientName}</p>
+                      <p className="text-xs text-on-surface-variant truncate">{appt.serviceName}</p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="text-xs font-bold text-on-surface">{appt.dentistName.replace('Bác sĩ ', 'BS. ')}</p>
+                      <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-bold">
+                        <span className="material-symbols-outlined text-[10px]">check_circle</span>
+                        Đã xác nhận
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="py-12 text-center text-on-surface-variant">
+                <span className="material-symbols-outlined text-[48px] text-outline/50">event_busy</span>
+                <p className="mt-2 text-sm">Không có lịch hẹn đã xác nhận hôm nay</p>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Right: Queue + SMS */}
-        <div className="col-span-12 lg:col-span-4 space-y-6">
-          {/* Waiting Queue */}
-          <div className="bg-white rounded-xl border border-outline-variant overflow-hidden flex flex-col h-[380px] shadow-sm">
-            <div className="p-5 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
+        {/* RIGHT: Live queue mini + Dentist status */}
+        <div className="col-span-12 lg:col-span-4 space-y-5">
+
+          {/* Live Queue */}
+          <div className="bg-white rounded-2xl border border-outline-variant overflow-hidden shadow-sm">
+            <div className="px-5 py-4 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
               <h3 className="font-headline-sm text-secondary flex items-center gap-2">
                 <span className="material-symbols-outlined">pending_actions</span>
-                Hàng Chờ Tiếp Đón
+                Hàng Chờ Hiện Tại
               </h3>
               <div className="flex items-center gap-1.5 text-xs font-bold text-secondary">
                 <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-secondary"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-secondary" />
                 </span>
-                {waitingPatients.length} Chờ
+                Live
               </div>
             </div>
-            <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar bg-slate-50">
-              {activeQueue.length > 0 ? (
-                activeQueue.map((item, idx) => (
-                  <div key={item.id} className="bg-white p-3.5 rounded-lg border border-outline-variant/60 flex items-center justify-between shadow-sm hover:border-primary transition-all">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-xs">
-                        {idx + 1}
-                      </div>
-                      <div>
-                        <p className="font-bold text-on-surface">{item.patientName}</p>
-                        <p className="text-xs text-on-surface-variant">BS. <strong className="text-primary">{item.dentistName}</strong> • {item.room}</p>
-                      </div>
+            <div className="divide-y divide-outline-variant max-h-64 overflow-y-auto custom-scrollbar">
+              {queue.filter(q => q.status !== 'Completed').length > 0 ? (
+                queue.filter(q => q.status !== 'Completed').map((item, idx) => (
+                  <div key={item.id} className="px-4 py-3 flex items-center gap-3">
+                    <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
+                      item.status === 'In Chair' ? 'bg-primary-container text-on-primary-container' : 'bg-amber-100 text-amber-800'
+                    }`}>
+                      {idx + 1}
                     </div>
-                    <div className="text-right">
-                      <p className={`text-xs font-bold ${item.status === 'In Chair' ? 'text-secondary animate-pulse' : 'text-primary'}`}>
-                        {item.status === 'In Chair' ? 'Đang khám' : 'Đang chờ'}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-on-surface text-sm truncate">{item.patientName}</p>
+                      <p className="text-xs text-on-surface-variant truncate">
+                        {item.serviceName ? `${item.serviceName} • ` : ''}{item.room}
                       </p>
-                      <p className="text-[10px] text-on-surface-variant font-medium">
-                        {item.status === 'In Chair' ? `${item.elapsedTimeMin || 0} phút khám` : `Chờ ${item.waitTimeMin} phút`}
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className={`text-xs font-bold ${item.status === 'In Chair' ? 'text-primary animate-pulse' : 'text-amber-700'}`}>
+                        {item.status === 'In Chair' ? `⏱ ${item.elapsedTimeMin ?? 0}p` : `⏳ ${item.waitTimeMin}p`}
                       </p>
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="h-full flex flex-col justify-center items-center text-on-surface-variant text-center p-4">
-                  <span className="material-symbols-outlined text-4xl mb-2 text-outline">group</span>
-                  <p className="text-xs font-bold">Hàng chờ hiện đang trống</p>
+                <div className="py-10 text-center text-on-surface-variant">
+                  <span className="material-symbols-outlined text-3xl text-outline/40">group</span>
+                  <p className="text-xs mt-2">Hàng chờ trống</p>
                 </div>
               )}
             </div>
           </div>
 
-          {/* SMS / Zalo quick send */}
-          <div className="bg-white rounded-xl border border-outline-variant overflow-hidden shadow-sm">
-            <div className="p-5 border-b border-outline-variant flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#26A17B]">chat_bubble</span>
-              <h3 className="font-headline-sm">Truyền Thông Nhắc Lịch</h3>
-            </div>
-            <div className="p-4 space-y-4">
-              <div className="flex gap-2">
-                <button onClick={() => alert('Đã bắt đầu gửi SMS nhắc hẹn tự động!')} className="flex-1 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold flex items-center justify-center gap-1.5 text-xs cursor-pointer">
-                  <span className="material-symbols-outlined text-sm">sms</span> SMS Nhắc Hẹn
-                </button>
-                <button onClick={() => alert('Đã đồng bộ nhắc hẹn qua Zalo OA!')} className="flex-1 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-bold flex items-center justify-center gap-1.5 text-xs cursor-pointer">
-                  <span className="material-symbols-outlined text-sm">alternate_email</span> Zalo OA
-                </button>
-              </div>
-              <div className="p-3 bg-surface-container-low rounded-lg border border-outline-variant/50">
-                <p className="text-xs font-bold mb-1">Nội dung tin mẫu</p>
-                <p className="text-xs text-on-surface-variant italic leading-relaxed">
-                  "Kính gửi Quý khách, nhắc nhở: Lịch khám răng định kỳ của Quý khách vào ngày mai tại phòng khám Nha khoa GoodSmile..."
-                </p>
-                <div className="mt-3 flex justify-end">
-                  <button onClick={() => alert('Đã gửi tin nhắc thành công!')} className="text-primary font-bold text-xs flex items-center gap-1 hover:underline cursor-pointer">
-                    Gửi ngay <span className="material-symbols-outlined text-sm">send</span>
-                  </button>
-                </div>
-              </div>
+          {/* Dentist room status */}
+          <div className="bg-white rounded-2xl border border-outline-variant overflow-hidden shadow-sm p-4">
+            <h4 className="font-headline-sm text-headline-sm mb-3 flex items-center gap-2 text-on-surface">
+              <span className="material-symbols-outlined text-primary">meeting_room</span>
+              Trạng thái phòng khám
+            </h4>
+            <div className="space-y-2">
+              {dentists.map(d => {
+                const dItem = queue.find(q => q.dentistId === d.id && q.status !== 'Completed');
+                const inChair = dItem?.status === 'In Chair';
+                const waiting = queue.filter(q => q.dentistId === d.id && q.status === 'Waiting').length;
+                return (
+                  <div key={d.id} className={`flex items-center gap-3 p-2.5 rounded-xl border ${
+                    inChair ? 'border-primary/30 bg-primary-container/10' : waiting > 0 ? 'border-amber-200 bg-amber-50/50' : 'border-outline-variant bg-surface-container-low'
+                  }`}>
+                    <div className={`w-2.5 h-2.5 rounded-full shrink-0 ${
+                      inChair ? 'bg-primary animate-pulse' : waiting > 0 ? 'bg-amber-500' : 'bg-outline'
+                    }`} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-bold text-on-surface truncate">{d.name.replace('Bác sĩ ', 'BS. ')}</p>
+                      <p className="text-[10px] text-on-surface-variant">{d.room}</p>
+                    </div>
+                    <span className={`text-[10px] font-bold shrink-0 ${inChair ? 'text-primary' : waiting > 0 ? 'text-amber-700' : 'text-secondary'}`}>
+                      {inChair ? '🟢 Đang khám' : waiting > 0 ? `⏳ ${waiting} chờ` : '⚪ Rảnh'}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
