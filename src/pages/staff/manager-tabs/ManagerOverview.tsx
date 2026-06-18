@@ -1,4 +1,5 @@
 import React from 'react';
+import { Icon } from '../../../components/Icon';
 import { useClinic } from '../../../context/ClinicContext';
 
 export const ManagerOverview: React.FC = () => {
@@ -37,7 +38,7 @@ export const ManagerOverview: React.FC = () => {
             onClick={() => alert('Đã xuất báo cáo tổng quan tháng sang PDF!')}
             className="px-4 py-2 rounded-lg bg-primary text-white font-label-md flex items-center gap-2 hover:opacity-90 transition-opacity cursor-pointer text-xs font-bold"
           >
-            <span className="material-symbols-outlined text-[18px]">download</span>
+            <Icon name="download" className="text-[18px]" />
             Xuất Báo Cáo PDF
           </button>
         </div>
@@ -48,12 +49,12 @@ export const ManagerOverview: React.FC = () => {
         <div className="bg-white p-5 rounded-xl border border-outline-variant flex flex-col justify-between h-32 shadow-sm border-l-4 border-l-purple-600">
           <div className="flex justify-between items-start">
             <span className="text-[10px] text-outline font-bold uppercase tracking-wider">Hệ thống mạng</span>
-            <span className="material-symbols-outlined text-purple-600">terminal</span>
+            <Icon name="terminal" className="text-purple-600" />
           </div>
           <div>
             <p className="font-headline-md text-headline-md text-on-surface">99.98%</p>
             <p className="text-[10px] text-secondary font-bold flex items-center gap-0.5">
-              <span className="material-symbols-outlined text-[12px]">trending_up</span> Mọi máy trạm trực tuyến
+              <Icon name="trending_up" className="text-[12px]" /> Mọi máy trạm trực tuyến
             </p>
           </div>
         </div>
@@ -61,14 +62,14 @@ export const ManagerOverview: React.FC = () => {
         <div className="bg-white p-5 rounded-xl border border-outline-variant flex flex-col justify-between h-32 shadow-sm border-l-4 border-l-error">
           <div className="flex justify-between items-start">
             <span className="text-[10px] text-outline font-bold uppercase tracking-wider">Hóa Đơn Chờ</span>
-            <span className="material-symbols-outlined text-error">receipt_long</span>
+            <Icon name="receipt_long" className="text-error" />
           </div>
           <div>
             <p className="font-headline-md text-headline-md text-on-surface">
               {invoices.filter((i) => i.status === 'Pending').length} HĐ
             </p>
             <p className="text-[10px] text-error font-bold flex items-center gap-0.5">
-              <span className="material-symbols-outlined text-[12px]">warning</span> {overdueCount} Quá hạn thu phí
+              <Icon name="warning" className="text-[12px]" /> {overdueCount} Quá hạn thu phí
             </p>
           </div>
         </div>
@@ -76,12 +77,12 @@ export const ManagerOverview: React.FC = () => {
         <div className="bg-white p-5 rounded-xl border border-outline-variant flex flex-col justify-between h-32 shadow-sm border-l-4 border-l-secondary">
           <div className="flex justify-between items-start">
             <span className="text-[10px] text-outline font-bold uppercase tracking-wider">Tổng Doanh Thu</span>
-            <span className="material-symbols-outlined text-secondary">payments</span>
+            <Icon name="payments" className="text-secondary" />
           </div>
           <div>
             <p className="font-headline-md text-headline-md text-on-surface">₫{totalRevenue.toLocaleString()}</p>
             <p className="text-[10px] text-secondary font-bold flex items-center gap-0.5">
-              <span className="material-symbols-outlined text-[12px]">check_circle</span> Đã ghi nhận thực thu
+              <Icon name="check_circle" className="text-[12px]" /> Đã ghi nhận thực thu
             </p>
           </div>
         </div>
@@ -89,12 +90,12 @@ export const ManagerOverview: React.FC = () => {
         <div className="bg-white p-5 rounded-xl border border-outline-variant flex flex-col justify-between h-32 shadow-sm border-l-4 border-l-orange-500">
           <div className="flex justify-between items-start">
             <span className="text-[10px] text-outline font-bold uppercase tracking-wider">Lượng khám hôm nay</span>
-            <span className="material-symbols-outlined text-orange-500">timer</span>
+            <Icon name="timer" className="text-orange-500" />
           </div>
           <div>
             <p className="font-headline-md text-headline-md text-on-surface">{activeQueueCount} Ca chờ</p>
             <p className="text-[10px] text-orange-500 font-bold flex items-center gap-0.5">
-              <span className="material-symbols-outlined text-[12px]">schedule</span>
+              <Icon name="schedule" className="text-[12px]" />
               {avgQueueWait > 0 ? `Chờ trung bình: ${avgQueueWait} phút` : 'Không có ca chờ'}
             </p>
           </div>

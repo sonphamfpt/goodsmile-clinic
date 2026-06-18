@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Icon } from '../../components/Icon';
 import { useSearchParams } from 'react-router-dom';
 import { useClinic } from '../../context/ClinicContext';
 import { DentalChart } from '../../components/DentalChart';
@@ -250,18 +251,20 @@ const DentistHome: React.FC = () => {
 
               <div className="flex gap-3 mt-5">
                 <div className={`flex-1 p-2.5 rounded-xl border flex items-center gap-3 ${activePatient.criticalAllergy !== 'Không' ? 'bg-error-container/30 border-error/30' : 'bg-surface-container border-outline-variant/50'}`}>
-                  <span className={`material-symbols-outlined text-lg ${activePatient.criticalAllergy !== 'Không' ? 'text-error' : 'text-on-surface-variant'}`}>
-                    {activePatient.criticalAllergy !== 'Không' ? 'warning' : 'verified'}
-                  </span>
+                  <Icon
+                    name={activePatient.criticalAllergy !== 'Không' ? 'warning' : 'verified'}
+                    className={`text-lg ${activePatient.criticalAllergy !== 'Không' ? 'text-error' : 'text-on-surface-variant'}`}
+                  />
                   <div>
                     <p className="text-[9px] font-extrabold uppercase tracking-widest opacity-70 mb-0.5">Dị ứng</p>
                     <p className={`text-xs font-bold ${activePatient.criticalAllergy !== 'Không' ? 'text-error' : 'text-on-surface'}`}>{activePatient.criticalAllergy}</p>
                   </div>
                 </div>
                 <div className={`flex-1 p-2.5 rounded-xl border flex items-center gap-3 ${activePatient.condition !== 'Bình thường' ? 'bg-amber-50 border-amber-200' : 'bg-surface-container border-outline-variant/50'}`}>
-                  <span className={`material-symbols-outlined text-lg ${activePatient.condition !== 'Bình thường' ? 'text-amber-600' : 'text-on-surface-variant'}`}>
-                    {activePatient.condition !== 'Bình thường' ? 'medical_information' : 'favorite'}
-                  </span>
+                  <Icon
+                    name={activePatient.condition !== 'Bình thường' ? 'medical_information' : 'favorite'}
+                    className={`text-lg ${activePatient.condition !== 'Bình thường' ? 'text-amber-600' : 'text-on-surface-variant'}`}
+                  />
                   <div>
                     <p className="text-[9px] font-extrabold uppercase tracking-widest opacity-70 mb-0.5">Bệnh nền</p>
                     <p className={`text-xs font-bold ${activePatient.condition !== 'Bình thường' ? 'text-amber-800' : 'text-on-surface'}`}>{activePatient.condition}</p>
@@ -274,7 +277,7 @@ const DentistHome: React.FC = () => {
             <div className="p-6 lg:w-1/2 flex flex-col">
               <div className="flex items-center justify-between mb-4 shrink-0">
                 <h4 className="text-xs font-extrabold uppercase tracking-wider text-on-surface-variant flex items-center gap-2">
-                  <span className="material-symbols-outlined text-sm">history</span>
+                  <Icon name="history" className="text-sm" />
                   Lịch sử điều trị gần đây
                   <span className="ml-1.5 px-2 py-0.5 text-[10px] font-bold bg-primary/10 text-primary rounded-full">
                     {activePatientRecords.length}
@@ -301,7 +304,7 @@ const DentistHome: React.FC = () => {
                             onClick={() => setSearchParams({ tab: 'records', patientId: activePatient.id })}
                             className="px-3 py-1 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg text-xs font-bold transition-all cursor-pointer inline-flex items-center gap-1 shadow-sm border border-green-200/50"
                           >
-                            <span className="material-symbols-outlined text-[14px]">folder_shared</span>
+                            <Icon name="folder_shared" className="text-[14px]" />
                             Xem chi tiết EMR
                           </button>
                         </td>
@@ -310,7 +313,7 @@ const DentistHome: React.FC = () => {
                     {activePatientRecords.length === 0 && (
                       <tr>
                         <td colSpan={3} className="px-4 py-8 text-center text-on-surface-variant text-xs">
-                          <span className="material-symbols-outlined text-2xl mb-1 opacity-50 block">inventory_2</span>
+                          <Icon name="inventory_2" className="text-2xl mb-1 opacity-50 block" />
                           Chưa có lịch sử điều trị
                         </td>
                       </tr>
@@ -420,7 +423,7 @@ const DentistHome: React.FC = () => {
                   {/* Phác đồ & Lộ trình điều trị */}
                   <div className="bg-slate-50 border border-outline-variant/60 rounded-xl p-4 space-y-3">
                     <label className="block text-xs font-bold uppercase text-on-surface-variant flex items-center gap-1.5">
-                      <span className="material-symbols-outlined text-[16px] text-primary">route</span>
+                      <Icon name="route" className="text-[16px] text-primary" />
                       Phác đồ & Lộ trình điều trị
                     </label>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -429,7 +432,7 @@ const DentistHome: React.FC = () => {
                         className={`p-3 rounded-xl border-2 cursor-pointer transition-all flex flex-col gap-1 select-none ${treatmentType === 'independent' ? 'border-primary bg-primary/5' : 'border-outline-variant hover:border-slate-305 bg-white'}`}
                       >
                         <div className="flex items-center gap-2">
-                          <span className={`material-symbols-outlined text-base ${treatmentType === 'independent' ? 'text-primary' : 'text-slate-400'}`}>medical_services</span>
+                          <Icon name="medical_services" className={`text-base ${treatmentType === 'independent' ? 'text-primary' : 'text-slate-400'}`} />
                           <span className="text-xs font-bold">Điều trị độc lập</span>
                         </div>
                         <p className="text-[10px] text-on-surface-variant leading-relaxed">Sinh hóa đơn mới cho các dịch vụ thực hiện trong ngày.</p>
@@ -440,7 +443,7 @@ const DentistHome: React.FC = () => {
                         className={`p-3 rounded-xl border-2 cursor-pointer transition-all flex flex-col gap-1 select-none ${treatmentType === 'plan_init' ? 'border-teal-600 bg-teal-50/30' : 'border-outline-variant hover:border-slate-305 bg-white'}`}
                       >
                         <div className="flex items-center gap-2">
-                          <span className={`material-symbols-outlined text-base ${treatmentType === 'plan_init' ? 'text-teal-600' : 'text-slate-400'}`}>assignment_add</span>
+                          <Icon name="assignment_add" className={`text-base ${treatmentType === 'plan_init' ? 'text-teal-600' : 'text-slate-400'}`} />
                           <span className="text-xs font-bold text-teal-950">Khởi tạo phác đồ</span>
                         </div>
                         <p className="text-[10px] text-on-surface-variant leading-relaxed">Lập lộ trình dài hạn (Niềng răng, Implant...). Xuất hóa đơn tổng 1 lần.</p>
@@ -458,7 +461,7 @@ const DentistHome: React.FC = () => {
                         className={`p-3 rounded-xl border-2 cursor-pointer transition-all flex flex-col gap-1 select-none ${patientPlans.length === 0 ? 'opacity-50 cursor-not-allowed bg-slate-100 border-slate-200' : treatmentType === 'plan_session' ? 'border-amber-600 bg-amber-50/30' : 'border-outline-variant hover:border-slate-305 bg-white'}`}
                       >
                         <div className="flex items-center gap-2">
-                          <span className={`material-symbols-outlined text-base ${treatmentType === 'plan_session' ? 'text-amber-600' : 'text-slate-400'}`}>calendar_today</span>
+                          <Icon name="calendar_today" className={`text-base ${treatmentType === 'plan_session' ? 'text-amber-600' : 'text-slate-400'}`} />
                           <span className="text-xs font-bold text-amber-950">Phiên điều trị tiếp</span>
                         </div>
                         <p className="text-[10px] text-on-surface-variant leading-relaxed">Ghi nhận tiến trình của phác đồ hiện tại. Không sinh thêm hóa đơn mới.</p>
@@ -501,12 +504,12 @@ const DentistHome: React.FC = () => {
                   <div className="space-y-2">
                     {hasServiceMismatch && (
                       <div className="p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-xl text-xs font-semibold flex items-start gap-2 animate-pulse">
-                        <span className="material-symbols-outlined text-amber-600 text-[18px] shrink-0">info</span>
+                        <Icon name="info" className="text-amber-600 text-[18px] shrink-0" />
                         <p>{hasServiceMismatch}</p>
                       </div>
                     )}
                     <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-[18px] text-on-surface-variant">search</span>
+                      <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-on-surface-variant" />
                       <input
                         type="text"
                         placeholder="Tìm dịch vụ nhanh (ví dụ: trám, nhổ, sứ...)"
@@ -518,9 +521,9 @@ const DentistHome: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => setServiceSearch('')}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-[16px] text-on-surface-variant hover:text-on-surface cursor-pointer"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[16px] text-on-surface-variant hover:text-on-surface cursor-pointer"
                         >
-                          close
+                          <Icon name="close" className="text-[16px]" />
                         </button>
                       )}
                     </div>
@@ -562,9 +565,9 @@ const DentistHome: React.FC = () => {
                             <button
                               type="button"
                               onClick={() => handleServiceCheckbox(id)}
-                              className="material-symbols-outlined text-[12px] hover:text-error cursor-pointer font-bold"
+                              className="text-[12px] hover:text-error cursor-pointer font-bold"
                             >
-                              close
+                              <Icon name="close" className="text-[12px] hover:text-error font-bold" />
                             </button>
                           </span>
                         );
@@ -583,7 +586,7 @@ const DentistHome: React.FC = () => {
                           className={`p-2.5 rounded-xl border cursor-pointer transition-all flex items-start gap-2.5 ${isSelected ? 'bg-primary/5 border-primary shadow-sm' : 'bg-white border-outline-variant hover:border-primary/40 hover:bg-slate-50'}`}
                         >
                           <div className={`w-4 h-4 rounded flex items-center justify-center shrink-0 mt-0.5 transition-colors ${isSelected ? 'bg-primary text-white border-primary' : 'border-2 border-outline-variant text-transparent bg-white'}`}>
-                            <span className="material-symbols-outlined text-[11px] font-bold">check</span>
+                            <Icon name="check" className="text-[11px] font-bold" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className={`text-xs font-bold leading-tight truncate ${isSelected ? 'text-primary' : 'text-on-surface'}`}>{s.name}</p>
@@ -632,9 +635,7 @@ const DentistHome: React.FC = () => {
                             </option>
                           ))}
                         </select>
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-[16px] pointer-events-none text-on-surface-variant">
-                          keyboard_arrow_down
-                        </span>
+                        <Icon name="keyboard_arrow_down" className="absolute right-3 top-1/2 -translate-y-1/2 text-[16px] pointer-events-none text-on-surface-variant" />
                       </div>
                     </div>
                   </div>
@@ -705,9 +706,9 @@ const DentistHome: React.FC = () => {
                                   onClick={() => {
                                     setPrescriptionDrugs(prev => prev.filter((_, i) => i !== index));
                                   }}
-                                  className="material-symbols-outlined text-base text-outline hover:text-error cursor-pointer"
+                                  className="text-base text-outline hover:text-error cursor-pointer"
                                 >
-                                  delete
+                                  <Icon name="delete" className="text-base text-outline hover:text-error" />
                                 </button>
                               </td>
                             </tr>
@@ -726,7 +727,7 @@ const DentistHome: React.FC = () => {
 
                   {hasAllergyConflict && (
                     <div className="p-3 bg-red-50 border border-red-200 text-red-900 rounded-xl text-xs font-semibold flex items-start gap-2.5 shadow-sm border-dashed">
-                      <span className="material-symbols-outlined text-red-600 text-[18px] shrink-0">warning</span>
+                      <Icon name="warning" className="text-red-600 text-[18px] shrink-0" />
                       <div>
                         <p className="uppercase text-[9px] font-black text-red-700 tracking-wider">CẢNH BÁO AN TOÀN DỊ ỨNG THUỐC!</p>
                         <p className="mt-0.5 leading-relaxed font-semibold">
@@ -739,7 +740,7 @@ const DentistHome: React.FC = () => {
                   )}
 
                   <div className="p-3 bg-amber-50 border border-amber-200 text-amber-800 rounded-lg text-xs font-semibold flex items-start gap-2">
-                    <span className="material-symbols-outlined text-amber-600 text-[16px] shrink-0 mt-0.5">warning</span>
+                    <Icon name="warning" className="text-amber-600 text-[16px] shrink-0 mt-0.5" />
                     <p>Lưu ý: Bệnh nhân tự mang đơn thuốc ra ngoài mua. Phòng khám hiện tại không trực tiếp bán thuốc.</p>
                   </div>
                 </div>
@@ -768,7 +769,7 @@ const DentistHome: React.FC = () => {
                       : 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
                   }`}
                 >
-                  <span className="material-symbols-outlined">border_color</span>
+                  <Icon name="border_color" />
                   Xem & Ký Bệnh Án
                 </button>
               </div>
@@ -778,7 +779,7 @@ const DentistHome: React.FC = () => {
       ) : (
         /* Empty Workspace screen */
         <div className="bg-white rounded-xl border border-outline-variant p-12 text-center text-on-surface-variant clinical-shadow flex flex-col justify-center items-center h-96">
-          <span className="material-symbols-outlined text-[64px] text-primary/20 mb-4 animate-bounce">dentistry</span>
+          <Icon name="dentistry" className="text-[64px] text-primary/20 mb-4 animate-bounce" />
           <h3 className="text-headline-sm font-bold text-on-surface">Không Có Bệnh Nhân Nào Đang Chọn</h3>
           <p className="text-body-md text-on-surface-variant max-w-sm mt-2">
             Vui lòng chọn một bệnh nhân từ tab <strong>Hàng chờ bác sĩ</strong> để tải hồ sơ nha khoa lâm sàng.
@@ -792,11 +793,11 @@ const DentistHome: React.FC = () => {
             {/* Header */}
             <div className="bg-slate-900 px-6 py-4 text-white flex justify-between items-center shrink-0">
               <h3 className="font-bold text-sm flex items-center gap-2">
-                <span className="material-symbols-outlined">folder_shared</span>
+                <Icon name="folder_shared" />
                 Xem Trước & Ký Xác Nhận Bệnh Án EMR
               </h3>
               <button onClick={() => setShowSignModal(false)} className="p-1 hover:bg-white/20 rounded-full cursor-pointer flex items-center justify-center">
-                <span className="material-symbols-outlined">close</span>
+                <Icon name="close" />
               </button>
             </div>
 
@@ -947,7 +948,7 @@ const DentistHome: React.FC = () => {
             {/* Footer buttons */}
             <div className="p-4 bg-slate-50 border-t border-outline-variant flex justify-between items-center shrink-0">
               <span className="text-[10px] text-slate-500 font-semibold flex items-center gap-1">
-                <span className="material-symbols-outlined text-sm text-green-600">lock</span>
+                <Icon name="lock" className="text-sm text-green-600" />
                 Mã bảo mật EMR SHA-256 đã tự động sinh
               </span>
               <div className="flex gap-2">
@@ -964,7 +965,7 @@ const DentistHome: React.FC = () => {
                   }}
                   className="px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow active:scale-95 transition-all"
                 >
-                  <span className="material-symbols-outlined text-[16px]">draw</span>
+                  <Icon name="draw" className="text-[16px]" />
                   Xác Nhận Ký & Gửi Hóa Đơn
                 </button>
               </div>

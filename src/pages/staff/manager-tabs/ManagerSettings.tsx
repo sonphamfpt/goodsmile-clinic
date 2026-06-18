@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Icon } from '../../../components/Icon';
 import { useClinic } from '../../../context/ClinicContext';
 
 export const ManagerSettings: React.FC = () => {
@@ -58,7 +59,7 @@ export const ManagerSettings: React.FC = () => {
       {/* Title */}
       <div className="bg-white p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col sm:flex-row gap-4 items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-purple-600 font-bold">settings</span>
+          <Icon name="settings" className="text-purple-600 font-bold" />
           <div>
             <h3 className="font-bold text-on-surface">Cấu Hình Bảng Giá Dịch Vụ</h3>
             <p className="text-xs text-on-surface-variant">Thiết lập đơn giá điều trị nha khoa, thời gian làm việc ước tính</p>
@@ -69,7 +70,7 @@ export const ManagerSettings: React.FC = () => {
             onClick={() => setShowAddService(true)}
             className="bg-primary text-on-primary px-4 py-2 rounded-lg font-bold text-xs flex items-center gap-1 hover:bg-primary-container transition-all cursor-pointer shadow-md"
           >
-            <span className="material-symbols-outlined text-sm">add</span> Thêm dịch vụ mới
+            <Icon name="add" className="text-sm" /> Thêm dịch vụ mới
           </button>
         </div>
       </div>
@@ -146,11 +147,11 @@ export const ManagerSettings: React.FC = () => {
           <div className="bg-white rounded-xl border border-outline-variant max-w-sm w-full overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-150">
             <div className="px-6 py-4 bg-primary text-on-primary flex justify-between items-center">
               <h3 className="font-headline-sm text-headline-sm flex items-center gap-2">
-                <span className="material-symbols-outlined">add_box</span>
+                <Icon name="add_box" />
                 Cấu Hình Dịch Vụ Mới
               </h3>
               <button onClick={() => setShowAddService(false)} className="text-on-primary hover:text-white cursor-pointer">
-                <span className="material-symbols-outlined">close</span>
+                <Icon name="close" />
               </button>
             </div>
 

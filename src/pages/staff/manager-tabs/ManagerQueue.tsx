@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Icon } from '../../../components/Icon';
 import { useClinic } from '../../../context/ClinicContext';
 import { QueueItem } from '../../../types/clinic';
 
@@ -89,7 +90,7 @@ export const ManagerQueue: React.FC = () => {
       <div className="flex flex-col gap-3 shrink-0">
         <div className="bg-white px-5 py-3 rounded-xl border border-outline-variant shadow-sm flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <span className="material-symbols-outlined text-purple-600">pending_actions</span>
+            <Icon name="pending_actions" className="text-purple-600" />
             <div>
               <h3 className="font-bold text-sm text-on-surface">Bảng Giám Sát Hàng Chờ & Ghế Khám</h3>
               <p className="text-[11px] text-on-surface-variant">Thời gian thực — cuộn ngang để xem tất cả phòng — click card để xem chi tiết</p>
@@ -114,7 +115,7 @@ export const ManagerQueue: React.FC = () => {
           ].map((kpi, i) => (
             <div key={i} className="bg-white rounded-xl border border-outline-variant shadow-sm p-4 flex items-center gap-3">
               <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${kpi.bg}`}>
-                <span className="material-symbols-outlined text-xl">{kpi.icon}</span>
+                <Icon name={kpi.icon} className="text-xl" />
               </div>
               <div>
                 <p className="text-[9px] text-outline font-bold uppercase tracking-wide">{kpi.label}</p>
@@ -162,13 +163,13 @@ export const ManagerQueue: React.FC = () => {
                     <p className="text-[8px] text-blue-600 font-bold uppercase mb-0.5">Đang điều trị</p>
                     <p className="font-bold text-xs text-on-surface truncate">{room.inChairItem.patientName}</p>
                     <div className="flex items-center gap-1 mt-1 text-blue-600">
-                      <span className="material-symbols-outlined text-[11px] animate-spin">progress_activity</span>
+                      <Icon name="progress_activity" className="text-[11px] animate-spin" />
                       <span className="text-[9px] font-bold font-data-mono">{room.inChairItem.elapsedTimeMin ?? 2} phút</span>
                     </div>
                   </div>
                 ) : (
                   <div className="bg-emerald-50 rounded-lg p-2.5 border border-emerald-200 flex items-center gap-1.5">
-                    <span className="material-symbols-outlined text-emerald-600 text-sm">check_circle</span>
+                    <Icon name="check_circle" className="text-emerald-600 text-sm" />
                     <p className="text-[10px] text-emerald-700 font-semibold">Ghế trống — sẵn sàng</p>
                   </div>
                 )}
@@ -198,7 +199,7 @@ export const ManagerQueue: React.FC = () => {
               {/* CTA hint */}
               <div className="px-4 pb-3 pt-1 border-t border-outline-variant/20">
                 <p className="text-[8px] text-purple-600 font-bold text-center flex items-center justify-center gap-0.5">
-                  <span className="material-symbols-outlined text-[10px]">open_in_full</span>
+                  <Icon name="open_in_full" className="text-[10px]" />
                   Xem chi tiết đầy đủ
                 </p>
               </div>
@@ -236,7 +237,7 @@ export const ManagerQueue: React.FC = () => {
                   onClick={() => setSelectedRoom(null)}
                   className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/35 flex items-center justify-center transition-colors cursor-pointer shrink-0"
                 >
-                  <span className="material-symbols-outlined text-[18px]">close</span>
+                  <Icon name="close" className="text-[18px]" />
                 </button>
               </div>
 
@@ -249,7 +250,7 @@ export const ManagerQueue: React.FC = () => {
                   { label: 'Thời gian đã khám', val: selectedRoom.inChairItem ? `${selectedRoom.inChairItem.elapsedTimeMin ?? 2}p` : '—', unit: '', icon: 'timer' },
                 ].map((kpi, i) => (
                   <div key={i} className="bg-white/15 rounded-xl p-3 text-center">
-                    <span className="material-symbols-outlined text-lg opacity-80">{kpi.icon}</span>
+                    <Icon name={kpi.icon} className="text-lg opacity-80" />
                     <p className="text-xl font-extrabold leading-tight mt-0.5">{kpi.val}<span className="text-xs font-semibold opacity-80 ml-0.5">{kpi.unit}</span></p>
                     <p className="text-[9px] opacity-70 font-semibold uppercase tracking-wide mt-0.5">{kpi.label}</p>
                   </div>
@@ -267,7 +268,7 @@ export const ManagerQueue: React.FC = () => {
                   {/* Ghế khám hiện tại */}
                   <section>
                     <h4 className="text-[10px] font-bold uppercase text-outline tracking-widest mb-3 flex items-center gap-1.5">
-                      <span className="material-symbols-outlined text-sm text-blue-600">dentistry</span>
+                      <Icon name="dentistry" className="text-sm text-blue-600" />
                       Ghế Khám Hiện Tại
                     </h4>
                     {selectedRoom.inChairItem ? (
@@ -280,7 +281,7 @@ export const ManagerQueue: React.FC = () => {
                             <p className="text-[10px] text-outline mt-0.5">ID: {selectedRoom.inChairItem.patientId}</p>
                           </div>
                           <div className="bg-blue-600 text-white rounded-full px-3 py-1 text-[10px] font-bold flex items-center gap-1">
-                            <span className="material-symbols-outlined text-[12px] animate-spin">progress_activity</span>
+                            <Icon name="progress_activity" className="text-[12px] animate-spin" />
                             Đang khám
                           </div>
                         </div>
@@ -302,7 +303,7 @@ export const ManagerQueue: React.FC = () => {
                         {/* Dịch vụ đang thực hiện */}
                         {selectedRoom.inChairItem.serviceName && (
                           <div className="bg-white border border-blue-100 rounded-lg p-2.5 flex items-center gap-2">
-                            <span className="material-symbols-outlined text-blue-500 text-sm">medical_services</span>
+                            <Icon name="medical_services" className="text-blue-500 text-sm" />
                             <div>
                               <p className="text-[9px] text-outline font-bold">Dịch vụ</p>
                               <p className="text-xs font-semibold text-on-surface">{selectedRoom.inChairItem.serviceName}</p>
@@ -326,7 +327,7 @@ export const ManagerQueue: React.FC = () => {
                       </div>
                     ) : (
                       <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5 flex flex-col items-center gap-2 text-center">
-                        <span className="material-symbols-outlined text-4xl text-emerald-500">event_seat</span>
+                        <Icon name="event_seat" className="text-4xl text-emerald-500" />
                         <p className="font-bold text-sm text-emerald-800">Ghế đang trống</p>
                         <p className="text-[11px] text-emerald-600">Sẵn sàng nhận bệnh nhân tiếp theo</p>
                       </div>
@@ -336,14 +337,14 @@ export const ManagerQueue: React.FC = () => {
                   {/* Đã hoàn thành hôm nay (trong phòng này) */}
                   <section>
                     <h4 className="text-[10px] font-bold uppercase text-outline tracking-widest mb-3 flex items-center gap-1.5">
-                      <span className="material-symbols-outlined text-sm text-emerald-600">check_circle</span>
+                      <Icon name="check_circle" className="text-sm text-emerald-600" />
                       Đã Hoàn Thành Hôm Nay ({selectedRoom.completedInRoom.length} ca)
                     </h4>
                     {selectedRoom.completedInRoom.length > 0 ? (
                       <div className="space-y-2">
                         {selectedRoom.completedInRoom.map((p) => (
                           <div key={p.id} className="flex items-center gap-3 bg-slate-50 rounded-lg border border-outline-variant/40 px-3 py-2">
-                            <span className="material-symbols-outlined text-emerald-500 text-sm shrink-0">done</span>
+                            <Icon name="done" className="text-emerald-500 text-sm shrink-0" />
                             <div className="flex-1 min-w-0">
                               <p className="font-semibold text-xs text-on-surface truncate">{p.patientName}</p>
                               <p className="text-[9px] text-outline">Check-in: {p.checkInTime}</p>
@@ -365,7 +366,7 @@ export const ManagerQueue: React.FC = () => {
                 {/* Right col: Queue timeline */}
                 <div className="p-6 space-y-4">
                   <h4 className="text-[10px] font-bold uppercase text-outline tracking-widest mb-3 flex items-center gap-1.5">
-                    <span className="material-symbols-outlined text-sm text-amber-600">queue</span>
+                    <Icon name="queue" className="text-sm text-amber-600" />
                     Hàng Chờ & Dự Kiến Vào Khám
                   </h4>
 
@@ -433,7 +434,7 @@ export const ManagerQueue: React.FC = () => {
 
                                 {p.serviceName && (
                                   <div className="flex items-center gap-1.5 text-[9px] text-on-surface-variant bg-white rounded-lg border border-outline-variant/30 px-2 py-1">
-                                    <span className="material-symbols-outlined text-[11px] text-purple-500">medical_services</span>
+                                    <Icon name="medical_services" className="text-[11px] text-purple-500" />
                                     {p.serviceName}
                                   </div>
                                 )}
@@ -446,7 +447,7 @@ export const ManagerQueue: React.FC = () => {
                         <div className="relative pl-12">
                           <div className="absolute left-3.5 w-3 h-3 rounded-full bg-outline-variant border-2 border-white z-10 mt-1"></div>
                           <div className="flex items-center gap-2 text-[10px] text-outline italic">
-                            <span className="material-symbols-outlined text-sm">flag</span>
+                            <Icon name="flag" className="text-sm" />
                             Cuối hàng chờ — Bệnh nhân cuối chờ thêm ~{selectedRoom.avgWait} phút
                           </div>
                         </div>
@@ -454,7 +455,7 @@ export const ManagerQueue: React.FC = () => {
                     </div>
                   ) : (
                     <div className="flex flex-col items-center justify-center py-10 text-center">
-                      <span className="material-symbols-outlined text-5xl text-slate-300 mb-3">inbox</span>
+                      <Icon name="inbox" className="text-5xl text-slate-300 mb-3" />
                       <p className="font-bold text-sm text-on-surface">Không có bệnh nhân chờ</p>
                       <p className="text-[11px] text-outline mt-1">Phòng này đang rảnh, có thể nhận bệnh nhân mới ngay</p>
                     </div>

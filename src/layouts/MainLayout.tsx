@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { BrandLogo } from '../components/BrandLogo';
+import { Icon } from '../components/Icon';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -133,13 +134,13 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             </p>
             <div className="flex gap-stack-md mt-stack-lg">
               <a href="#" className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-primary border border-outline-variant hover:bg-primary hover:text-white transition-all">
-                <span className="material-symbols-outlined text-lg">public</span>
+                <Icon name="public" className="text-lg" />
               </a>
               <a href="#" className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-primary border border-outline-variant hover:bg-primary hover:text-white transition-all">
-                <span className="material-symbols-outlined text-lg">mail</span>
+                <Icon name="mail" className="text-lg" />
               </a>
               <a href="#" className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-primary border border-outline-variant hover:bg-primary hover:text-white transition-all">
-                <span className="material-symbols-outlined text-lg">call</span>
+                <Icon name="call" className="text-lg" />
               </a>
             </div>
           </div>

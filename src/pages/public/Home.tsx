@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BookingModal } from '../../components/BookingModal';
 import { LogoIcon } from '../../components/BrandLogo';
+import { FaUsers, FaStar } from "react-icons/fa";
+import { MdMedicalServices, MdVerified } from "react-icons/md";
+import { RiAwardFill } from "react-icons/ri";
+import { Icon } from '../../components/Icon';
 
 // ── Promotional Banner Popup ──
 const PromoBanner: React.FC<{ onClose: () => void; onBookNow: () => void }> = ({ onClose, onBookNow }) => {
@@ -35,6 +39,13 @@ const PromoBanner: React.FC<{ onClose: () => void; onBookNow: () => void }> = ({
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+  
+  const stats = [
+  { icon: <FaUsers />, val: '12,500+', label: 'Bệnh nhân hài lòng' },
+  { icon: <MdMedicalServices />, val: '15+', label: 'Năm kinh nghiệm' },
+  { icon: <RiAwardFill />, val: '4', label: 'Bác sĩ chuyên khoa' },
+  { icon: <FaStar />, val: '4.9/5', label: 'Đánh giá Google' },
+  ];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-300">
@@ -121,7 +132,7 @@ const PromoBanner: React.FC<{ onClose: () => void; onBookNow: () => void }> = ({
               Kiến tạo nụ cười rạng rỡ, tự tin cùng đội ngũ chuyên gia nha khoa hàng đầu.
             </p>
             <div className="mt-4 inline-flex items-center gap-1 bg-white/15 px-3 py-1 rounded-full text-[10px] font-bold border border-white/10">
-              <span className="material-symbols-outlined text-[12px] text-yellow-300">verified</span>
+              <Icon name="verified" className="text-[12px] text-yellow-300" />
               Công nghệ Đạt chuẩn ISO
             </div>
           </div>
@@ -134,14 +145,14 @@ const PromoBanner: React.FC<{ onClose: () => void; onBookNow: () => void }> = ({
             onClick={onClose}
             className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-all cursor-pointer"
           >
-            <span className="material-symbols-outlined text-[18px] font-bold">close</span>
+            <Icon name="close" className="text-[18px] font-bold" />
           </button>
 
           <div className="space-y-4">
             {/* Promo Tag */}
             <div>
               <span className="inline-flex items-center gap-1 bg-amber-500/10 text-amber-700 text-[10px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full">
-                <span className="material-symbols-outlined text-[12px] text-amber-600 animate-pulse-soft">star</span>
+                <Icon name="star" className="text-[12px] text-amber-600 animate-pulse-soft" />
                 Ưu đãi tháng 6 / 2026
               </span>
             </div>
@@ -195,7 +206,7 @@ const PromoBanner: React.FC<{ onClose: () => void; onBookNow: () => void }> = ({
                 ></div>
               </div>
               <p className="text-[10px] text-amber-600 font-bold flex items-center gap-1 mt-1">
-                <span className="material-symbols-outlined text-[12px]">info</span>
+                <Icon name="info" className="text-[12px]" />
                 Lưu ý: Hơn 100 người khác đang xem ưu đãi này.
               </p>
             </div>
@@ -205,7 +216,7 @@ const PromoBanner: React.FC<{ onClose: () => void; onBookNow: () => void }> = ({
               <div className="ticket-circle-l"></div>
               <div className="ticket-circle-r"></div>
               
-              <span className="material-symbols-outlined text-primary text-xl">local_offer</span>
+              <Icon name="local_offer" className="text-primary text-xl" />
               <div className="flex-1">
                 <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Mã coupon của bạn</p>
                 <p className="font-extrabold text-primary tracking-widest text-base font-mono">SMILE30</p>
@@ -239,7 +250,7 @@ const PromoBanner: React.FC<{ onClose: () => void; onBookNow: () => void }> = ({
               className="flex-1 py-3 bg-gradient-to-r from-primary to-green-600 text-white rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-primary/20 active:scale-95 transition-all cursor-pointer text-center flex items-center justify-center gap-1.5"
             >
               Đặt lịch ngay
-              <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+              <Icon name="arrow_forward" className="text-[16px]" />
             </button>
           </div>
 
@@ -285,6 +296,13 @@ export const Home: React.FC = () => {
     { name: 'Lê Phương Linh', role: 'Giáo viên', rating: 5, comment: 'Tẩy trắng răng xong kết quả rõ ngay! Được miễn phí khám ban đầu, báo giá rõ ràng trước khi làm. Nhân viên lễ tân thân thiện, cho mình uống nước chờ. Rất hài lòng!', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=80&h=80&q=80' },
   ];
 
+  const stats = [
+    { icon: <FaUsers />, val: '12,500+', label: 'Bệnh nhân hài lòng' },
+    { icon: <MdMedicalServices />, val: '15+', label: 'Năm kinh nghiệm' },
+    { icon: <RiAwardFill />, val: '4', label: 'Bác sĩ chuyên khoa' },
+    { icon: <FaStar />, val: '4.9/5', label: 'Đánh giá Google' },
+  ];
+
   return (
     <div className="flex flex-col bg-background">
 
@@ -313,7 +331,7 @@ export const Home: React.FC = () => {
 
         <div className="flex-1 space-y-6 max-w-2xl relative z-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/15 text-white/90 rounded-full text-xs font-bold border border-white/20">
-            <span className="material-symbols-outlined text-[16px]">verified</span>
+            <Icon name="verified" className="text-[16px]" />
             Giải pháp nha khoa 4.0 hàng đầu Việt Nam
           </div>
           <h1 className="font-headline-lg text-headline-lg text-white leading-tight">
@@ -329,7 +347,7 @@ export const Home: React.FC = () => {
               className="bg-white text-primary px-8 py-3.5 rounded-xl font-bold flex items-center gap-2 hover:shadow-xl active:scale-95 transition-all cursor-pointer"
             >
               Đặt lịch khám ngay
-              <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+              <Icon name="arrow_forward" className="text-[18px]" />
             </button>
             <button
               onClick={() => navigate('/services')}
@@ -341,15 +359,15 @@ export const Home: React.FC = () => {
           <div className="flex items-center gap-4 pt-4 border-t border-outline-variant/30">
             <div className="flex -space-x-3">
               {[
-                'https://images.unsplash.com/photo-1588776814546-1ffedac39b40?auto=format&fit=crop&w=900&q=80',
-                'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=150&h=150&q=80',
+                'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=500&q=80',
+                'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=500&q=80',
               ].map((src, i) => (
                 <img key={i} src={src} alt="Doctor" className="w-10 h-10 rounded-full border-2 border-white object-cover" />
               ))}
               <div className="w-10 h-10 rounded-full border-2 border-white bg-primary-container text-white flex items-center justify-center text-xs font-bold">+500</div>
             </div>
             <p className="text-sm font-medium text-on-surface-variant">
-              Được tin dùng bởi <span className="text-primary font-bold">500+</span> phòng khám trên toàn quốc
+               Được tin dùng bởi <span className="text-primary font-bold">500+</span> phòng khám trên toàn quốc
             </p>
           </div>
         </div>
@@ -358,13 +376,13 @@ export const Home: React.FC = () => {
             <img
               alt="Dental Clinic Dashboard"
               className="w-full object-cover"
-              src="https://images.unsplash.com/photo-1629909615957-be38d48fbbe4?auto=format&fit=crop&w=900&q=80"
+              src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=1200&q=80"
             />
           </div>
           <div className="absolute -top-6 -right-6 bg-white p-4 rounded-xl shadow-xl z-20 hidden lg:block border border-outline-variant">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-secondary-container rounded-full flex items-center justify-center text-on-secondary-container">
-                <span className="material-symbols-outlined">pending_actions</span>
+                <Icon name="pending_actions" />
               </div>
               <div>
                 <p className="text-xs text-on-surface-variant">Hàng chờ thực tế</p>
@@ -378,14 +396,11 @@ export const Home: React.FC = () => {
       {/* ── Stats Bar ── */}
       <section className="bg-primary text-on-primary py-8 px-6 md:px-16">
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          {[
-            { icon: 'groups', val: '12,500+', label: 'Bệnh nhân hài lòng' },
-            { icon: 'medical_services', val: '15+',     label: 'Năm kinh nghiệm' },
-            { icon: 'workspace_premium', val: '4',      label: 'Bác sĩ chuyên khoa' },
-            { icon: 'star', val: '4.9/5',              label: 'Đánh giá Google' },
-          ].map((stat, i) => (
+          {stats.map((stat, i) => (
             <div key={i} className="flex flex-col items-center gap-2">
-              <span className="material-symbols-outlined text-3xl opacity-80">{stat.icon}</span>
+              <div className="text-3xl opacity-80">
+                {stat.icon}
+              </div>
               <p className="text-3xl font-extrabold">{stat.val}</p>
               <p className="text-sm opacity-75 font-semibold">{stat.label}</p>
             </div>
@@ -405,7 +420,7 @@ export const Home: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             <div className="md:col-span-2 bg-white rounded-xl border border-outline-variant p-6 flex flex-col justify-between hover:shadow-md transition-all">
               <div>
-                <span className="material-symbols-outlined text-primary text-4xl mb-3">monitor_heart</span>
+                <Icon name="monitor_heart" className="text-primary text-4xl mb-3" />
                 <h3 className="font-headline-md text-headline-md mb-2">Hàng Chờ Thực Tế (Real-time)</h3>
                 <p className="text-on-surface-variant text-sm">Theo dõi trạng thái bệnh nhân từ lúc check-in đến khi hoàn tất điều trị. Đồng bộ tức thì giữa lễ tân, bác sĩ và thu ngân.</p>
               </div>
@@ -418,22 +433,22 @@ export const Home: React.FC = () => {
             </div>
             <div className="bg-secondary-container rounded-xl p-6 flex flex-col justify-between text-on-secondary-container hover:shadow-md transition-all">
               <div>
-                <span className="material-symbols-outlined text-3xl mb-3">psychology</span>
+                <Icon name="psychology" className="text-3xl mb-3" />
                 <h3 className="font-headline-md text-headline-md mb-2">Trợ Lý AI Thông Minh</h3>
                 <p className="text-sm">Tư vấn sức khỏe tự động và dự đoán các vấn đề nha khoa tiềm ẩn dựa trên dữ liệu lâm sàng.</p>
               </div>
               <div onClick={() => navigate('/login')} className="flex items-center gap-1 text-sm font-bold cursor-pointer hover:underline mt-4">
-                Khám phá AI <span className="material-symbols-outlined">chevron_right</span>
+                Khám phá AI <Icon name="chevron_right" />
               </div>
             </div>
             <div className="bg-primary text-on-primary rounded-xl p-6 flex flex-col justify-between hover:shadow-md transition-all">
               <div>
-                <span className="material-symbols-outlined text-3xl mb-3">biotech</span>
+                <Icon name="biotech" className="text-3xl mb-3" />
                 <h3 className="font-headline-md text-headline-md mb-2">Độ Chính Xác Tuyệt Đối</h3>
                 <p className="text-sm">Hệ thống sơ đồ răng kỹ thuật số giúp bác sĩ lập kế hoạch điều trị chi tiết và minh bạch.</p>
               </div>
               <div className="flex items-center gap-2 mt-4">
-                <span className="material-symbols-outlined">stars</span>
+                <Icon name="stars" />
                 <span className="text-sm font-semibold">Tiêu chuẩn quốc tế ISO 13485</span>
               </div>
             </div>
@@ -443,7 +458,7 @@ export const Home: React.FC = () => {
                 <p className="text-on-surface-variant text-sm">Hồ sơ bệnh án điện tử (EMR) được mã hóa theo tiêu chuẩn HIPAA, đảm bảo quyền riêng tư và an toàn thông tin tuyệt đối.</p>
               </div>
               <div className="hidden sm:flex w-24 h-24 bg-white rounded-full items-center justify-center shadow-inner shrink-0">
-                <span className="material-symbols-outlined text-primary text-5xl">encrypted</span>
+                <Icon name="encrypted" className="text-primary text-5xl" />
               </div>
             </div>
           </div>
@@ -470,7 +485,7 @@ export const Home: React.FC = () => {
             ].map((svc, i) => (
               <div key={i} onClick={() => navigate('/services')} className="bg-white rounded-xl border border-outline-variant p-4 hover:shadow-md hover:border-primary/30 transition-all cursor-pointer group">
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${svc.color}`}>
-                  <span className="material-symbols-outlined text-xl">{svc.icon}</span>
+                  <Icon name={svc.icon} className="text-xl" />
                 </div>
                 <h4 className="font-bold text-sm text-on-surface group-hover:text-primary transition-colors">{svc.name}</h4>
                 <p className="text-[10px] text-on-surface-variant mt-0.5">{svc.desc}</p>
@@ -512,7 +527,7 @@ export const Home: React.FC = () => {
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-3">
                   <div className={`p-2 rounded-lg flex-shrink-0 ${item.color}`}>
-                    <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
+                    <Icon name={item.icon} className="text-[20px]" />
                   </div>
                   <div>
                     <h4 className="font-bold text-sm text-on-surface">{item.title}</h4>
@@ -535,7 +550,7 @@ export const Home: React.FC = () => {
             <h2 className="font-headline-lg text-headline-lg text-on-surface">Khách Hàng Nói Gì Về GoodSmile?</h2>
             <div className="flex items-center justify-center gap-1 mt-2">
               {[...Array(5)].map((_, i) => (
-                <span key={i} className="material-symbols-outlined text-amber-400 text-xl">star</span>
+                <FaStar key={i} className="text-amber-400 text-[14px]" />
               ))}
               <span className="text-sm font-bold text-on-surface ml-2">4.9/5</span>
               <span className="text-sm text-outline ml-1">(1.240 đánh giá)</span>
@@ -545,8 +560,8 @@ export const Home: React.FC = () => {
             {reviews.map((r, i) => (
               <div key={i} className="bg-surface-container-low rounded-xl border border-outline-variant p-5 space-y-4 hover:shadow-md transition-all">
                 <div className="flex items-center gap-1">
-                  {[...Array(r.rating)].map((_, j) => (
-                    <span key={j} className="material-symbols-outlined text-amber-400 text-[16px]">star</span>
+                  {[...Array(5)].map((_, i) => (
+                    <FaStar key={i} className="text-amber-400 text-[14px]" />
                   ))}
                 </div>
                 <p className="text-sm text-on-surface-variant leading-relaxed">"{r.comment}"</p>
@@ -557,7 +572,7 @@ export const Home: React.FC = () => {
                     <p className="text-[10px] text-outline">{r.role}</p>
                   </div>
                   <span className="ml-auto text-[10px] text-outline flex items-center gap-0.5">
-                    <span className="material-symbols-outlined text-[14px] text-green-500">verified</span> Đã xác minh
+                    <MdVerified className="text-[14px] text-green-500" /> Đã xác minh
                   </span>
                 </div>
               </div>
@@ -581,9 +596,7 @@ export const Home: React.FC = () => {
                   className="w-full text-left px-5 py-4 flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors cursor-pointer"
                 >
                   <span className="font-semibold text-sm text-on-surface">{faq.q}</span>
-                  <span className={`material-symbols-outlined text-outline shrink-0 transition-transform duration-200 ${activeFaq === i ? 'rotate-180' : ''}`}>
-                    expand_more
-                  </span>
+                  <Icon name="pending_actions" className={`text-outline shrink-0 transition-transform duration-200 ${activeFaq === i ? 'rotate-180' : ''}`} />
                 </button>
                 {activeFaq === i && (
                   <div className="px-5 pb-4 text-sm text-on-surface-variant border-t border-outline-variant/30 pt-3 animate-in fade-in duration-150">

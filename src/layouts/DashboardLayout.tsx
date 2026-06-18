@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { BrandLogo } from '../components/BrandLogo';
+import { Icon } from '../components/Icon';
+
 
 interface NavItem {
   label: string;
@@ -120,7 +122,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
                     : 'text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface'
                 }`}
               >
-                <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
+                <Icon name={item.icon} className="text-[20px]" />
                 <span className="text-xs font-semibold truncate">{item.label}</span>
               </button>
             );
@@ -134,7 +136,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
               onClick={() => navigate('/patient?tab=ai')}
               className="w-full text-left text-on-surface-variant hover:bg-surface-container-high rounded-lg px-3 py-2.5 flex items-center gap-3 transition-all"
             >
-              <span className="material-symbols-outlined text-[20px]">smart_toy</span>
+              <Icon name="smart_toy" className="text-[20px]" />
               <span className="text-xs font-semibold">AI tư vấn sức khỏe</span>
             </button>
           )}
@@ -142,14 +144,14 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
             onClick={() => navigate('/queue-board')}
             className="w-full text-left text-on-surface-variant hover:bg-surface-container-high rounded-lg px-3 py-2.5 flex items-center gap-3 transition-all"
           >
-            <span className="material-symbols-outlined text-[20px]">monitor</span>
+            <Icon name="monitor" className="text-[20px]" />
             <span className="text-xs font-semibold">Bảng hàng chờ TV</span>
           </button>
           <button
             onClick={() => setShowLogoutConfirm(true)}
             className="w-full text-left text-error hover:bg-error-container/20 rounded-lg px-3 py-2.5 flex items-center gap-3 transition-all"
           >
-            <span className="material-symbols-outlined text-[20px]">logout</span>
+            <Icon name="logout" className="text-[20px]" />
             <span className="text-xs font-semibold">Đăng xuất</span>
           </button>
         </div>
@@ -177,11 +179,11 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
               className="p-2 text-error hover:bg-error-container rounded-full transition-colors active:scale-95"
               title="Y tế khẩn cấp"
             >
-              <span className="material-symbols-outlined text-[22px]">emergency</span>
+              <Icon name="emergency" className="text-[22px]" />
             </button>
 
             <button className="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors relative">
-              <span className="material-symbols-outlined text-[22px]">notifications</span>
+              <Icon name="notifications" className="text-[22px]" />
               <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-error rounded-full"></span>
             </button>
 
@@ -218,7 +220,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
           >
             <div className="p-6 text-center space-y-4">
               <div className="w-14 h-14 rounded-full bg-error-container flex items-center justify-center mx-auto">
-                <span className="material-symbols-outlined text-error text-3xl">logout</span>
+                <Icon name="logout" className="text-error text-3xl" />
               </div>
               <div>
                 <h3 className="font-bold text-base text-on-surface">Xác nhận đăng xuất?</h3>
@@ -238,7 +240,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
                   onClick={handleLogoutConfirm}
                   className="flex-1 py-2.5 rounded-xl bg-error text-white font-bold text-sm hover:bg-error/90 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2"
                 >
-                  <span className="material-symbols-outlined text-[16px]">logout</span>
+                  <Icon name="logout" className="text-[16px]" />
                   Đăng xuất
                 </button>
               </div>

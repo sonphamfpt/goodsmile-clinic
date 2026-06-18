@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Icon } from '../../../components/Icon';
 import { useClinic } from '../../../context/ClinicContext';
 
 export const PatientBilling: React.FC = () => {
@@ -30,13 +31,13 @@ export const PatientBilling: React.FC = () => {
         {/* Khối Cảnh báo (Hóa đơn nợ) - Chiếm 1 cột trên Desktop */}
         <div className="lg:col-span-1 space-y-4">
           <h3 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2 mb-4">
-            <span className="material-symbols-outlined text-amber-600">pending_actions</span>
+            <Icon name="pending_actions" className="text-amber-600" />
             Cần thanh toán
           </h3>
 
           {pendingInvoices.length === 0 ? (
             <div className="bg-surface-container-low border border-outline-variant rounded-2xl p-6 text-center text-on-surface-variant">
-              <span className="material-symbols-outlined text-[48px] text-secondary opacity-50 mb-2">check_circle</span>
+              <Icon name="check_circle" className="text-[48px] text-secondary opacity-50 mb-2" />
               <p className="font-bold text-sm">Tuyệt vời!</p>
               <p className="text-xs mt-1">Bạn không có khoản nợ nào.</p>
             </div>
@@ -118,14 +119,14 @@ export const PatientBilling: React.FC = () => {
         {/* Khối Lịch sử (Đã thanh toán) - Chiếm 2 cột trên Desktop */}
         <div className="lg:col-span-2">
           <h3 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2 mb-4">
-            <span className="material-symbols-outlined text-secondary">task_alt</span>
+            <Icon name="task_alt" className="text-secondary" />
             Lịch sử giao dịch
           </h3>
 
           <div className="bg-white rounded-3xl border border-outline-variant shadow-sm overflow-hidden">
             {paidInvoices.length === 0 ? (
               <div className="text-center py-16">
-                <span className="material-symbols-outlined text-[64px] text-outline opacity-40">receipt_long</span>
+                <Icon name="receipt_long" className="text-[64px] text-outline opacity-40" />
                 <p className="text-on-surface-variant mt-4 font-bold">Chưa có giao dịch nào</p>
               </div>
             ) : (
@@ -137,7 +138,7 @@ export const PatientBilling: React.FC = () => {
                     <div className="flex flex-wrap justify-between items-start gap-4 mb-4">
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-primary-container text-primary rounded-2xl flex items-center justify-center shrink-0">
-                          <span className="material-symbols-outlined text-[24px]">payments</span>
+                          <Icon name="payments" className="text-[24px]" />
                         </div>
                         <div>
                           <p className="font-bold text-on-surface text-lg">₫{inv.netPrice.toLocaleString()}</p>
@@ -146,13 +147,13 @@ export const PatientBilling: React.FC = () => {
                       </div>
                       <div className="flex flex-col items-end gap-2">
                          <span className="px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-wider rounded-full flex items-center gap-1">
-                           <span className="material-symbols-outlined text-[14px]">check_circle</span> Đã thanh toán
+                           <Icon name="check_circle" className="text-[14px]" /> Đã thanh toán
                          </span>
                          <button 
                            onClick={() => setPrintInvoice(inv)}
                            className="text-xs font-bold text-primary hover:underline flex items-center gap-1 cursor-pointer"
                          >
-                           <span className="material-symbols-outlined text-[16px]">receipt</span>
+                           <Icon name="receipt" className="text-[16px]" />
                            Xem biên lai
                          </button>
                       </div>
@@ -189,14 +190,14 @@ export const PatientBilling: React.FC = () => {
             onClick={() => window.print()}
             className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-full font-bold shadow-lg hover:scale-105 transition-transform cursor-pointer"
           >
-            <span className="material-symbols-outlined">print</span>
+            <Icon name="print" />
             Xuất Ra Máy In
           </button>
           <button 
             onClick={() => setPrintInvoice(null)}
             className="flex items-center justify-center w-12 h-12 bg-white text-on-surface rounded-full font-bold shadow-lg hover:scale-105 transition-transform cursor-pointer"
           >
-            <span className="material-symbols-outlined">close</span>
+            <Icon name="close" />
           </button>
         </div>
 

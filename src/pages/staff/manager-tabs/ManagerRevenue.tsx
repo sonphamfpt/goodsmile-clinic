@@ -1,4 +1,5 @@
 import React from 'react';
+import { Icon } from '../../../components/Icon';
 import { useClinic } from '../../../context/ClinicContext';
 
 export const ManagerRevenue: React.FC = () => {
@@ -74,7 +75,7 @@ export const ManagerRevenue: React.FC = () => {
       {/* Header Info */}
       <div className="bg-white p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col sm:flex-row gap-4 items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-purple-600 font-bold">receipt_long</span>
+          <Icon name="receipt_long" className="text-purple-600 font-bold" />
           <div>
             <h3 className="font-bold text-on-surface">Báo Cáo Doanh Thu</h3>
             <p className="text-xs text-on-surface-variant">Phân tích dòng tiền thực thu, thống kê hiệu suất doanh số dịch vụ</p>
@@ -85,7 +86,7 @@ export const ManagerRevenue: React.FC = () => {
             onClick={() => alert('Đã xuất báo cáo doanh thu tài chính sang Excel!')}
             className="px-4 py-2 rounded-lg border border-outline text-on-surface-variant hover:text-on-surface text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5"
           >
-            <span className="material-symbols-outlined text-sm">grid_on</span>
+            <Icon name="grid_on" className="text-sm" />
             Xuất Excel (.xlsx)
           </button>
         </div>
@@ -122,7 +123,7 @@ export const ManagerRevenue: React.FC = () => {
       <div className="bg-white rounded-xl border border-outline-variant p-5 shadow-sm space-y-3">
         <div className="flex justify-between items-baseline text-xs">
           <span className="font-bold text-on-surface flex items-center gap-1">
-            <span className="material-symbols-outlined text-purple-600 text-sm">target</span> Tiến trình doanh thu tháng 6
+            <Icon name="target" className="text-purple-600 text-sm" /> Tiến trình doanh thu tháng 6
           </span>
           <span className="text-on-surface-variant">
             Đạt <strong>₫{netRevenue.toLocaleString()}</strong> / ₫{monthlyTarget.toLocaleString()} (
@@ -140,7 +141,7 @@ export const ManagerRevenue: React.FC = () => {
         <section className="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden flex flex-col justify-between">
           <div className="p-4 border-b border-outline-variant bg-surface-container-low">
             <h4 className="font-bold text-xs uppercase text-on-surface flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-sm text-purple-600">groups</span>
+              <Icon name="groups" className="text-sm text-purple-600" />
               Phân Phối Doanh Thu Theo Bác Sĩ
             </h4>
           </div>
@@ -167,7 +168,7 @@ export const ManagerRevenue: React.FC = () => {
         <section className="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden flex flex-col justify-between">
           <div className="p-4 border-b border-outline-variant bg-surface-container-low">
             <h4 className="font-bold text-xs uppercase text-on-surface flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-sm text-purple-600">medical_services</span>
+              <Icon name="medical_services" className="text-sm text-purple-600" />
               Nhóm Dịch Vụ Tạo Doanh Thu Cao Nhất
             </h4>
           </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ToothState } from '../types/clinic';
+import { Icon } from './Icon';
 
 interface DentalChartProps {
   teethState: ToothState[];
@@ -96,9 +97,7 @@ export const DentalChart: React.FC<DentalChartProps> = ({
         title={`Răng ${num}: ${getToothName(num)} - ${tooth.condition.toUpperCase()} ${tooth.treatment ? `(${tooth.treatment})` : ''}`}
       >
         <span className="text-[10px] font-bold block">{num}</span>
-        <span className="material-symbols-outlined text-[18px]">
-          {getToothIcon(tooth.condition)}
-        </span>
+        <Icon name={getToothIcon(tooth.condition)} className="text-[18px]" />
         <span className="text-[8px] font-medium leading-none truncate max-w-full">
           {tooth.condition === 'decay' && 'Sâu'}
           {tooth.condition === 'crown' && 'Sứ'}

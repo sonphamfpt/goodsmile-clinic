@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Icon } from '../../../components/Icon';
 import { useClinic } from '../../../context/ClinicContext';
 import { BookingModal } from '../../../components/BookingModal';
 
@@ -83,7 +84,7 @@ export const ReceptionistAppointments: React.FC = () => {
           onClick={() => setIsBookingOpen(true)}
           className="flex items-center gap-2 px-5 py-3 bg-primary text-on-primary rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all cursor-pointer shadow-md"
         >
-          <span className="material-symbols-outlined">calendar_add_on</span>
+          <Icon name="calendar_add_on" />
           Đặt lịch hẹn mới
         </button>
       </div>
@@ -97,7 +98,7 @@ export const ReceptionistAppointments: React.FC = () => {
           { label: 'Đang khám',      value: inProgressCount, icon: 'medical_services',color: 'text-primary bg-primary-container border-primary/20' },
         ].map(s => (
           <div key={s.label} className={`rounded-xl border p-4 flex items-center gap-3 ${s.color}`}>
-            <span className="material-symbols-outlined text-[26px]">{s.icon}</span>
+            <Icon name={s.icon} className="text-[26px]" />
             <div>
               <p className="text-2xl font-bold">{s.value}</p>
               <p className="text-xs font-medium opacity-80">{s.label}</p>
@@ -109,7 +110,7 @@ export const ReceptionistAppointments: React.FC = () => {
       {/* ── Pending Alert ── */}
       {pendingCount > 0 && filterStatus !== 'Confirmed' && (
         <div className="flex items-center gap-3 px-4 py-3 bg-amber-50 border border-amber-300 rounded-xl mb-5">
-          <span className="material-symbols-outlined text-amber-600">notification_important</span>
+          <Icon name="notification_important" className="text-amber-600" />
           <p className="text-sm text-amber-800 font-bold">
             Có {pendingCount} lịch hẹn đang chờ xác nhận.
             {' '}
@@ -145,7 +146,7 @@ export const ReceptionistAppointments: React.FC = () => {
 
         {/* Search */}
         <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-[16px] text-on-surface-variant">search</span>
+          <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-[16px] text-on-surface-variant" />
           <input
             placeholder="Tên, SĐT, dịch vụ..."
             value={searchQuery}
@@ -180,7 +181,7 @@ export const ReceptionistAppointments: React.FC = () => {
             onClick={() => { setFilterDentist('all'); setFilterStatus('all'); setSearchQuery(''); }}
             className="text-xs text-on-surface-variant border border-outline-variant rounded-xl px-3 py-2 hover:bg-surface-container cursor-pointer flex items-center gap-1"
           >
-            <span className="material-symbols-outlined text-[14px]">filter_alt_off</span>
+            <Icon name="filter_alt_off" className="text-[14px]" />
             Xóa lọc
           </button>
         )}
@@ -216,7 +217,7 @@ export const ReceptionistAppointments: React.FC = () => {
                     <td className="px-5 py-4 text-sm font-bold text-on-surface">{appt.dentistName}</td>
                     <td className="px-5 py-4">
                       <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${conf.badge}`}>
-                        <span className="material-symbols-outlined text-[13px]">{conf.icon}</span>
+                        <Icon name={conf.icon} className="text-[13px]" />
                         {conf.label}
                       </span>
                     </td>
@@ -229,7 +230,7 @@ export const ReceptionistAppointments: React.FC = () => {
                             onClick={() => confirmAppointment(appt.id)}
                             className="px-3 py-1.5 bg-secondary text-on-secondary rounded-lg text-xs font-bold hover:opacity-90 cursor-pointer flex items-center gap-1 active:scale-95 transition-all"
                           >
-                            <span className="material-symbols-outlined text-[13px]">check</span>
+                            <Icon name="check" className="text-[13px]" />
                             Xác nhận
                           </button>
                         )}
@@ -240,7 +241,7 @@ export const ReceptionistAppointments: React.FC = () => {
                             onClick={() => handleCheckin(appt)}
                             className="px-3 py-1.5 bg-primary text-on-primary rounded-lg text-xs font-bold hover:opacity-90 cursor-pointer flex items-center gap-1 active:scale-95 transition-all"
                           >
-                            <span className="material-symbols-outlined text-[13px]">how_to_reg</span>
+                            <Icon name="how_to_reg" className="text-[13px]" />
                             Vào khám
                           </button>
                         )}
@@ -256,7 +257,7 @@ export const ReceptionistAppointments: React.FC = () => {
                             className="px-2.5 py-1.5 border border-error text-error rounded-lg text-xs font-bold hover:bg-error-container cursor-pointer transition-all"
                             title="Hủy lịch"
                           >
-                            <span className="material-symbols-outlined text-[13px]">cancel</span>
+                            <Icon name="cancel" className="text-[13px]" />
                           </button>
                         )}
                       </div>
@@ -269,7 +270,7 @@ export const ReceptionistAppointments: React.FC = () => {
 
           {filtered.length === 0 && (
             <div className="text-center py-16">
-              <span className="material-symbols-outlined text-[64px] text-outline/40">calendar_today</span>
+              <Icon name="calendar_today" className="text-[64px] text-outline/40" />
               <p className="text-on-surface-variant mt-4">Không có lịch hẹn nào phù hợp</p>
               {(filterDentist !== 'all' || filterStatus !== 'all' || searchQuery) && (
                 <button
@@ -287,7 +288,7 @@ export const ReceptionistAppointments: React.FC = () => {
       {/* ── Timeline by dentist ── */}
       <div className="mt-6 bg-white rounded-2xl border border-outline-variant shadow-sm overflow-hidden">
         <div className="px-5 py-4 border-b border-outline-variant bg-surface-container-low flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary">view_timeline</span>
+          <Icon name="view_timeline" className="text-primary" />
           <h4 className="font-headline-sm text-headline-sm">Timeline theo phòng khám — {viewDay === 'today' ? 'Hôm nay' : viewDay === 'tomorrow' ? 'Ngày mai' : 'Cả tuần'}</h4>
         </div>
         <div className="p-5 grid grid-cols-2 lg:grid-cols-4 gap-4">

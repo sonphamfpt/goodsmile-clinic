@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Icon } from '../../components/Icon';
 import { useNavigate } from 'react-router-dom';
 import { useAuth, UserRole } from '../../context/AuthContext';
 import { BrandLogo } from '../../components/BrandLogo';
@@ -137,7 +138,7 @@ export const LoginRegister: React.FC = () => {
                 { icon: 'analytics', text: 'Phân tích doanh thu & Quản lý sổ quỹ tự động' }
               ].map((f, i) => (
                 <div key={i} className="flex items-center gap-3 text-sm text-slate-300 bg-white/5 border border-white/5 px-4 py-3 rounded-xl">
-                  <span className="material-symbols-outlined text-[18px] text-blue-300">{f.icon}</span>
+                  <Icon name={f.icon} className="text-[18px] text-blue-300" />
                   <span className="font-medium">{f.text}</span>
                 </div>
               ))}
@@ -213,9 +214,7 @@ export const LoginRegister: React.FC = () => {
                   Địa chỉ Email *
                 </label>
                 <div className="relative group">
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 group-focus-within:text-primary transition-colors text-[20px]">
-                    mail
-                  </span>
+                  <Icon name="mail" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors text-[20px]" />
                   <input
                     type="email"
                     required
@@ -240,9 +239,7 @@ export const LoginRegister: React.FC = () => {
                   )}
                 </div>
                 <div className="relative group">
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 group-focus-within:text-primary transition-colors text-[20px]">
-                    lock
-                  </span>
+                  <Icon name="lock" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors text-[20px]" />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     required
@@ -254,9 +251,9 @@ export const LoginRegister: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 hover:text-slate-700 transition-colors text-[20px] cursor-pointer"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors text-[20px] cursor-pointer"
                   >
-                    {showPassword ? 'visibility_off' : 'visibility'}
+                    <Icon name={showPassword ? 'visibility_off' : 'visibility'} className="text-[20px]" />
                   </button>
                 </div>
               </div>
@@ -275,7 +272,7 @@ export const LoginRegister: React.FC = () => {
               {/* Error Message Box */}
               {errorMsg && (
                 <div className="flex items-start gap-2.5 text-red-600 text-xs bg-red-50 border border-red-100 rounded-xl p-3 animate-in fade-in duration-200">
-                  <span className="material-symbols-outlined text-[18px] shrink-0 mt-0.5">error</span>
+                  <Icon name="error" className="text-[18px] shrink-0 mt-0.5" />
                   <span className="font-semibold leading-relaxed">{errorMsg}</span>
                 </div>
               )}
@@ -288,7 +285,7 @@ export const LoginRegister: React.FC = () => {
               >
                 {isLoading ? (
                   <>
-                    <span className="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>
+                    <Icon name="progress_activity" className="text-[18px] animate-spin" />
                     Đang kết nối hệ thống...
                   </>
                 ) : (
@@ -318,7 +315,7 @@ export const LoginRegister: React.FC = () => {
                     className={`border text-[11px] font-bold p-2.5 rounded-xl transition-all active:scale-95 cursor-pointer flex flex-col items-center justify-center gap-1.5 shadow-sm text-center ${acc.color}`}
                     title={`Email: ${acc.email}\nMật khẩu: ${acc.password}`}
                   >
-                    <span className="material-symbols-outlined text-[20px]">{acc.icon}</span>
+                    <Icon name={acc.icon} className="text-[20px]" />
                     <span>{acc.label}</span>
                   </button>
                 ))}
@@ -335,7 +332,7 @@ export const LoginRegister: React.FC = () => {
                   onClick={() => handleQuickLogin('manager')}
                   className="text-purple-600 hover:text-purple-800 transition-colors flex items-center gap-0.5"
                 >
-                  <span className="material-symbols-outlined text-[13px]">flash_on</span>
+                  <Icon name="flash_on" className="text-[13px]" />
                   Quản lý
                 </button>
                 <span className="text-slate-200">|</span>
@@ -344,7 +341,7 @@ export const LoginRegister: React.FC = () => {
                   onClick={() => handleQuickLogin('dentist')}
                   className="text-blue-600 hover:text-blue-800 transition-colors flex items-center gap-0.5"
                 >
-                  <span className="material-symbols-outlined text-[13px]">flash_on</span>
+                  <Icon name="flash_on" className="text-[13px]" />
                   Bác sĩ
                 </button>
                 <span className="text-slate-200">|</span>
@@ -353,7 +350,7 @@ export const LoginRegister: React.FC = () => {
                   onClick={() => handleQuickLogin('receptionist')}
                   className="text-orange-600 hover:text-orange-800 transition-colors flex items-center gap-0.5"
                 >
-                  <span className="material-symbols-outlined text-[13px]">flash_on</span>
+                  <Icon name="flash_on" className="text-[13px]" />
                   Lễ tân
                 </button>
               </div>

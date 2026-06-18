@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Icon } from '../../../components/Icon';
 import { useClinic } from '../../../context/ClinicContext';
 
 const STATUS_CONFIG = {
@@ -128,7 +129,7 @@ export const PatientAppointments: React.FC = () => {
         ].map((stat) => (
           <div key={stat.label} className="bg-white rounded-xl border border-outline-variant p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
             <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.color}`}>
-              <span className="material-symbols-outlined text-[24px]">{stat.icon}</span>
+              <Icon name={stat.icon} className="text-[24px]" />
             </div>
             <div>
               <p className="text-2xl font-bold text-on-surface">{stat.value}</p>
@@ -182,7 +183,7 @@ export const PatientAppointments: React.FC = () => {
                 {/* 24h Alert Banner */}
                 {appt.isNext24h && (
                   <div className="bg-amber-100 text-amber-800 px-4 py-2 rounded-t-2xl flex items-center gap-2 text-xs font-bold border-b border-amber-200">
-                    <span className="material-symbols-outlined text-[16px] animate-pulse">notifications_active</span>
+                    <Icon name="notifications_active" className="text-[16px] animate-pulse" />
                     Lịch hẹn của bạn sẽ diễn ra trong vòng 24h tới. Vui lòng đến đúng giờ.
                   </div>
                 )}
@@ -202,7 +203,7 @@ export const PatientAppointments: React.FC = () => {
                       <div className="text-center sm:mt-3">
                         <p className="text-lg font-black text-on-surface">{appt.time}</p>
                         <p className="text-xs font-bold text-on-surface-variant flex items-center justify-center gap-1 mt-0.5">
-                          <span className="material-symbols-outlined text-[14px]">timer</span>
+                          <Icon name="timer" className="text-[14px]" />
                           {appt.duration} phút
                         </p>
                       </div>
@@ -214,7 +215,7 @@ export const PatientAppointments: React.FC = () => {
                         <div>
                           <h4 className="font-headline-sm text-headline-sm text-on-surface">{appt.service}</h4>
                           <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full mt-2 border ${status.color}`}>
-                            <span className="material-symbols-outlined text-[14px]">{status.icon}</span>
+                            <Icon name={status.icon} className="text-[14px]" />
                             {status.label}
                           </span>
                         </div>
@@ -224,7 +225,7 @@ export const PatientAppointments: React.FC = () => {
                         <img src={appt.avatar} alt={appt.dentist} className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm" />
                         <div>
                           <p className="text-sm font-bold text-on-surface flex items-center gap-1">
-                            <span className="material-symbols-outlined text-[16px] text-primary">stethoscope</span>
+                            <Icon name="stethoscope" className="text-[16px] text-primary" />
                             {appt.dentist}
                           </p>
                           <p className="text-xs text-on-surface-variant mt-0.5 font-medium">{appt.room}</p>
@@ -233,7 +234,7 @@ export const PatientAppointments: React.FC = () => {
 
                       {appt.notes && (
                         <div className="bg-amber-50/50 border border-amber-200 rounded-xl p-4 flex gap-3 text-sm text-amber-900 leading-relaxed max-w-2xl">
-                          <span className="material-symbols-outlined text-[20px] text-amber-600 shrink-0 mt-0.5">sticky_note_2</span>
+                          <Icon name="sticky_note_2" className="text-[20px] text-amber-600 shrink-0 mt-0.5" />
                           <span><strong>Ghi chú:</strong> {appt.notes}</span>
                         </div>
                       )}
@@ -245,21 +246,21 @@ export const PatientAppointments: React.FC = () => {
                         onClick={() => setQrCodeApptId(appt.id)}
                         className="flex-1 sm:flex-none px-4 py-2.5 bg-primary text-on-primary rounded-xl text-xs font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-all cursor-pointer shadow-sm"
                       >
-                        <span className="material-symbols-outlined text-[18px]">qr_code_2</span>
+                        <Icon name="qr_code_2" className="text-[18px]" />
                         Mã Check-in
                       </button>
                       <button
                         onClick={() => setRescheduleId(appt.id)}
                         className="flex-1 sm:flex-none px-4 py-2.5 bg-surface-container text-on-surface rounded-xl text-xs font-bold flex items-center justify-center gap-2 hover:bg-surface-container-high transition-all cursor-pointer border border-outline-variant"
                       >
-                        <span className="material-symbols-outlined text-[18px]">update</span>
+                        <Icon name="update" className="text-[18px]" />
                         Dời lịch
                       </button>
                       <button
                         onClick={() => setCancelId(appt.id)}
                         className="flex-1 sm:flex-none px-4 py-2.5 border border-error/30 text-error rounded-xl text-xs font-bold flex items-center justify-center gap-2 hover:bg-error-container/30 transition-all cursor-pointer"
                       >
-                        <span className="material-symbols-outlined text-[18px]">event_busy</span>
+                        <Icon name="event_busy" className="text-[18px]" />
                         Huỷ lịch
                       </button>
                     </div>
@@ -271,7 +272,7 @@ export const PatientAppointments: React.FC = () => {
 
           {UPCOMING_APPOINTMENTS.length === 0 && (
             <div className="text-center py-20 bg-white rounded-2xl border border-outline-variant border-dashed">
-              <span className="material-symbols-outlined text-[80px] text-outline">event_busy</span>
+              <Icon name="event_busy" className="text-[80px] text-outline" />
               <p className="text-on-surface-variant mt-4 text-body-lg">Bạn chưa có lịch hẹn nào sắp tới</p>
               <button className="mt-4 px-6 py-2 bg-primary text-on-primary rounded-xl font-bold cursor-pointer">
                 Đặt lịch khám ngay
@@ -299,7 +300,7 @@ export const PatientAppointments: React.FC = () => {
                       </p>
                     </div>
                     <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full border ${status.color}`}>
-                      <span className="material-symbols-outlined text-[16px]">{status.icon}</span>
+                      <Icon name={status.icon} className="text-[16px]" />
                       {status.label}
                     </span>
                   </div>
@@ -321,9 +322,10 @@ export const PatientAppointments: React.FC = () => {
                                 className="text-amber-400 cursor-pointer hover:scale-125 transition-transform border-none bg-transparent"
                                 title="Đánh giá chất lượng"
                               >
-                                <span className="material-symbols-outlined text-[24px]">
-                                  {star <= userRating ? 'star' : 'star_border'}
-                                </span>
+                                <Icon
+                                  name={star <= userRating ? 'star' : 'star_border'}
+                                  className="text-[24px]"
+                                />
                               </button>
                             ))}
                           </div>
@@ -337,7 +339,7 @@ export const PatientAppointments: React.FC = () => {
                           }}
                           className="px-3 py-2 bg-primary/10 text-primary border border-primary/20 rounded-lg text-xs font-bold hover:bg-primary hover:text-white transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
                         >
-                          <span className="material-symbols-outlined text-[16px]">rate_review</span>
+                          <Icon name="rate_review" className="text-[16px]" />
                           <span>{reviewMap[appt.id] ? 'Sửa nhận xét' : 'Nhận xét chi tiết'}</span>
                         </button>
                       </div>
@@ -345,7 +347,7 @@ export const PatientAppointments: React.FC = () => {
                       {/* Display comment if present */}
                       {reviewMap[appt.id]?.comment && (
                         <div className="bg-primary/5 border border-primary/10 rounded-xl p-3.5 flex gap-3 text-sm text-on-surface leading-relaxed max-w-2xl animate-fade-in mt-1">
-                          <span className="material-symbols-outlined text-[20px] text-primary shrink-0 mt-0.5">chat_bubble</span>
+                          <Icon name="chat_bubble" className="text-[20px] text-primary shrink-0 mt-0.5" />
                           <div>
                             <p className="text-[10px] font-bold text-primary mb-1 uppercase tracking-wider">Ý kiến phản hồi từ bạn:</p>
                             <p className="italic text-on-surface-variant">"{reviewMap[appt.id].comment}"</p>
@@ -367,7 +369,7 @@ export const PatientAppointments: React.FC = () => {
                     onClick={() => alert(`Đang chuyển tới trang Đặt lịch cho dịch vụ: ${appt.service}`)}
                     className="px-6 py-2.5 bg-primary-container text-on-primary-container rounded-xl text-sm font-bold hover:opacity-80 transition-all cursor-pointer flex items-center gap-2 border border-primary/20"
                   >
-                    <span className="material-symbols-outlined text-[18px]">replay</span>
+                    <Icon name="replay" className="text-[18px]" />
                     Khám lại
                   </button>
                 </div>
@@ -389,11 +391,11 @@ export const PatientAppointments: React.FC = () => {
           <div className="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6 animate-fade-in border border-outline-variant">
             <div className="flex justify-between items-center border-b border-outline-variant pb-4">
               <h3 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
-                <span className="material-symbols-outlined text-secondary">update</span>
+                <Icon name="update" className="text-secondary" />
                 Dời lịch hẹn
               </h3>
               <button onClick={() => setRescheduleId(null)} className="text-on-surface-variant hover:text-on-surface cursor-pointer rounded-full p-1 hover:bg-surface-container">
-                <span className="material-symbols-outlined">close</span>
+                <Icon name="close" />
               </button>
             </div>
             
@@ -435,7 +437,7 @@ export const PatientAppointments: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="bg-white rounded-3xl max-w-sm w-full p-8 shadow-2xl space-y-5 animate-fade-in border border-outline-variant">
             <div className="w-16 h-16 bg-error-container rounded-full flex items-center justify-center mx-auto border border-error/20">
-              <span className="material-symbols-outlined text-error text-3xl">warning</span>
+              <Icon name="warning" className="text-error text-3xl" />
             </div>
             <h3 className="font-headline-sm text-headline-sm text-center text-on-surface">Huỷ lịch hẹn?</h3>
             <p className="text-center text-on-surface-variant text-sm">
@@ -465,11 +467,11 @@ export const PatientAppointments: React.FC = () => {
           <div className="bg-white rounded-3xl max-w-sm w-full p-8 shadow-2xl space-y-5 animate-fade-in border border-outline-variant text-center" onClick={e => e.stopPropagation()}>
             <div className="flex justify-between items-center mb-2">
               <h3 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary">qr_code_scanner</span>
+                <Icon name="qr_code_scanner" className="text-primary" />
                 Mã Check-in
               </h3>
               <button onClick={() => setQrCodeApptId(null)} className="text-on-surface-variant hover:text-on-surface cursor-pointer rounded-full p-1 hover:bg-surface-container">
-                <span className="material-symbols-outlined">close</span>
+                <Icon name="close" />
               </button>
             </div>
             
@@ -498,11 +500,11 @@ export const PatientAppointments: React.FC = () => {
           <div className="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6 animate-fade-in border border-outline-variant text-left">
             <div className="flex justify-between items-center border-b border-outline-variant pb-4">
               <h3 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary">rate_review</span>
+                <Icon name="rate_review" className="text-primary" />
                 Đánh giá ca khám
               </h3>
               <button onClick={() => setActiveReviewId(null)} className="text-on-surface-variant hover:text-on-surface cursor-pointer rounded-full p-1 hover:bg-surface-container border-none bg-transparent">
-                <span className="material-symbols-outlined">close</span>
+                <Icon name="close" />
               </button>
             </div>
             
@@ -526,9 +528,10 @@ export const PatientAppointments: React.FC = () => {
                       onClick={() => setModalRating(star)}
                       className="text-amber-400 cursor-pointer hover:scale-125 transition-transform border-none bg-transparent"
                     >
-                      <span className="material-symbols-outlined text-[36px]">
-                        {star <= modalRating ? 'star' : 'star_border'}
-                      </span>
+                      <Icon
+                        name={star <= modalRating ? 'star' : 'star_border'}
+                        className="text-[36px]"
+                      />
                     </button>
                   ))}
                 </div>

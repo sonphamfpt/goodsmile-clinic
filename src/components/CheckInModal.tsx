@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useClinic } from '../context/ClinicContext';
+import { Icon } from './Icon';
 
 type CheckInMode = 'existing' | 'new' | 'qr';
 
@@ -102,7 +103,7 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
         {isSuccess ? (
           <div className="p-12 text-center space-y-4">
             <div className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mx-auto">
-              <span className="material-symbols-outlined text-4xl text-on-secondary">check_circle</span>
+              <Icon name="check_circle" className="text-4xl text-on-secondary" />
             </div>
             <h3 className="font-headline-sm text-headline-sm text-on-surface">Check-in thành công!</h3>
             <p className="text-on-surface-variant">Bệnh nhân đã được đưa vào hàng chờ</p>
@@ -111,11 +112,11 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
           <>
             <div className="bg-primary px-6 py-4 text-on-primary flex justify-between items-center">
               <h3 className="font-headline-sm text-headline-sm flex items-center gap-2">
-                <span className="material-symbols-outlined">how_to_reg</span>
+                <Icon name="how_to_reg" />
                 {title}
               </h3>
               <button onClick={resetAndClose} className="hover:bg-white/20 p-1 rounded-full cursor-pointer" type="button">
-                <span className="material-symbols-outlined">close</span>
+                <Icon name="close" />
               </button>
             </div>
 
@@ -142,7 +143,7 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
               {mode === 'qr' && (
                 <div className="py-8 flex flex-col items-center justify-center border-2 border-dashed border-primary/30 bg-primary/5 rounded-2xl">
                   <div className="relative">
-                    <span className="material-symbols-outlined text-[64px] text-primary">qr_code_scanner</span>
+                    <Icon name="qr_code_scanner" className="text-[64px] text-primary" />
                     {isScanning && (
                       <div className="absolute top-0 left-0 w-full h-full border-t-2 border-secondary animate-bounce pointer-events-none" />
                     )}
@@ -157,7 +158,7 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
                     disabled={isScanning}
                     className="px-6 py-2 bg-primary text-on-primary rounded-xl font-bold cursor-pointer hover:bg-primary-container hover:text-on-primary-container disabled:opacity-50 flex items-center gap-2"
                   >
-                    <span className="material-symbols-outlined text-[18px]">camera_alt</span>
+                    <Icon name="camera_alt" className="text-[18px]" />
                     Giả lập quét QR
                   </button>
                 </div>
@@ -277,7 +278,7 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
                       Hủy
                     </button>
                     <button type="submit" className="flex-1 py-3 bg-primary text-on-primary rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all cursor-pointer shadow-md flex items-center justify-center gap-2">
-                      <span className="material-symbols-outlined">how_to_reg</span>
+                      <Icon name="how_to_reg" />
                       Xác nhận
                     </button>
                   </div>

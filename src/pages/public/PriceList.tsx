@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Icon } from '../../components/Icon';
 import { useClinic } from '../../context/ClinicContext';
 import { BookingModal } from '../../components/BookingModal';
 
@@ -38,7 +39,7 @@ export const PriceList: React.FC = () => {
         <div className="bg-white rounded-xl border border-outline-variant p-4 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
           {/* Search bar */}
           <div className="relative w-full md:w-80">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+            <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]" />
             <input
               type="text"
               placeholder="Tìm tên dịch vụ hoặc mã..."
@@ -117,7 +118,7 @@ export const PriceList: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 text-on-surface-variant">
                       <span className="inline-flex items-center gap-1">
-                        <span className="material-symbols-outlined text-sm">schedule</span>
+                        <Icon name="schedule" className="text-sm" />
                         {service.durationMin} phút
                       </span>
                     </td>
@@ -148,7 +149,7 @@ export const PriceList: React.FC = () => {
         {/* Insurance Policy Note */}
         <div className="p-5 bg-surface-container-low rounded-xl border border-outline-variant space-y-2">
           <h4 className="font-bold flex items-center gap-2 text-primary">
-            <span className="material-symbols-outlined">info</span>
+            <Icon name="info" />
             Chính sách giảm trừ bảo hiểm & Thẻ thành viên GoodSmile
           </h4>
           <ul className="list-disc pl-5 text-xs text-on-surface-variant space-y-1">

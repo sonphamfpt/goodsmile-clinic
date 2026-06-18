@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useClinic } from '../../context/ClinicContext';
 import { DOCTOR_PROFILES } from '../../services/doctorProfiles';
+import { Icon } from '../../components/Icon';
 import { BookingModal } from '../../components/BookingModal';
 
 const CATEGORIES = ['Tất cả chuyên khoa', 'Bảo tồn & Vi Phẫu', 'Phẫu thuật Hàm Mặt & Implant', 'Phục Hình Thẩm Mỹ', 'Chỉnh Nha & Niềng Răng'];
@@ -117,7 +118,7 @@ export const Doctors: React.FC = () => {
         <div className="max-w-6xl mx-auto">
           {filtered.length === 0 ? (
             <div className="text-center py-12 bg-white border border-[#e2e8f0] p-8">
-              <span className="material-symbols-outlined text-slate-400 text-5xl mb-2">search_off</span>
+              <Icon name="search_off" className="text-slate-400 text-5xl mb-2" />
               <p className="text-[#64748b] font-bold">Không tìm thấy bác sĩ nào thuộc chuyên khoa này.</p>
             </div>
           ) : (
@@ -139,7 +140,7 @@ export const Doctors: React.FC = () => {
                     <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
                       <span className="bg-[#005eb8] text-white text-xs font-bold px-3 py-1.5 flex items-center gap-1 shadow-sm">
                         Xem hồ sơ chi tiết
-                        <span className="material-symbols-outlined text-[12px]">arrow_forward</span>
+                        <Icon name="arrow_forward" className="text-[12px]" />
                       </span>
                     </div>
                   </div>
@@ -187,7 +188,7 @@ export const Doctors: React.FC = () => {
             {/* Standard 1 */}
             <div className="bg-[#f8fafc] border border-[#e2e8f0] p-8 hover:shadow-sm transition-shadow">
               <div className="bg-[#eff6ff] text-[#1d4ed8] w-12 h-12 flex items-center justify-center mb-6">
-                <span className="material-symbols-outlined text-[28px]">verified</span>
+                <Icon name="verified" className="text-[28px]" />
               </div>
               <h3 className="text-lg font-bold text-[#0f172a] mb-2">100% Bác Sĩ Chính Quy</h3>
               <p className="text-sm text-[#475569] leading-relaxed">
@@ -198,7 +199,7 @@ export const Doctors: React.FC = () => {
             {/* Standard 2 */}
             <div className="bg-[#f8fafc] border border-[#e2e8f0] p-8 hover:shadow-sm transition-shadow">
               <div className="bg-[#f0fdf4] text-[#15803d] w-12 h-12 flex items-center justify-center mb-6">
-                <span className="material-symbols-outlined text-[28px]">health_and_safety</span>
+                <Icon name="health_and_safety" className="text-[28px]" />
               </div>
               <h3 className="text-lg font-bold text-[#0f172a] mb-2">Vô Trùng Tiêu Chuẩn Quốc Tế</h3>
               <p className="text-sm text-[#475569] leading-relaxed">
@@ -209,7 +210,7 @@ export const Doctors: React.FC = () => {
             {/* Standard 3 */}
             <div className="bg-[#f8fafc] border border-[#e2e8f0] p-8 hover:shadow-sm transition-shadow">
               <div className="bg-[#fdf2f8] text-[#be185d] w-12 h-12 flex items-center justify-center mb-6">
-                <span className="material-symbols-outlined text-[28px]">psychology</span>
+                <Icon name="psychology" className="text-[28px]" />
               </div>
               <h3 className="text-lg font-bold text-[#0f172a] mb-2">Công Nghệ Đi Đầu</h3>
               <p className="text-sm text-[#475569] leading-relaxed">
@@ -237,7 +238,7 @@ export const Doctors: React.FC = () => {
               onClick={() => setIsBookingOpen(true)}
               className="bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold px-8 py-3.5 shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 cursor-pointer inline-flex items-center gap-2"
             >
-              <span className="material-symbols-outlined text-[20px]">calendar_month</span>
+              <Icon name="calendar_month" className="text-[20px]" />
               Đặt Lịch Hẹn Ngay
             </button>
           </div>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Icon } from '../../../components/Icon';
 
 interface StaffMember {
   id: string;
@@ -163,7 +164,7 @@ export const ManagerRbac: React.FC = () => {
       {/* Header Info */}
       <div className="bg-white p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col sm:flex-row gap-4 items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-purple-600 font-bold">groups</span>
+          <Icon name="groups" className="text-purple-600 font-bold" />
           <div>
             <h3 className="font-bold text-on-surface">Nhân Sự & Phân Quyền</h3>
             <p className="text-xs text-on-surface-variant">Quản lý sơ đồ tài khoản nhân viên và thay đổi quyền truy cập phân hệ</p>
@@ -174,7 +175,7 @@ export const ManagerRbac: React.FC = () => {
             onClick={() => setShowAddStaffModal(true)}
             className="px-4 py-2 bg-primary text-on-primary rounded-lg font-bold text-xs flex items-center gap-1 hover:bg-primary-container transition-all cursor-pointer shadow-md"
           >
-            <span className="material-symbols-outlined text-sm">person_add</span>
+            <Icon name="person_add" className="text-sm" />
             Thêm Nhân Sự Mới
           </button>
         </div>
@@ -265,7 +266,7 @@ export const ManagerRbac: React.FC = () => {
                       className="p-1 border border-outline text-on-surface-variant hover:text-purple-600 rounded transition-all cursor-pointer"
                       title="Lịch sử đăng nhập"
                     >
-                      <span className="material-symbols-outlined text-sm block">history_edu</span>
+                      <Icon name="history_edu" className="text-sm block" />
                     </button>
                   </td>
                 </tr>
@@ -281,11 +282,11 @@ export const ManagerRbac: React.FC = () => {
           <div className="bg-white rounded-xl border border-outline-variant max-w-sm w-full overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-150">
             <div className="px-6 py-4 bg-primary text-on-primary flex justify-between items-center">
               <h3 className="font-headline-sm text-headline-sm flex items-center gap-2">
-                <span className="material-symbols-outlined">person_add</span>
+                <Icon name="person_add" />
                 Khai Báo Nhân Sự Mới
               </h3>
               <button onClick={() => setShowAddStaffModal(false)} className="text-on-primary hover:text-white cursor-pointer">
-                <span className="material-symbols-outlined">close</span>
+                <Icon name="close" />
               </button>
             </div>
 

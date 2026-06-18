@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Icon } from '../../components/Icon';
 import { useSearchParams } from 'react-router-dom';
 import { useClinic } from '../../context/ClinicContext';
 import { BookingModal } from '../../components/BookingModal';
@@ -50,7 +51,7 @@ const ReceptionistHome: React.FC = () => {
           </p>
         </div>
         <div className="absolute right-0 top-0 bottom-0 opacity-10 flex items-center pr-8 pointer-events-none">
-          <span className="material-symbols-outlined text-[130px]">support_agent</span>
+          <Icon name="support_agent" className="text-[130px]" />
         </div>
       </div>
 
@@ -62,7 +63,7 @@ const ReceptionistHome: React.FC = () => {
           className="h-28 bg-primary-container text-white rounded-2xl px-6 flex items-center gap-5 hover:scale-[1.02] transition-transform shadow-xl shadow-primary-container/30 cursor-pointer text-left"
         >
           <div className="bg-white/20 p-4 rounded-xl shrink-0">
-            <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>how_to_reg</span>
+            <Icon name="how_to_reg" className="text-4xl" />
           </div>
           <div>
             <h3 className="text-headline-sm font-bold text-white">Đón Tiếp Bệnh Nhân</h3>
@@ -76,7 +77,7 @@ const ReceptionistHome: React.FC = () => {
           className="h-28 bg-tertiary-container text-white rounded-2xl px-6 flex items-center gap-5 hover:scale-[1.02] transition-transform shadow-xl shadow-tertiary-container/30 cursor-pointer text-left"
         >
           <div className="bg-white/20 p-4 rounded-xl shrink-0">
-            <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>calendar_add_on</span>
+            <Icon name="calendar_add_on" className="text-4xl" />
           </div>
           <div>
             <h3 className="text-headline-sm font-bold text-white">Đặt Lịch Hẹn Mới</h3>
@@ -95,7 +96,7 @@ const ReceptionistHome: React.FC = () => {
         ].map(s => (
           <div key={s.label} className={`rounded-xl border p-4 flex items-center gap-3 ${s.color}`}>
             <div className="relative shrink-0">
-              <span className="material-symbols-outlined text-[26px]">{s.icon}</span>
+              <Icon name={s.icon} className="text-[26px]" />
               {s.pulse && (
                 <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-current rounded-full animate-ping opacity-60" />
               )}
@@ -118,7 +119,7 @@ const ReceptionistHome: React.FC = () => {
           {pendingAppts.length > 0 && (
             <div className="bg-amber-50 border border-amber-300 rounded-2xl overflow-hidden shadow-sm">
               <div className="px-5 py-3.5 bg-amber-100 border-b border-amber-200 flex items-center gap-2">
-                <span className="material-symbols-outlined text-amber-700">notification_important</span>
+                <Icon name="notification_important" className="text-amber-700" />
                 <h3 className="font-bold text-amber-800">
                   {pendingAppts.length} lịch hẹn chờ xác nhận
                 </h3>
@@ -140,7 +141,7 @@ const ReceptionistHome: React.FC = () => {
                         onClick={() => confirmAppointment(appt.id)}
                         className="px-3 py-1.5 bg-secondary text-on-secondary rounded-lg text-xs font-bold hover:opacity-90 cursor-pointer flex items-center gap-1 transition-all active:scale-95"
                       >
-                        <span className="material-symbols-outlined text-[14px]">check</span>
+                        <Icon name="check" className="text-[14px]" />
                         Xác nhận
                       </button>
                     </div>
@@ -154,7 +155,7 @@ const ReceptionistHome: React.FC = () => {
           <div className="bg-white rounded-2xl border border-outline-variant overflow-hidden shadow-sm">
             <div className="px-5 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
               <h3 className="font-headline-sm text-primary flex items-center gap-2">
-                <span className="material-symbols-outlined">event_available</span>
+                <Icon name="event_available" />
                 Lịch Hẹn Đã Xác Nhận Hôm Nay
               </h3>
               <span className="bg-primary-fixed text-primary px-3 py-1 rounded-full text-xs font-bold">
@@ -176,7 +177,7 @@ const ReceptionistHome: React.FC = () => {
                     <div className="text-right shrink-0">
                       <p className="text-xs font-bold text-on-surface">{appt.dentistName.replace('Bác sĩ ', 'BS. ')}</p>
                       <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-bold">
-                        <span className="material-symbols-outlined text-[10px]">check_circle</span>
+                        <Icon name="check_circle" className="text-[10px]" />
                         Đã xác nhận
                       </span>
                     </div>
@@ -185,7 +186,7 @@ const ReceptionistHome: React.FC = () => {
               </div>
             ) : (
               <div className="py-12 text-center text-on-surface-variant">
-                <span className="material-symbols-outlined text-[48px] text-outline/50">event_busy</span>
+                <Icon name="event_busy" className="text-[48px] text-outline/50" />
                 <p className="mt-2 text-sm">Không có lịch hẹn đã xác nhận hôm nay</p>
               </div>
             )}
@@ -199,7 +200,7 @@ const ReceptionistHome: React.FC = () => {
           <div className="bg-white rounded-2xl border border-outline-variant overflow-hidden shadow-sm">
             <div className="px-5 py-4 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
               <h3 className="font-headline-sm text-secondary flex items-center gap-2">
-                <span className="material-symbols-outlined">pending_actions</span>
+                <Icon name="pending_actions" />
                 Hàng Chờ Hiện Tại
               </h3>
               <div className="flex items-center gap-1.5 text-xs font-bold text-secondary">
@@ -234,7 +235,7 @@ const ReceptionistHome: React.FC = () => {
                 ))
               ) : (
                 <div className="py-10 text-center text-on-surface-variant">
-                  <span className="material-symbols-outlined text-3xl text-outline/40">group</span>
+                  <Icon name="group" className="text-3xl text-outline/40" />
                   <p className="text-xs mt-2">Hàng chờ trống</p>
                 </div>
               )}
@@ -244,7 +245,7 @@ const ReceptionistHome: React.FC = () => {
           {/* Dentist room status */}
           <div className="bg-white rounded-2xl border border-outline-variant overflow-hidden shadow-sm p-4">
             <h4 className="font-headline-sm text-headline-sm mb-3 flex items-center gap-2 text-on-surface">
-              <span className="material-symbols-outlined text-primary">meeting_room</span>
+              <Icon name="meeting_room" className="text-primary" />
               Trạng thái phòng khám
             </h4>
             <div className="space-y-2">

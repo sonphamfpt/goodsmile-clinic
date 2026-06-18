@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Icon } from '../../../components/Icon';
 import { useClinic } from '../../../context/ClinicContext';
 import { Invoice } from '../../../types/clinic';
 
@@ -65,7 +66,7 @@ export const CashierHistory: React.FC = () => {
       {/* Header and Filters */}
       <div className="bg-white p-5 rounded-xl border border-outline-variant shadow-sm space-y-4">
         <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-amber-600 font-bold">history</span>
+          <Icon name="history" className="text-amber-600 font-bold" />
           <div>
             <h3 className="font-bold text-on-surface">Lịch Sử Thanh Toán</h3>
             <p className="text-xs text-on-surface-variant">Tra cứu và in lại biên lai của toàn bộ hóa đơn đã hoàn tất</p>
@@ -74,7 +75,7 @@ export const CashierHistory: React.FC = () => {
 
         <div className="flex flex-col md:flex-row gap-3">
           <div className="relative flex-1">
-            <span className="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-sm">search</span>
+            <Icon name="search" className="absolute left-3 top-2.5 text-on-surface-variant text-sm" />
             <input
               type="text"
               placeholder="Tìm theo tên bệnh nhân, SĐT hoặc mã HD..."
@@ -161,7 +162,7 @@ export const CashierHistory: React.FC = () => {
                             className="p-1 border border-outline hover:border-amber-600 text-on-surface-variant hover:text-amber-600 rounded transition-all cursor-pointer"
                             title="In lại hóa đơn"
                           >
-                            <span className="material-symbols-outlined text-sm block">print</span>
+                            <Icon name="print" className="text-sm block" />
                           </button>
                         </td>
                       </tr>
@@ -169,7 +170,7 @@ export const CashierHistory: React.FC = () => {
                   ) : (
                     <tr>
                       <td colSpan={6} className="text-center py-12 text-on-surface-variant italic">
-                        <span className="material-symbols-outlined text-4xl text-outline mb-2">history</span>
+                        <Icon name="history" className="text-4xl text-outline mb-2" />
                         <p>Chưa có hóa đơn thanh toán nào trong lịch sử.</p>
                       </td>
                     </tr>
@@ -185,7 +186,7 @@ export const CashierHistory: React.FC = () => {
           <div className="col-span-12 lg:col-span-5 animate-in slide-in-from-right duration-250">
             <div className="bg-white rounded-xl border border-outline-variant p-5 shadow-sm space-y-4 relative overflow-hidden">
               <div className="absolute right-0 top-0 w-24 h-24 bg-amber-600/5 rounded-bl-full flex items-center justify-center pointer-events-none">
-                <span className="material-symbols-outlined text-amber-600/20 text-3xl translate-x-2 -translate-y-2">check_circle</span>
+                <Icon name="check_circle" className="text-amber-600/20 text-3xl translate-x-2 -translate-y-2" />
               </div>
 
               <div className="flex justify-between items-center border-b border-outline-variant/30 pb-3">
@@ -194,7 +195,7 @@ export const CashierHistory: React.FC = () => {
                   onClick={() => setSelectedInvoiceId(null)}
                   className="text-on-surface-variant hover:text-on-surface cursor-pointer"
                 >
-                  <span className="material-symbols-outlined text-sm">close</span>
+                  <Icon name="close" className="text-sm" />
                 </button>
               </div>
 
@@ -268,7 +269,7 @@ export const CashierHistory: React.FC = () => {
                     onClick={() => handleReprint(selectedInvoice.id)}
                     className="flex-1 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow cursor-pointer"
                   >
-                    <span className="material-symbols-outlined text-sm">print</span>
+                    <Icon name="print" className="text-sm" />
                     In lại biên lai
                   </button>
                   <button
@@ -276,7 +277,7 @@ export const CashierHistory: React.FC = () => {
                     className="py-2 px-3 border border-outline text-on-surface-variant hover:text-on-surface rounded text-xs font-bold transition-all cursor-pointer"
                     title="Gửi Email"
                   >
-                    <span className="material-symbols-outlined text-sm block">mail</span>
+                    <Icon name="mail" className="text-sm block" />
                   </button>
                 </div>
               </div>
@@ -291,7 +292,7 @@ export const CashierHistory: React.FC = () => {
           showPrintToast ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0 pointer-events-none'
         }`}
       >
-        <span className="material-symbols-outlined text-amber-400 animate-pulse">print</span>
+        <Icon name="print" className="text-amber-400 animate-pulse" />
         <div>
           <p className="font-bold text-xs">Đang truyền lệnh in...</p>
           <p className="text-[10px] opacity-80">

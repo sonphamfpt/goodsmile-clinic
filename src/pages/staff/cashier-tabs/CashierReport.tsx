@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Icon } from '../../../components/Icon';
 import { useClinic } from '../../../context/ClinicContext';
 
 export const CashierReport: React.FC = () => {
@@ -55,7 +56,7 @@ export const CashierReport: React.FC = () => {
     <div className="space-y-6 animate-in fade-in duration-200">
       {/* Header */}
       <div className="bg-white p-4 rounded-xl border border-outline-variant shadow-sm flex items-center gap-2">
-        <span className="material-symbols-outlined text-amber-600 font-bold">analytics</span>
+        <Icon name="analytics" className="text-amber-600 font-bold" />
         <div>
           <h3 className="font-bold text-on-surface">Báo Cáo Ca Trực & Sổ Quỹ</h3>
           <p className="text-xs text-on-surface-variant">Chốt doanh thu ca trực, đối soát tiền mặt ngăn kéo và chốt ca làm việc</p>
@@ -88,13 +89,13 @@ export const CashierReport: React.FC = () => {
           {/* Closing Verification Form */}
           <div className="bg-white rounded-xl border border-outline-variant p-6 shadow-sm space-y-4">
             <h3 className="font-headline-sm text-headline-sm border-b border-outline-variant/30 pb-3 flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-amber-600">assignment_turned_in</span>
+              <Icon name="assignment_turned_in" className="text-amber-600" />
               Bảng Kiểm Kê & Bàn Giao Ca
             </h3>
 
             {isSubmitted ? (
               <div className="bg-emerald-50 border border-emerald-300 text-emerald-900 rounded-lg p-5 text-center space-y-3">
-                <span className="material-symbols-outlined text-4xl text-emerald-600">task_alt</span>
+                <Icon name="task_alt" className="text-4xl text-emerald-600" />
                 <h4 className="font-bold">CA TRỰC ĐÃ CHỐT SỔ THÀNH CÔNG</h4>
                 <p className="text-xs text-emerald-800">
                   Dữ liệu bàn giao của bạn đã được lưu lại lúc {new Date().toLocaleTimeString('vi-VN')} vào sổ cái kế toán.
@@ -172,7 +173,7 @@ export const CashierReport: React.FC = () => {
                     type="submit"
                     className="px-6 py-2.5 bg-amber-600 text-white rounded-lg font-bold text-xs flex items-center gap-1.5 active:scale-95 transition-all shadow-md hover:bg-amber-700 cursor-pointer"
                   >
-                    <span className="material-symbols-outlined text-sm">lock_clock</span>
+                    <Icon name="lock_clock" className="text-sm" />
                     KHOÁ SỔ & CHỐT CA TRỰC
                   </button>
                 </div>
@@ -185,7 +186,7 @@ export const CashierReport: React.FC = () => {
         <div className="col-span-12 lg:col-span-4 space-y-6">
           <div className="bg-white rounded-xl border border-outline-variant p-5 shadow-sm space-y-4">
             <h4 className="font-bold text-xs uppercase text-amber-900 flex items-center gap-1">
-              <span className="material-symbols-outlined text-sm">info</span> Quy trình chốt quỹ
+              <Icon name="info" className="text-sm" /> Quy trình chốt quỹ
             </h4>
             <ul className="text-xs text-on-surface-variant space-y-2 list-decimal list-inside leading-relaxed">
               <li>Đếm tiền mặt thực tế trong ngăn kéo trước khi chốt ca.</li>

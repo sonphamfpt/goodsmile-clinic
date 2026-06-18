@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Icon } from '../../../components/Icon';
 import { useClinic } from '../../../context/ClinicContext';
 
 type Step = 1 | 2 | 3 | 4;
@@ -102,7 +103,7 @@ export const PatientBooking: React.FC = () => {
                 }`}
               >
                 {step > s.num ? (
-                  <span className="material-symbols-outlined text-[18px]">check</span>
+                  <Icon name="check" className="text-[18px]" />
                 ) : (
                   s.num
                 )}
@@ -136,7 +137,7 @@ export const PatientBooking: React.FC = () => {
                 <div className="flex justify-between items-start gap-3">
                   <div className="flex-1">
                     <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 ${selectedService === svc.id ? 'bg-primary text-on-primary' : 'bg-secondary-container text-on-secondary-container'}`}>
-                      <span className="material-symbols-outlined text-[20px]">dentistry</span>
+                      <Icon name="dentistry" className="text-[20px]" />
                     </div>
                     <p className={`font-bold text-body-md ${selectedService === svc.id ? 'text-on-primary-container' : 'text-on-surface'}`}>{svc.name}</p>
                     <p className={`text-xs mt-1 ${selectedService === svc.id ? 'text-on-primary-container/70' : 'text-on-surface-variant'}`}>
@@ -148,7 +149,7 @@ export const PatientBooking: React.FC = () => {
                       ₫{svc.price.toLocaleString()}
                     </p>
                     {selectedService === svc.id && (
-                      <span className="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+                      <Icon name="check_circle" className="text-primary text-[20px]" />
                     )}
                   </div>
                 </div>
@@ -162,7 +163,7 @@ export const PatientBooking: React.FC = () => {
               className="px-8 py-3 bg-primary text-on-primary rounded-xl font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
             >
               Tiếp theo
-              <span className="material-symbols-outlined">arrow_forward</span>
+              <Icon name="arrow_forward" />
             </button>
           </div>
         </div>
@@ -188,19 +189,19 @@ export const PatientBooking: React.FC = () => {
                   <p className={`font-bold ${selectedDentist === doc.id ? 'text-on-primary-container' : 'text-on-surface'}`}>{doc.name}</p>
                   <p className={`text-xs mt-0.5 ${selectedDentist === doc.id ? 'text-on-primary-container/70' : 'text-on-surface-variant'}`}>{doc.role}</p>
                   <div className={`mt-2 inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full ${selectedDentist === doc.id ? 'bg-primary/20 text-primary' : 'bg-surface-container text-on-surface-variant'}`}>
-                    <span className="material-symbols-outlined text-[12px]">meeting_room</span>
+                    <Icon name="meeting_room" className="text-[12px]" />
                     {doc.room}
                   </div>
                 </div>
                 {selectedDentist === doc.id && (
-                  <span className="material-symbols-outlined text-primary text-[24px]">check_circle</span>
+                  <Icon name="check_circle" className="text-primary text-[24px]" />
                 )}
               </button>
             ))}
           </div>
           <div className="flex justify-between pt-4">
             <button onClick={() => setStep(1)} className="px-6 py-3 border border-outline text-on-surface rounded-xl font-bold hover:bg-surface-container transition-all cursor-pointer flex items-center gap-2">
-              <span className="material-symbols-outlined">arrow_back</span>
+              <Icon name="arrow_back" />
               Quay lại
             </button>
             <button
@@ -209,7 +210,7 @@ export const PatientBooking: React.FC = () => {
               className="px-8 py-3 bg-primary text-on-primary rounded-xl font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
             >
               Tiếp theo
-              <span className="material-symbols-outlined">arrow_forward</span>
+              <Icon name="arrow_forward" />
             </button>
           </div>
         </div>
@@ -248,7 +249,7 @@ export const PatientBooking: React.FC = () => {
               <div className="space-y-4">
                 <div>
                   <p className="text-xs font-bold text-on-surface-variant mb-2 flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[16px]">light_mode</span> Buổi sáng
+                    <Icon name="light_mode" className="text-[16px]" /> Buổi sáng
                   </p>
                   <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
                     {AVAILABLE_TIMES.filter(t => t.includes('AM')).map((time) => {
@@ -274,7 +275,7 @@ export const PatientBooking: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-xs font-bold text-on-surface-variant mb-2 flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[16px]">wb_twilight</span> Buổi chiều
+                    <Icon name="wb_twilight" className="text-[16px]" /> Buổi chiều
                   </p>
                   <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
                     {AVAILABLE_TIMES.filter(t => t.includes('PM')).map((time) => {
@@ -320,7 +321,7 @@ export const PatientBooking: React.FC = () => {
 
           <div className="flex justify-between pt-2">
             <button onClick={() => setStep(2)} className="px-6 py-3 border border-outline text-on-surface rounded-xl font-bold hover:bg-surface-container transition-all cursor-pointer flex items-center gap-2">
-              <span className="material-symbols-outlined">arrow_back</span>
+              <Icon name="arrow_back" />
               Quay lại
             </button>
             <button
@@ -329,7 +330,7 @@ export const PatientBooking: React.FC = () => {
               className="px-8 py-3 bg-primary text-on-primary rounded-xl font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
             >
               Xem xác nhận
-              <span className="material-symbols-outlined">arrow_forward</span>
+              <Icon name="arrow_forward" />
             </button>
           </div>
         </div>
@@ -344,7 +345,7 @@ export const PatientBooking: React.FC = () => {
             {/* Summary header */}
             <div className="bg-primary p-6 text-on-primary">
               <div className="flex items-center gap-3">
-                <span className="material-symbols-outlined text-3xl">event_available</span>
+                <Icon name="event_available" className="text-3xl" />
                 <div>
                   <p className="font-bold text-headline-sm">Lịch hẹn sắp xếp</p>
                   <p className="text-sm opacity-80">Vui lòng kiểm tra kỹ trước khi xác nhận</p>
@@ -365,7 +366,7 @@ export const PatientBooking: React.FC = () => {
               ].map((item) => (
                 <div key={item.label} className="flex items-center gap-4 py-3 border-b border-outline-variant/50 last:border-0">
                   <div className="w-9 h-9 bg-secondary-container rounded-lg flex items-center justify-center text-on-secondary-container shrink-0">
-                    <span className="material-symbols-outlined text-[18px]">{item.icon}</span>
+                    <Icon name={item.icon} className="text-[18px]" />
                   </div>
                   <div className="flex-1">
                     <p className="text-xs text-on-surface-variant">{item.label}</p>
@@ -375,7 +376,7 @@ export const PatientBooking: React.FC = () => {
               ))}
               {note && (
                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex gap-3">
-                  <span className="material-symbols-outlined text-amber-600 text-[20px] shrink-0">sticky_note_2</span>
+                  <Icon name="sticky_note_2" className="text-amber-600 text-[20px] shrink-0" />
                   <p className="text-sm text-amber-800">{note}</p>
                 </div>
               )}
@@ -383,7 +384,7 @@ export const PatientBooking: React.FC = () => {
           </div>
 
           <div className="bg-surface-container-low rounded-xl p-4 flex gap-3 border border-outline-variant">
-            <span className="material-symbols-outlined text-secondary shrink-0">info</span>
+            <Icon name="info" className="text-secondary shrink-0" />
             <p className="text-xs text-on-surface-variant">
               Bạn sẽ nhận SMS xác nhận lịch hẹn trong vòng 5 phút. Vui lòng đến trước 10 phút và mang theo CCCD/Thẻ thành viên nếu có.
             </p>
@@ -391,14 +392,14 @@ export const PatientBooking: React.FC = () => {
 
           <div className="flex justify-between pt-2">
             <button onClick={() => setStep(3)} className="px-6 py-3 border border-outline text-on-surface rounded-xl font-bold hover:bg-surface-container transition-all cursor-pointer flex items-center gap-2">
-              <span className="material-symbols-outlined">arrow_back</span>
+              <Icon name="arrow_back" />
               Sửa thông tin
             </button>
             <button
               onClick={handleConfirm}
               className="px-8 py-3 bg-secondary text-on-secondary rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all flex items-center gap-2 cursor-pointer shadow-md"
             >
-              <span className="material-symbols-outlined">check_circle</span>
+              <Icon name="check_circle" />
               Xác nhận đặt lịch
             </button>
           </div>
@@ -409,7 +410,7 @@ export const PatientBooking: React.FC = () => {
       {step === 4 && isBooked && (
         <div className="text-center py-8 space-y-4 animate-fade-in bg-white rounded-2xl border border-outline-variant shadow-sm max-w-xl mx-auto mt-4 p-6">
           <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center mx-auto shadow-md">
-            <span className="material-symbols-outlined text-4xl text-on-secondary">check_circle</span>
+            <Icon name="check_circle" className="text-4xl text-on-secondary" />
           </div>
           <div>
             <h3 className="font-headline-sm text-headline-sm text-on-surface">Đặt lịch thành công!</h3>
@@ -428,9 +429,9 @@ export const PatientBooking: React.FC = () => {
           <div className="bg-surface-container-low rounded-xl p-4 inline-block text-left w-full border border-outline-variant">
             <p className="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-2">Thông tin tóm tắt</p>
             <div className="space-y-1.5 text-sm text-on-surface">
-              <p className="flex items-center gap-2"><span className="material-symbols-outlined text-[16px] text-primary">dentistry</span> {serviceSel?.name}</p>
-              <p className="flex items-center gap-2"><span className="material-symbols-outlined text-[16px] text-primary">stethoscope</span> {dentistSel?.name} — {dentistSel?.room}</p>
-              <p className="flex items-center gap-2"><span className="material-symbols-outlined text-[16px] text-primary">event</span> {selectedDate} lúc {selectedTime}</p>
+              <p className="flex items-center gap-2"><Icon name="dentistry" className="text-[16px] text-primary" /> {serviceSel?.name}</p>
+              <p className="flex items-center gap-2"><Icon name="stethoscope" className="text-[16px] text-primary" /> {dentistSel?.name} — {dentistSel?.room}</p>
+              <p className="flex items-center gap-2"><Icon name="event" className="text-[16px] text-primary" /> {selectedDate} lúc {selectedTime}</p>
             </div>
           </div>
           <div className="pt-2">
@@ -438,7 +439,7 @@ export const PatientBooking: React.FC = () => {
               onClick={handleReset}
               className="px-6 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-bold hover:opacity-90 active:scale-95 transition-all cursor-pointer inline-flex items-center gap-2"
             >
-              <span className="material-symbols-outlined text-[18px]">add_circle</span>
+              <Icon name="add_circle" className="text-[18px]" />
               Đặt lịch hẹn khác
             </button>
           </div>

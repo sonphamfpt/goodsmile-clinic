@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Icon } from '../../../components/Icon';
 import { useClinic } from '../../../context/ClinicContext';
 
 const MSG_TEMPLATES = [
@@ -144,7 +145,7 @@ export const ReceptionistReminders: React.FC = () => {
           {/* Template selection */}
           <div className="bg-white rounded-2xl border border-outline-variant shadow-sm p-5">
             <h4 className="font-bold text-on-surface mb-3 flex items-center gap-2 text-sm uppercase text-on-surface-variant tracking-wider">
-              <span className="material-symbols-outlined text-[18px]">article</span>
+              <Icon name="article" className="text-[18px]" />
               Chọn mẫu tin nhắn
             </h4>
             <div className="space-y-2">
@@ -157,7 +158,7 @@ export const ReceptionistReminders: React.FC = () => {
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${t.color}`}>
-                        <span className="material-symbols-outlined text-[20px]">{t.icon}</span>
+                        <Icon name={t.icon} className="text-[20px]" />
                       </div>
                       <div>
                         <p className={`font-bold text-sm ${selectedTemplate === t.id ? 'text-primary' : 'text-on-surface'}`}>{t.label}</p>
@@ -165,7 +166,7 @@ export const ReceptionistReminders: React.FC = () => {
                       </div>
                     </div>
                     {selectedTemplate === t.id && (
-                      <span className="material-symbols-outlined text-primary">check_circle</span>
+                      <Icon name="check_circle" className="text-primary" />
                     )}
                   </div>
                 </button>
@@ -176,7 +177,7 @@ export const ReceptionistReminders: React.FC = () => {
           {/* Channel selection */}
           <div className="bg-white rounded-2xl border border-outline-variant shadow-sm p-5">
             <h4 className="font-bold text-sm uppercase text-on-surface-variant tracking-wider mb-3 flex items-center gap-2">
-              <span className="material-symbols-outlined text-[18px]">send</span>
+              <Icon name="send" className="text-[18px]" />
               Kênh gửi
             </h4>
             <div className="grid grid-cols-3 gap-3">
@@ -207,7 +208,7 @@ export const ReceptionistReminders: React.FC = () => {
           <div className="bg-white rounded-2xl border border-outline-variant shadow-sm overflow-hidden">
             <div className="px-5 py-3 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
               <h4 className="font-bold text-sm text-on-surface flex items-center gap-2">
-                <span className="material-symbols-outlined text-[18px]">preview</span>
+                <Icon name="preview" className="text-[18px]" />
                 Xem trước nội dung
               </h4>
               <button onClick={() => setPreviewMode(!previewMode)} className="text-xs text-primary font-bold cursor-pointer">{previewMode ? 'Ẩn' : 'Xem trước'}</button>
@@ -249,12 +250,12 @@ export const ReceptionistReminders: React.FC = () => {
             >
               {sending ? (
                 <>
-                  <span className="material-symbols-outlined animate-spin">refresh</span>
+                  <Icon name="refresh" className="animate-spin" />
                   Đang gửi...
                 </>
               ) : (
                 <>
-                  <span className="material-symbols-outlined">send</span>
+                  <Icon name="send" />
                   Gửi ngay cho {selectedRecipients.length > 0 ? `${selectedRecipients.length} người` : 'tất cả'}
                 </>
               )}
@@ -263,7 +264,7 @@ export const ReceptionistReminders: React.FC = () => {
               onClick={() => alert('Đã lên lịch gửi tự động vào 8:00 AM mỗi ngày!')}
               className="px-5 py-3.5 border border-outline text-on-surface rounded-xl font-bold hover:bg-surface-container transition-all cursor-pointer flex items-center gap-2"
             >
-              <span className="material-symbols-outlined">schedule_send</span>
+              <Icon name="schedule_send" />
               Hẹn giờ
             </button>
           </div>
@@ -271,7 +272,7 @@ export const ReceptionistReminders: React.FC = () => {
           {/* Send success */}
           {sendResult && (
             <div className="p-4 bg-secondary-container border border-secondary/20 rounded-xl flex items-center gap-3">
-              <span className="material-symbols-outlined text-secondary text-3xl">check_circle</span>
+              <Icon name="check_circle" className="text-secondary text-3xl" />
               <div>
                 <p className="font-bold text-on-secondary-container">Gửi thành công!</p>
                 <p className="text-xs text-on-secondary-container/80">
@@ -289,7 +290,7 @@ export const ReceptionistReminders: React.FC = () => {
           <div className="bg-white rounded-2xl border border-outline-variant shadow-sm overflow-hidden">
             <div className="px-5 py-3 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
               <h4 className="font-bold text-sm text-on-surface flex items-center gap-2">
-                <span className="material-symbols-outlined text-[18px]">group</span>
+                <Icon name="group" className="text-[18px]" />
                 Danh sách gửi ({allRecipients.length} người)
               </h4>
               <button onClick={selectAll} className="text-xs text-primary font-bold cursor-pointer hover:underline">Chọn tất cả</button>
@@ -323,7 +324,7 @@ export const ReceptionistReminders: React.FC = () => {
           {/* Send history log */}
           <div className="bg-white rounded-2xl border border-outline-variant shadow-sm overflow-hidden">
             <div className="px-5 py-3 border-b border-outline-variant bg-surface-container-low flex items-center gap-2">
-              <span className="material-symbols-outlined text-[18px] text-on-surface-variant">history</span>
+              <Icon name="history" className="text-[18px] text-on-surface-variant" />
               <h4 className="font-bold text-sm text-on-surface">Lịch sử gửi tin</h4>
             </div>
             <div className="divide-y divide-outline-variant">
@@ -332,7 +333,7 @@ export const ReceptionistReminders: React.FC = () => {
                 return (
                   <div key={log.id} className="flex items-center gap-4 px-5 py-3 hover:bg-surface-container-low transition-colors">
                     <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${conf.badge}`}>
-                      <span className="material-symbols-outlined text-[18px]">{conf.icon}</span>
+                      <Icon name={conf.icon} className="text-[18px]" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-bold text-on-surface truncate">{log.template}</p>
@@ -353,7 +354,7 @@ export const ReceptionistReminders: React.FC = () => {
               { label: 'Opt-out', value: 2, icon: 'unsubscribe', color: 'text-error' },
             ].map(s => (
               <div key={s.label} className="bg-white rounded-xl border border-outline-variant p-3 text-center shadow-sm">
-                <span className={`material-symbols-outlined text-[24px] ${s.color} block mb-1`}>{s.icon}</span>
+                <Icon name={s.icon} className={`text-[24px] ${s.color} block mb-1`} />
                 <p className={`font-bold text-lg ${s.color}`}>{s.value}</p>
                 <p className="text-[10px] text-on-surface-variant font-medium">{s.label}</p>
               </div>

@@ -1,6 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useClinic } from '../../context/ClinicContext';
 import { BookingModal } from '../../components/BookingModal';
+import { Icon } from '../../components/Icon';
+
+const DEFAULT_SERVICE_IMAGE =
+  'https://images.pexels.com/photos/3845625/pexels-photo-3845625.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop';
+
+const ServiceImage: React.FC<{ src: string; alt: string; className?: string }> = ({ src, alt, className }) => {
+  const [imgSrc, setImgSrc] = useState(src);
+
+  useEffect(() => {
+    setImgSrc(src);
+  }, [src]);
+
+  return (
+    <img
+      src={imgSrc}
+      alt={alt}
+      className={className}
+      loading="lazy"
+      referrerPolicy="no-referrer"
+      onError={() => {
+        if (imgSrc !== DEFAULT_SERVICE_IMAGE) setImgSrc(DEFAULT_SERVICE_IMAGE);
+      }}
+    />
+  );
+};
 
 // ── Service Metadata (extended) ──
 const SERVICE_META: Record<string, {
@@ -22,11 +47,12 @@ const SERVICE_META: Record<string, {
     desc: 'Loại bỏ mảng bám, cao răng cứng đầu trên răng và dưới nướu, ngăn ngừa viêm nướu và hôi miệng hiệu quả lâu dài.',
     duration: '30 – 45 phút',
     highlights: ['Dụng cụ siêu âm hiện đại', 'Đánh bóng răng sau cạo', 'Khuyên dùng mỗi 6 tháng'],
-    image: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.pexels.com/photos/3845625/pexels-photo-3845625.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
     accentColor: '#0d9488',
     bgColor: 'bg-teal-50',
     textColor: 'text-teal-700',
   },
+
   'S-02': {
     icon: 'brightness_high',
     category: 'Thẩm Mỹ Răng',
@@ -35,44 +61,48 @@ const SERVICE_META: Record<string, {
     badge: 'HOT',
     badgeColor: 'bg-rose-500 text-white',
     highlights: ['Công nghệ Philips Zoom', 'Không ê buốt', 'Hiệu quả ngay sau 1 lần'],
-    image: 'https://images.unsplash.com/photo-1559591937-abc79e46eef0?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.pexels.com/photos/6627536/pexels-photo-6627536.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
     accentColor: '#eab308',
     bgColor: 'bg-yellow-50',
     textColor: 'text-yellow-700',
   },
+
   'S-03': {
     icon: 'dentistry',
     category: 'Phục Hồi Răng',
     desc: 'Phục hồi hình dáng và chức năng nhai cho răng sứt mẻ, sâu bằng Composite cao cấp, màu sắc trùng khớp tự nhiên.',
     duration: '45 – 60 phút',
     highlights: ['Composite A3-shade matching', 'Không cần mài răng nhiều', 'Bền đến 7 năm'],
-    image: 'https://images.unsplash.com/photo-1629909615957-be38d48fbbe4?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.pexels.com/photos/3845557/pexels-photo-3845557.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
     accentColor: '#2563eb',
     bgColor: 'bg-blue-50',
     textColor: 'text-blue-700',
   },
+
   'S-04': {
     icon: 'healing',
     category: 'Phẫu Thuật',
     desc: 'Phẫu thuật nhổ răng khôn mọc lệch, mọc ngầm bằng sóng siêu âm Piezotome, hạn chế tối đa sưng đau và chảy máu.',
     duration: '30 – 90 phút',
     highlights: ['Sóng siêu âm Piezotome', 'Gây tê không đau', 'Hồi phục nhanh 2–3 ngày'],
-    image: 'https://images.unsplash.com/photo-1588776814546-1ffedac39b40?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.pexels.com/photos/3779708/pexels-photo-3779708.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
     accentColor: '#dc2626',
     bgColor: 'bg-red-50',
     textColor: 'text-red-700',
   },
+
   'S-05': {
     icon: 'biotech',
     category: 'Điều Trị Nội Nha',
     desc: 'Điều trị tủy triệt để bằng máy trâm xoay, loại bỏ tủy viêm, trám kín ống tủy — bảo tồn tối đa răng thật.',
     duration: '60 – 120 phút',
     highlights: ['Máy trâm xoay ProTaper', 'X-quang định vị ống tủy', 'Không đau sau điều trị'],
-    image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1629909615184-74f495363b67?auto=format&fit=crop&w=600&q=80',
     accentColor: '#7c3aed',
     bgColor: 'bg-purple-50',
     textColor: 'text-purple-700',
   },
+
   'S-06': {
     icon: 'rebase',
     category: 'Cấy Ghép Implant',
@@ -81,11 +111,12 @@ const SERVICE_META: Record<string, {
     badge: 'PREMIUM',
     badgeColor: 'bg-indigo-600 text-white',
     highlights: ['Implant Straumann Thụy Sĩ', 'Bảo hành 25 năm', 'Tỷ lệ thành công 98.7%'],
-    image: 'https://images.unsplash.com/photo-1581056771392-b4b567aa1db4?auto=format&fit=crop&w=600&q=80',
+    image:  'https://images.unsplash.com/photo-1588776814546-1ffedac39b40?auto=format&fit=crop&w=600&q=80',
     accentColor: '#4f46e5',
     bgColor: 'bg-indigo-50',
     textColor: 'text-indigo-700',
   },
+
   'S-07': {
     icon: 'grid_view',
     category: 'Chỉnh Nha',
@@ -94,11 +125,12 @@ const SERVICE_META: Record<string, {
     badge: 'PHỔ BIẾN',
     badgeColor: 'bg-emerald-600 text-white',
     highlights: ['Invisalign & mắc cài sứ', 'Theo dõi kỹ thuật số', 'Kế hoạch cá nhân hóa'],
-    image: 'https://images.unsplash.com/photo-1609840114035-3c981b782dfe?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.pexels.com/photos/6627536/pexels-photo-6627536.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
     accentColor: '#059669',
     bgColor: 'bg-emerald-50',
     textColor: 'text-emerald-700',
   },
+
   'S-08': {
     icon: 'assignment',
     category: 'Chẩn Đoán',
@@ -107,52 +139,54 @@ const SERVICE_META: Record<string, {
     badge: 'MIỄN PHÍ',
     badgeColor: 'bg-green-500 text-white',
     highlights: ['Chụp X-quang toàn hàm', 'Phân tích AI hỗ trợ chẩn đoán', 'Miễn phí lần đầu'],
-    image: 'https://images.unsplash.com/photo-1526256262350-7da7584cf5eb?auto=format&fit=crop&w=600&q=80',
-    accentColor: '#16a34a',
+    image: 'https://images.unsplash.com/photo-1609840114035-3c981b782dfe?auto=format&fit=crop&w=600&q=80',    accentColor: '#16a34a',
     bgColor: 'bg-green-50',
     textColor: 'text-green-700',
   },
+
   'S-09': {
     icon: 'diamond',
     category: 'Phục Hình Sứ',
     desc: 'Mão sứ toàn sứ Zirconia độ trong cao, phủ lên răng hư, đổi màu, tạo hình lại nụ cười hoàn hảo bền vững.',
     duration: '2 – 3 buổi hẹn',
     highlights: ['Zirconia IPS e.max', 'Màu sắc tự nhiên như răng thật', 'Không gây dị ứng'],
-    image: 'https://images.unsplash.com/photo-1616391182219-e080b4d1043a?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.pexels.com/photos/6627421/pexels-photo-6627421.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
     accentColor: '#db2777',
     bgColor: 'bg-pink-50',
     textColor: 'text-pink-700',
   },
+
   'S-10': {
     icon: 'child_care',
     category: 'Nha Khoa Trẻ Em',
     desc: 'Khám, trám, nhổ sữa và phòng ngừa sâu răng cho trẻ em từ 3 tuổi, môi trường thân thiện giúp trẻ không sợ nha sĩ.',
     duration: '30 – 45 phút',
     highlights: ['Chuyên gia nhi khoa', 'Phòng khám màu sắc vui', 'Trám Fluor phòng ngừa'],
-    image: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.pexels.com/photos/6627421/pexels-photo-6627421.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
     accentColor: '#f59e0b',
     bgColor: 'bg-amber-50',
     textColor: 'text-amber-700',
   },
+
   'S-11': {
     icon: 'lens_blur',
     category: 'Phẫu Thuật Nướu',
     desc: 'Điều trị cười hở nướu, cắt viền nướu bất đối xứng và điều trị viêm nha chu mãn tính bằng công nghệ Laser Er:YAG.',
     duration: '45 – 90 phút',
     highlights: ['Laser Er:YAG không đau', 'Hồi phục nhanh 48h', 'Kết quả thẩm mỹ rõ ngay'],
-    image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.pexels.com/photos/3845624/pexels-photo-3845624.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
     accentColor: '#0891b2',
     bgColor: 'bg-cyan-50',
     textColor: 'text-cyan-700',
   },
+
   'S-12': {
     icon: 'image_search',
     category: 'Chẩn Đoán Hình Ảnh',
     desc: 'Chụp X-quang kỹ thuật số Panoramic, CT Cone Beam 3D giúp chẩn đoán chính xác vị trí, cấu trúc xương hàm trước phẫu thuật.',
     duration: '15 – 30 phút',
     highlights: ['CT Cone Beam 3D', 'Liều bức xạ cực thấp', 'Kết quả ngay 10 phút'],
-    image: 'https://images.unsplash.com/photo-1559591937-abc79e46eef0?auto=format&fit=crop&w=600&q=80',
-    accentColor: '#64748b',
+    image: 'https://images.unsplash.com/photo-1559757175-7cb057fba93c?auto=format&fit=crop&w=600&q=80',    accentColor: '#64748b',
     bgColor: 'bg-slate-50',
     textColor: 'text-slate-700',
   },
@@ -171,7 +205,7 @@ export const Services: React.FC = () => {
     ...s,
     meta: SERVICE_META[s.id] ?? {
       icon: 'dentistry', category: 'Khác', desc: 'Dịch vụ nha khoa chuyên sâu tại GoodSmile.', duration: '30 – 60 phút',
-      badge: undefined, badgeColor: undefined, highlights: [], image: 'https://images.unsplash.com/photo-1629909615957-be38d48fbbe4?auto=format&fit=crop&w=600&q=80',
+      badge: undefined, badgeColor: undefined, highlights: [], image: DEFAULT_SERVICE_IMAGE,
       accentColor: '#00478d', bgColor: 'bg-blue-50', textColor: 'text-blue-700',
     }
   }));
@@ -195,7 +229,7 @@ export const Services: React.FC = () => {
 
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/15 text-white/90 rounded-full text-xs font-bold mb-5 border border-white/20">
-            <span className="material-symbols-outlined text-[14px]">medical_services</span>
+            <Icon name="medical_services" className="text-[14px]" />
             12 Chuyên Khoa · Công Nghệ 4.0
           </div>
           <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-8">
@@ -231,7 +265,9 @@ export const Services: React.FC = () => {
         <div className="max-w-7xl mx-auto px-6 md:px-16 py-3 flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
           {/* Search */}
           <div className="relative flex-1 max-w-sm">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline text-[18px]">search</span>
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">
+              <Icon name="search" />
+            </div>
             <input
               type="text"
               placeholder="Tìm dịch vụ..."
@@ -273,7 +309,7 @@ export const Services: React.FC = () => {
             onClick={() => setIsBookingOpen(true)}
             className="hidden sm:flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-bold hover:shadow-lg active:scale-95 transition-all cursor-pointer"
           >
-            <span className="material-symbols-outlined text-[16px]">calendar_month</span>
+            <Icon name="calendar_month" className="text-[16px]" />
             Đặt lịch ngay
           </button>
         </div>
@@ -290,7 +326,7 @@ export const Services: React.FC = () => {
               >
                 {/* Image Header */}
                 <div className="relative h-44 overflow-hidden">
-                  <img
+                  <ServiceImage
                     src={meta.image}
                     alt={svc.name}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
@@ -314,13 +350,15 @@ export const Services: React.FC = () => {
 
                   {/* Duration on image */}
                   <div className="absolute bottom-3 right-3 bg-black/50 backdrop-blur-sm text-white text-[9px] font-bold px-2 py-1 rounded-full flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[10px]">schedule</span>
+                    <Icon name="schedule" className="text-[10px]" />
                     {meta.duration}
                   </div>
 
                   {/* Icon overlay bottom-left */}
                   <div className="absolute bottom-3 left-3 w-8 h-8 rounded-lg bg-white/20 backdrop-blur flex items-center justify-center">
-                    <span className="material-symbols-outlined text-white text-[16px]">{meta.icon}</span>
+                    <div className="text-white text-[16px]">
+                      <Icon name={meta.icon} />
+                    </div>
                   </div>
                 </div>
 
@@ -334,7 +372,9 @@ export const Services: React.FC = () => {
                     {meta.highlights.slice(0, 3).map((h, i) => (
                       <li key={i} className="flex items-center gap-2 text-xs text-on-surface-variant">
                         <span className="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: meta.accentColor + '20' }}>
-                          <span className="material-symbols-outlined text-[10px]" style={{ color: meta.accentColor }}>check</span>
+                          <div className="text-[10px]" style={{ color: meta.accentColor }}>
+                            <Icon name="check" />
+                          </div>
                         </span>
                         {h}
                       </li>
@@ -355,7 +395,7 @@ export const Services: React.FC = () => {
                     </div>
                     <div className="flex items-center gap-1 text-xs font-bold" style={{ color: meta.accentColor }}>
                       Xem chi tiết
-                      <span className="material-symbols-outlined text-[14px] transition-transform group-hover:translate-x-1">arrow_forward</span>
+                      <Icon name="arrow_forward" className="text-[14px] transition-transform group-hover:translate-x-1" />
                     </div>
                   </div>
                 </div>
@@ -366,7 +406,7 @@ export const Services: React.FC = () => {
 
         {filtered.length === 0 && (
           <div className="text-center py-20">
-            <span className="material-symbols-outlined text-5xl text-slate-300">search_off</span>
+            <Icon name="search_off" className="text-5xl text-slate-300 flex justify-center" />
             <p className="text-on-surface-variant mt-3 font-semibold">Không tìm thấy dịch vụ phù hợp</p>
             <button onClick={() => { setSearchQuery(''); setActiveCategory('Tất cả'); }} className="mt-3 text-primary text-sm hover:underline cursor-pointer">Xóa bộ lọc</button>
           </div>
@@ -390,7 +430,7 @@ export const Services: React.FC = () => {
             ].map((step, i) => (
               <div key={i} className="flex flex-col items-center text-center px-4 relative z-10">
                 <div className={`w-16 h-16 rounded-2xl ${step.color} flex items-center justify-center shadow-lg mb-4`}>
-                  <span className="material-symbols-outlined text-2xl">{step.icon}</span>
+                  <Icon name={step.icon} className="text-2xl" />
                 </div>
                 <span className="text-[9px] font-extrabold text-outline uppercase tracking-widest mb-1">Bước {step.step}</span>
                 <h4 className="font-bold text-sm text-on-surface mb-2">{step.title}</h4>
@@ -413,7 +453,7 @@ export const Services: React.FC = () => {
             ].map((badge, i) => (
               <div key={i} className="flex flex-col items-center gap-2 text-center">
                 <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <span className="material-symbols-outlined text-primary text-xl">{badge.icon}</span>
+                  <Icon name={badge.icon} className="text-primary text-xl" />
                 </div>
                 <p className="font-bold text-xs text-on-surface">{badge.label}</p>
                 <p className="text-[9px] text-outline">{badge.sub}</p>
@@ -458,13 +498,13 @@ export const Services: React.FC = () => {
           >
             {/* Modal image header */}
             <div className="relative h-52 overflow-hidden shrink-0">
-              <img src={selectedSvc.meta.image} alt={selectedSvc.name} className="w-full h-full object-cover" />
+              <ServiceImage src={selectedSvc.meta.image} alt={selectedSvc.name} className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
               <button
                 onClick={() => setSelectedService(null)}
                 className="absolute top-4 right-4 w-8 h-8 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center text-white transition-colors cursor-pointer"
               >
-                <span className="material-symbols-outlined text-[18px]">close</span>
+                <Icon name="close" className="text-[18px]" />
               </button>
               <div className="absolute bottom-4 left-5">
                 <span className={`text-[9px] font-extrabold uppercase px-2.5 py-1 rounded-full ${selectedSvc.meta.bgColor} ${selectedSvc.meta.textColor}`}>
@@ -499,7 +539,9 @@ export const Services: React.FC = () => {
                   {selectedSvc.meta.highlights.map((h, i) => (
                     <li key={i} className="flex items-center gap-3 text-sm text-on-surface">
                       <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: selectedSvc.meta.accentColor + '20' }}>
-                        <span className="material-symbols-outlined text-[14px]" style={{ color: selectedSvc.meta.accentColor }}>check_circle</span>
+                        <div className="text-[14px]" style={{ color: selectedSvc.meta.accentColor }}>
+                          <Icon name="check_circle" />
+                        </div>
                       </div>
                       {h}
                     </li>

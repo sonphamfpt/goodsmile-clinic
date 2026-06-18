@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Icon } from '../../../components/Icon';
 import { useClinic } from '../../../context/ClinicContext';
 
 // Helper to mask name for privacy: "Nguyễn Văn A" -> "Nguyễn V*** A***"
@@ -69,7 +70,7 @@ export const PatientQueue: React.FC = () => {
                 isCurrent ? 'bg-white text-primary ring-4 ring-white/30 scale-110 shadow-lg' : 
                 isActive ? 'bg-white text-primary' : 'bg-primary-container/50 text-white/50 border border-white/20'
               }`}>
-                <span className="material-symbols-outlined text-[16px]">{step.icon}</span>
+                <Icon name={step.icon} className="text-[16px]" />
               </div>
               <span className={`text-[10px] font-bold ${isActive ? 'text-white' : 'text-white/50'}`}>{step.label}</span>
             </div>
@@ -105,14 +106,14 @@ export const PatientQueue: React.FC = () => {
               {/* Vị trí trung tâm: Số thứ tự */}
               <div className="text-center md:text-left flex-1">
                 <p className="text-sm font-bold opacity-80 uppercase tracking-widest mb-2 flex items-center justify-center md:justify-start gap-2">
-                  <span className="material-symbols-outlined text-[18px]">person</span>
+                  <Icon name="person" className="text-[18px]" />
                   Lượt khám của bạn
                 </p>
                 
                 {myQueueItem.status === 'In Chair' ? (
                   <div className="animate-fade-in">
                     <h3 className="text-4xl sm:text-5xl font-black mb-2 flex items-center justify-center md:justify-start gap-3">
-                      <span className="material-symbols-outlined text-[48px] animate-pulse">medical_services</span>
+                      <Icon name="medical_services" className="text-[48px] animate-pulse" />
                       Đang khám
                     </h3>
                     <p className="text-lg opacity-90">Bác sĩ đang điều trị cho bạn.</p>
@@ -142,21 +143,21 @@ export const PatientQueue: React.FC = () => {
                   <div>
                     <p className="text-[10px] uppercase font-bold opacity-60 mb-1">Bác sĩ phụ trách</p>
                     <p className="font-bold flex items-center gap-2">
-                      <span className="material-symbols-outlined text-[18px]">stethoscope</span>
+                      <Icon name="stethoscope" className="text-[18px]" />
                       {myQueueItem.dentistName}
                     </p>
                   </div>
                   <div>
                     <p className="text-[10px] uppercase font-bold opacity-60 mb-1">Phòng khám</p>
                     <p className="font-bold flex items-center gap-2">
-                      <span className="material-symbols-outlined text-[18px]">meeting_room</span>
+                      <Icon name="meeting_room" className="text-[18px]" />
                       {myQueueItem.room}
                     </p>
                   </div>
                   <div>
                     <p className="text-[10px] uppercase font-bold opacity-60 mb-1">Giờ Check-in</p>
                     <p className="font-bold flex items-center gap-2">
-                      <span className="material-symbols-outlined text-[18px]">schedule</span>
+                      <Icon name="schedule" className="text-[18px]" />
                       {myQueueItem.checkInTime}
                     </p>
                   </div>
@@ -168,7 +169,7 @@ export const PatientQueue: React.FC = () => {
         </div>
       ) : (
         <div className="mb-8 bg-surface-container rounded-3xl border border-outline-variant p-10 text-center">
-          <span className="material-symbols-outlined text-[64px] text-outline mb-4">playlist_remove</span>
+          <Icon name="playlist_remove" className="text-[64px] text-outline mb-4" />
           <h3 className="text-xl font-bold text-on-surface mb-2">Bạn không có trong hàng chờ</h3>
           <p className="text-on-surface-variant">Hãy đến quầy lễ tân để check-in hoặc đặt lịch khám mới.</p>
         </div>
@@ -181,7 +182,7 @@ export const PatientQueue: React.FC = () => {
         <div className="flex-1 space-y-4">
           <div className="flex items-center justify-between pb-2 border-b-2 border-primary/20">
             <h3 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary">meeting_room</span>
+              <Icon name="meeting_room" className="text-primary" />
               {myDentistName ? `Phòng khám (${myDentistName})` : 'Đang trong phòng khám'}
             </h3>
             <span className="bg-primary-container text-on-primary-container text-xs font-bold px-2.5 py-1 rounded-full">
@@ -203,7 +204,7 @@ export const PatientQueue: React.FC = () => {
                       <img src={dentist.avatar} alt={dentist.name} className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm" />
                     ) : (
                       <div className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center">
-                        <span className="material-symbols-outlined text-outline">person</span>
+                        <Icon name="person" className="text-outline" />
                       </div>
                     )}
                     <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-white rounded-full animate-pulse"></span>
@@ -222,7 +223,7 @@ export const PatientQueue: React.FC = () => {
                     <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded flex shrink-0 ${
                       isMe ? 'bg-white/20 text-white' : 'bg-primary/10 text-primary'
                     }`}>
-                      <span className="material-symbols-outlined text-[14px]">timer</span>
+                      <Icon name="timer" className="text-[14px]" />
                       {item.elapsedTimeMin}p
                     </span>
                   </div>
@@ -242,7 +243,7 @@ export const PatientQueue: React.FC = () => {
         <div className="flex-1 space-y-4">
           <div className="flex items-center justify-between pb-2 border-b-2 border-amber-200">
             <h3 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
-              <span className="material-symbols-outlined text-amber-600">airline_seat_recline_normal</span>
+              <Icon name="airline_seat_recline_normal" className="text-amber-600" />
               {myDentistName ? `Hàng chờ (${myDentistName})` : 'Danh sách đợi tới lượt'}
             </h3>
             <span className="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded-full">
@@ -296,7 +297,7 @@ export const PatientQueue: React.FC = () => {
       
       {/* 3. Lời khuyên */}
       <div className="mt-8 bg-surface-container-low rounded-xl border border-outline-variant p-4 flex gap-3 text-sm text-on-surface-variant">
-        <span className="material-symbols-outlined text-secondary shrink-0">tips_and_updates</span>
+        <Icon name="tips_and_updates" className="text-secondary shrink-0" />
         <p>
           <strong>Lưu ý:</strong> Thứ tự thực tế có thể thay đổi đôi chút tùy thuộc vào tình trạng lâm sàng của bệnh nhân phía trước. 
           Vui lòng đợi tại khu vực phòng chờ tầng 1, chúng tôi sẽ mời bạn vào khi đến lượt.

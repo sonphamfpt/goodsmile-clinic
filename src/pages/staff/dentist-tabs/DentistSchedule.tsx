@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Icon } from '../../../components/Icon';
 import { useClinic } from '../../../context/ClinicContext';
 import { DoctorShift } from '../../../types/clinic';
 
@@ -157,8 +158,8 @@ export const DentistSchedule: React.FC = () => {
           <div className="flex justify-between items-center mb-3">
             <h4 className="font-bold text-xs uppercase tracking-wider text-slate-400">Tháng 6, 2026</h4>
             <div className="flex gap-1.5">
-              <span className="material-symbols-outlined text-sm text-slate-500 cursor-pointer">chevron_left</span>
-              <span className="material-symbols-outlined text-sm text-slate-500 cursor-pointer">chevron_right</span>
+              <Icon name="chevron_left" className="text-sm text-slate-500 cursor-pointer" />
+              <Icon name="chevron_right" className="text-sm text-slate-500 cursor-pointer" />
             </div>
           </div>
           
@@ -273,7 +274,7 @@ export const DentistSchedule: React.FC = () => {
                     <span className={`text-[9px] font-extrabold px-2 py-0.5 rounded-full border ${conf.color}`}>{conf.label}</span>
                   </div>
                   <p className="text-[10px] text-on-surface-variant font-medium flex items-center gap-1">
-                    <span className="material-symbols-outlined text-sm text-slate-400">schedule</span>
+                    <Icon name="schedule" className="text-sm text-slate-400" />
                     {conf.time}
                   </p>
                 </div>
@@ -346,7 +347,7 @@ export const DentistSchedule: React.FC = () => {
               }}
               className="px-5 py-2 bg-primary hover:bg-primary/95 text-white rounded-xl font-bold text-xs flex items-center gap-1.5 shadow active:scale-95 cursor-pointer transition-all"
             >
-              <span className="material-symbols-outlined text-[16px]">swap_horiz</span>
+              <Icon name="swap_horiz" className="text-[16px]" />
               Đăng ký đổi ca / phòng
             </button>
           </div>
@@ -377,7 +378,7 @@ export const DentistSchedule: React.FC = () => {
                       {/* Room Details Column */}
                       <td className="py-3 px-4 font-bold text-xs text-on-surface bg-slate-50/30 border-r border-outline-variant/60">
                         <div className="flex items-center gap-1.5 text-slate-800">
-                          <span className="material-symbols-outlined text-[18px] text-primary">meeting_room</span>
+                          <Icon name="meeting_room" className="text-[18px] text-primary" />
                           <span className="font-extrabold">{room}</span>
                         </div>
                         <p className="text-[9px] text-slate-400 font-bold mt-1 uppercase tracking-wider">Khu chuyên khoa</p>
@@ -522,7 +523,7 @@ export const DentistSchedule: React.FC = () => {
                                       className="p-1.5 border border-primary/20 bg-primary/5 hover:bg-primary/10 rounded-xl text-[10px] font-extrabold transition-all cursor-pointer text-primary shadow-sm hover:shadow active:scale-95 flex items-center justify-center gap-1"
                                       title={`Bấm để đổi ca/phòng trực`}
                                     >
-                                      <span className="material-symbols-outlined text-[14px]">meeting_room</span>
+                                      <Icon name="meeting_room" className="text-[14px]" />
                                       <span className="truncate">{morningShift.room}</span>
                                     </div>
                                   ) : (
@@ -544,7 +545,7 @@ export const DentistSchedule: React.FC = () => {
                                       className="p-1.5 border border-primary/20 bg-primary/5 hover:bg-primary/10 rounded-xl text-[10px] font-extrabold transition-all cursor-pointer text-primary shadow-sm hover:shadow active:scale-95 flex items-center justify-center gap-1"
                                       title={`Bấm để đổi ca/phòng trực`}
                                     >
-                                      <span className="material-symbols-outlined text-[14px]">meeting_room</span>
+                                      <Icon name="meeting_room" className="text-[14px]" />
                                       <span className="truncate">{afternoonShift.room}</span>
                                     </div>
                                   ) : (
@@ -642,14 +643,14 @@ export const DentistSchedule: React.FC = () => {
             {/* Modal Header */}
             <div className="bg-slate-900 px-6 py-4 text-white flex justify-between items-center shrink-0">
               <h3 className="font-bold text-sm flex items-center gap-2">
-                <span className="material-symbols-outlined">swap_horiz</span>
+                <Icon name="swap_horiz" />
                 Đăng Ký Đổi Ca Làm Việc Bác Sĩ
               </h3>
               <button 
                 onClick={() => setShowSwapModal(false)} 
                 className="p-1.5 hover:bg-white/20 rounded-full cursor-pointer flex items-center justify-center"
               >
-                <span className="material-symbols-outlined">close</span>
+                <Icon name="close" />
               </button>
             </div>
 
@@ -773,7 +774,7 @@ export const DentistSchedule: React.FC = () => {
                 onClick={handleConfirmAction}
                 className="px-6 py-2.5 bg-primary hover:bg-primary/95 text-white rounded-xl font-bold text-xs flex items-center gap-1 cursor-pointer shadow active:scale-95 transition-all"
               >
-                <span className="material-symbols-outlined text-[16px]">check_circle</span>
+                <Icon name="check_circle" className="text-[16px]" />
                 Xác nhận đổi ca
               </button>
             </div>

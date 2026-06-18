@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useClinic } from '../../context/ClinicContext';
+import { Icon } from '../../components/Icon';
 import { DOCTOR_PROFILES } from '../../services/doctorProfiles';
 import { BookingModal } from '../../components/BookingModal';
 
@@ -46,14 +47,14 @@ export const DoctorDetail: React.FC = () => {
     return (
       <div className="bg-[#f8fafc] min-h-screen py-20 px-6 font-body-md text-center">
         <div className="max-w-md mx-auto bg-white border border-[#e2e8f0] p-8 rounded-lg shadow-sm">
-          <span className="material-symbols-outlined text-red-500 text-6xl mb-4">error</span>
+          <Icon name="error" className="text-red-500 text-6xl mb-4" />
           <h2 className="text-2xl font-bold text-[#0f172a] mb-2">Không tìm thấy bác sĩ</h2>
           <p className="text-[#64748b] mb-6">Thông tin bác sĩ không tồn tại hoặc đã được cập nhật lại.</p>
           <Link
             to="/doctors"
             className="inline-flex items-center gap-2 bg-[#005eb8] text-white px-5 py-2.5 font-bold hover:bg-[#004a94] transition-colors"
           >
-            <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+            <Icon name="arrow_back" className="text-[18px]" />
             Quay lại danh sách
           </Link>
         </div>
@@ -72,7 +73,7 @@ export const DoctorDetail: React.FC = () => {
         <div className="relative z-10 max-w-6xl mx-auto">
           <div className="mb-4">
             <Link to="/doctors" className="inline-flex items-center gap-2 text-white/80 hover:text-white text-sm font-bold transition-colors">
-              <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+              <Icon name="arrow_back" className="text-[16px]" />
               Danh sách bác sĩ
             </Link>
           </div>
@@ -123,7 +124,7 @@ export const DoctorDetail: React.FC = () => {
                   onClick={() => setIsBookingOpen(true)}
                   className="w-full bg-[#005eb8] text-white py-3 px-4 font-bold flex justify-center items-center gap-2 hover:bg-[#004a94] transition-colors cursor-pointer"
                 >
-                  <span className="material-symbols-outlined text-[18px]">event_available</span>
+                  <Icon name="event_available" className="text-[18px]" />
                   Đặt Lịch Với Bác Sĩ
                 </button>
               </div>
@@ -146,7 +147,7 @@ export const DoctorDetail: React.FC = () => {
               <div className="bg-white border border-[#e2e8f0] p-6 md:p-8 shadow-sm space-y-6">
                 <div>
                   <h2 className="text-xl font-bold text-[#0f172a] mb-3 pb-2 border-b border-[#e2e8f0] flex items-center gap-2">
-                    <span className="material-symbols-outlined text-[#005eb8]">person</span>
+                    <Icon name="person" className="text-[#005eb8]" />
                     Giới thiệu chung
                   </h2>
                   <p className="text-[#334155] leading-relaxed text-base">
@@ -156,7 +157,7 @@ export const DoctorDetail: React.FC = () => {
 
                 <div>
                   <h3 className="text-sm font-bold uppercase text-[#475569] mb-3 flex items-center gap-2">
-                    <span className="material-symbols-outlined text-[#005eb8] text-[18px]">health_and_safety</span>
+                    <Icon name="health_and_safety" className="text-[#005eb8] text-[18px]" />
                     Thế mạnh điều trị chuyên sâu
                   </h3>
                   <div className="flex flex-wrap gap-2">
@@ -175,14 +176,14 @@ export const DoctorDetail: React.FC = () => {
                 {/* Education */}
                 <div>
                   <h2 className="text-xl font-bold text-[#0f172a] mb-4 pb-2 border-b border-[#e2e8f0] flex items-center gap-2">
-                    <span className="material-symbols-outlined text-[#005eb8]">school</span>
+                    <Icon name="school" className="text-[#005eb8]" />
                     Quá trình đào tạo & Bằng cấp
                   </h2>
                   <ul className="space-y-4">
                     {profile.education.map((edu, i) => (
                       <li key={i} className="flex gap-3 items-start">
                         <div className="bg-[#eff6ff] text-[#1d4ed8] p-1.5 rounded shrink-0">
-                          <span className="material-symbols-outlined text-[18px] block">school</span>
+                          <Icon name="school" className="text-[18px]" />
                         </div>
                         <div>
                           <p className="text-sm md:text-base font-semibold text-[#1e293b]">{edu}</p>
@@ -195,7 +196,7 @@ export const DoctorDetail: React.FC = () => {
                 {/* Work Experience */}
                 <div>
                   <h2 className="text-xl font-bold text-[#0f172a] mb-4 pb-2 border-b border-[#e2e8f0] flex items-center gap-2">
-                    <span className="material-symbols-outlined text-[#005eb8]">work</span>
+                    <Icon name="work" className="text-[#005eb8]" />
                     Lịch sử công tác
                   </h2>
                   <div className="relative border-l border-slate-200 ml-4 pl-6 space-y-6 py-2">
@@ -216,13 +217,13 @@ export const DoctorDetail: React.FC = () => {
                 {/* Certifications */}
                 <div>
                   <h2 className="text-xl font-bold text-[#0f172a] mb-4 pb-2 border-b border-[#e2e8f0] flex items-center gap-2">
-                    <span className="material-symbols-outlined text-[#005eb8]">verified</span>
+                    <Icon name="verified" className="text-[#005eb8]" />
                     Chứng chỉ & Hiệp hội thành viên
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {profile.certifications.map((cert, i) => (
                       <div key={i} className="flex gap-2 items-center bg-[#f8fafc] border border-[#e2e8f0] p-3">
-                        <span className="material-symbols-outlined text-[#15803d]">verified</span>
+                        <Icon name="verified" className="text-[#15803d]" />
                         <span className="text-sm font-bold text-[#334155]">{cert}</span>
                       </div>
                     ))}
@@ -254,7 +255,7 @@ export const DoctorDetail: React.FC = () => {
               className="text-[#005eb8] hover:text-[#004a94] text-sm font-bold flex items-center gap-1 transition-colors"
             >
               Xem tất cả danh sách
-              <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+              <Icon name="arrow_forward" className="text-[16px]" />
             </Link>
           </div>
 
@@ -301,7 +302,7 @@ export const DoctorDetail: React.FC = () => {
                   {/* View Profile Button */}
                   <div className="mt-4 pt-3 w-full border-t border-slate-100 flex items-center justify-center gap-1.5 text-xs font-bold text-[#005eb8] group-hover:text-[#004a94] transition-colors">
                     <span>Xem thông tin chi tiết</span>
-                    <span className="material-symbols-outlined text-[14px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+                    <Icon name="arrow_forward" className="text-[14px] group-hover:translate-x-0.5 transition-transform" />
                   </div>
                 </Link>
               );

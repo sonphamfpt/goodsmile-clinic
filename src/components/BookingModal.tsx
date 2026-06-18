@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useClinic } from '../context/ClinicContext';
+import { Icon } from './Icon';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -68,14 +69,14 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         {/* Header */}
         <div className="px-6 py-4 bg-primary text-on-primary flex justify-between items-center">
           <h3 className="font-headline-sm text-headline-sm flex items-center gap-2">
-            <span className="material-symbols-outlined">calendar_today</span>
+            <Icon name="calendar_today" />
             Đặt Lịch Hẹn Khám
           </h3>
           <button
             onClick={onClose}
             className="text-on-primary/80 hover:text-on-primary cursor-pointer transition-colors"
           >
-            <span className="material-symbols-outlined text-[24px]">close</span>
+            <Icon name="close" className="text-[24px]" />
           </button>
         </div>
 

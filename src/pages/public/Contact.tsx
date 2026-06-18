@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Icon } from '../../components/Icon';
 
 export const Contact: React.FC = () => {
   const [name, setName] = useState('');
@@ -53,7 +54,7 @@ export const Contact: React.FC = () => {
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-full bg-primary-fixed text-primary flex items-center justify-center flex-shrink-0">
-                    <span className="material-symbols-outlined">location_on</span>
+                    <Icon name="location_on" />
                   </div>
                   <div>
                     <h4 className="font-bold text-on-surface">Địa chỉ hệ thống</h4>
@@ -63,7 +64,7 @@ export const Contact: React.FC = () => {
 
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-full bg-primary-fixed text-primary flex items-center justify-center flex-shrink-0">
-                    <span className="material-symbols-outlined">call</span>
+                    <Icon name="call" />
                   </div>
                   <div>
                     <h4 className="font-bold text-on-surface">Hotline khẩn cấp</h4>
@@ -74,7 +75,7 @@ export const Contact: React.FC = () => {
 
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-full bg-primary-fixed text-primary flex items-center justify-center flex-shrink-0">
-                    <span className="material-symbols-outlined">mail</span>
+                    <Icon name="mail" />
                   </div>
                   <div>
                     <h4 className="font-bold text-on-surface">Thư điện tử</h4>
@@ -84,7 +85,7 @@ export const Contact: React.FC = () => {
 
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-full bg-primary-fixed text-primary flex items-center justify-center flex-shrink-0">
-                    <span className="material-symbols-outlined">schedule</span>
+                    <Icon name="schedule" />
                   </div>
                   <div>
                     <h4 className="font-bold text-on-surface">Giờ làm việc</h4>
@@ -98,7 +99,7 @@ export const Contact: React.FC = () => {
             {/* Map Placeholder */}
             <div className="bg-surface-container rounded-xl border border-outline-variant h-64 relative overflow-hidden flex flex-col justify-end p-4 shadow-inner">
               <div className="absolute inset-0 flex items-center justify-center text-on-surface-variant/40 flex-col gap-2">
-                <span className="material-symbols-outlined text-[64px]">map</span>
+                <Icon name="map" className="text-[64px]" />
                 <span className="text-xs font-bold uppercase tracking-wider">Bản đồ vị trí phòng khám</span>
               </div>
               <div className="bg-white/90 p-3 rounded-lg border border-outline-variant relative z-10 text-xs shadow">
@@ -118,7 +119,7 @@ export const Contact: React.FC = () => {
 
               {isSubmitted ? (
                 <div className="bg-secondary-container/20 border border-secondary/30 p-6 rounded-lg text-center space-y-3">
-                  <span className="material-symbols-outlined text-secondary text-5xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                  <Icon name="check_circle" className="text-secondary text-5xl" />
                   <h4 className="font-bold text-on-secondary-container">Gửi thông tin thành công!</h4>
                   <p className="text-xs text-on-secondary-container">
                     Cảm ơn bạn đã liên hệ với GoodSmile. Đội ngũ tư vấn viên y khoa sẽ gọi điện hỗ trợ bạn trong vòng 15-30 phút.
@@ -192,7 +193,7 @@ export const Contact: React.FC = () => {
                     type="submit"
                     className="w-full py-3 bg-primary text-on-primary rounded-lg font-bold flex items-center justify-center gap-2 hover:shadow-lg active:scale-95 transition-transform cursor-pointer"
                   >
-                    <span className="material-symbols-outlined">send</span>
+                    <Icon name="send" />
                     GỬI YÊU CẦU TƯ VẤN MIỄN PHÍ
                   </button>
                 </form>

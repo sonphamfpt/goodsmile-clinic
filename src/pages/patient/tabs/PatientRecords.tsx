@@ -3,6 +3,7 @@ import { useClinic } from '../../../context/ClinicContext';
 import { useAuth } from '../../../context/AuthContext';
 import { ToothState } from '../../../types/clinic';
 import { DentalChart } from '../../../components/DentalChart';
+import { Icon } from '../../../components/Icon';
 
 // Dental chart tooth data - full set of 32 teeth
 const UPPER_TEETH = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28];
@@ -247,7 +248,7 @@ export const PatientRecords: React.FC = () => {
             activeTab === 'chart' ? 'bg-white text-primary shadow-sm border border-outline-variant' : 'text-on-surface-variant hover:bg-surface-container'
           }`}
         >
-          <span className="material-symbols-outlined text-[20px]">dentistry</span>
+          <Icon name="dentistry" className="text-[20px]" />
           Sơ đồ răng tổng quan
         </button>
         <button
@@ -256,7 +257,7 @@ export const PatientRecords: React.FC = () => {
             activeTab === 'timeline' ? 'bg-white text-primary shadow-sm border border-outline-variant' : 'text-on-surface-variant hover:bg-surface-container'
           }`}
         >
-          <span className="material-symbols-outlined text-[20px]">history</span>
+          <Icon name="history" className="text-[20px]" />
           Lịch sử điều trị
         </button>
       </div>
@@ -282,7 +283,7 @@ export const PatientRecords: React.FC = () => {
           <div className="space-y-6">
             <div className="bg-surface-container-low rounded-3xl border border-outline-variant p-6">
               <h4 className="font-bold text-on-surface mb-4 uppercase tracking-wider text-sm flex items-center gap-2">
-                <span className="material-symbols-outlined text-secondary">pie_chart</span>
+                <Icon name="pie_chart" className="text-secondary" />
                 Thống kê tình trạng
               </h4>
               <div className="space-y-3">
@@ -293,7 +294,7 @@ export const PatientRecords: React.FC = () => {
                     <div key={key} className="flex items-center justify-between bg-white p-3 rounded-xl border border-outline-variant">
                       <div className="flex items-center gap-3">
                         <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${style.bg} border ${style.border} ${style.color}`}>
-                          <span className="material-symbols-outlined text-[16px]">{style.icon}</span>
+                          <Icon name={style.icon} className="text-[16px]" />
                         </div>
                         <span className="font-bold text-sm text-on-surface">{style.label}</span>
                       </div>
@@ -314,7 +315,7 @@ export const PatientRecords: React.FC = () => {
                       <h4 className="text-2xl font-black text-on-surface mt-1">Răng số {selectedTooth}</h4>
                     </div>
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center border-2 ${CONDITION_STYLES[getCondition(selectedTooth)].bg} ${CONDITION_STYLES[getCondition(selectedTooth)].border} ${CONDITION_STYLES[getCondition(selectedTooth)].color}`}>
-                      <span className="material-symbols-outlined text-[24px]">{CONDITION_STYLES[getCondition(selectedTooth)].icon}</span>
+                      <Icon name={CONDITION_STYLES[getCondition(selectedTooth)].icon} className="text-[24px]" />
                     </div>
                   </div>
                   <div>
@@ -328,7 +329,7 @@ export const PatientRecords: React.FC = () => {
             )}
             {!selectedTooth && (
               <div className="bg-surface-container-low border border-outline-variant border-dashed rounded-3xl p-6 text-center text-on-surface-variant flex flex-col items-center justify-center min-h-[150px]">
-                <span className="material-symbols-outlined text-4xl mb-2 opacity-50">touch_app</span>
+                <Icon name="touch_app" className="text-4xl mb-2 opacity-50" />
                 <p className="text-sm">Bấm vào một răng trên sơ đồ để xem trạng thái.</p>
               </div>
             )}
@@ -341,7 +342,7 @@ export const PatientRecords: React.FC = () => {
         <div className="max-w-4xl mx-auto relative animate-fade-in space-y-6">
           {/* EMR Search bar */}
           <div className="bg-white rounded-2xl border border-outline-variant p-4 shadow-sm flex items-center gap-3">
-            <span className="material-symbols-outlined text-on-surface-variant">search</span>
+            <Icon name="search" className="text-on-surface-variant" />
             <input
               type="text"
               placeholder="Tìm kiếm đợt khám theo bác sĩ, dịch vụ, chẩn đoán, ngày khám..."
@@ -351,7 +352,7 @@ export const PatientRecords: React.FC = () => {
             />
             {searchQuery && (
               <button onClick={() => setSearchQuery('')} className="p-1 hover:bg-slate-100 rounded-full cursor-pointer border-none bg-transparent">
-                <span className="material-symbols-outlined text-sm">close</span>
+                <Icon name="close" className="text-sm" />
               </button>
             )}
           </div>
@@ -377,7 +378,7 @@ export const PatientRecords: React.FC = () => {
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="flex items-center gap-2 text-sm font-bold text-on-surface-variant bg-white px-3 py-1.5 rounded-lg border border-outline-variant">
-                          <span className="material-symbols-outlined text-[18px]">stethoscope</span>
+                          <Icon name="stethoscope" className="text-[18px]" />
                           {visit.doctor} ({visit.room})
                         </div>
                         <button 
@@ -388,7 +389,7 @@ export const PatientRecords: React.FC = () => {
                           className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary border border-primary/20 rounded-lg text-sm font-bold hover:bg-primary hover:text-white transition-all cursor-pointer shadow-sm active:scale-95"
                           title="Xem hồ sơ bệnh án điện tử EMR"
                         >
-                          <span className="material-symbols-outlined text-[18px]">folder_shared</span>
+                          <Icon name="folder_shared" className="text-[18px]" />
                           <span>Chi tiết EMR</span>
                         </button>
                         <button 
@@ -396,7 +397,7 @@ export const PatientRecords: React.FC = () => {
                           className="flex items-center gap-1.5 px-3 py-1.5 bg-secondary-container text-on-secondary-container rounded-lg text-sm font-bold hover:opacity-80 transition-opacity cursor-pointer border-none"
                           title="Xem & In hồ sơ đợt khám này"
                         >
-                          <span className="material-symbols-outlined text-[18px]">print</span>
+                          <Icon name="print" className="text-[18px]" />
                           <span className="hidden sm:inline">In Phiếu Khám</span>
                         </button>
                       </div>
@@ -408,13 +409,13 @@ export const PatientRecords: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="bg-amber-50/50 border border-amber-200 rounded-xl p-4">
                         <p className="text-[10px] font-bold text-amber-800 uppercase tracking-widest flex items-center gap-1 mb-1">
-                          <span className="material-symbols-outlined text-[14px]">record_voice_over</span> Lý do khám
+                          <Icon name="record_voice_over" className="text-[14px]" /> Lý do khám
                         </p>
                         <p className="text-sm font-medium text-on-surface">{visit.reason}</p>
                       </div>
                       <div className="bg-error-container/20 border border-error/20 rounded-xl p-4">
                         <p className="text-[10px] font-bold text-error uppercase tracking-widest flex items-center gap-1 mb-1">
-                          <span className="material-symbols-outlined text-[14px]">vital_signs</span> Chẩn đoán bệnh
+                          <Icon name="vital_signs" className="text-[14px]" /> Chẩn đoán bệnh
                         </p>
                         <p className="text-sm font-bold text-error">{visit.diagnosis}</p>
                       </div>
@@ -423,12 +424,12 @@ export const PatientRecords: React.FC = () => {
                     {/* Treatments Done */}
                     <div>
                       <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2 flex items-center gap-1">
-                        <span className="material-symbols-outlined text-[14px]">healing</span> Thủ thuật đã thực hiện
+                        <Icon name="healing" className="text-[14px]" /> Thủ thuật đã thực hiện
                       </p>
                       <ul className="space-y-2">
                         {visit.treatments.map((t, i) => (
                           <li key={i} className="flex items-center gap-2 text-sm text-on-surface font-medium bg-surface-container-low p-2 rounded-lg border border-outline-variant w-fit">
-                            <span className="material-symbols-outlined text-[16px] text-primary">check_circle</span>
+                            <Icon name="check_circle" className="text-[16px] text-primary" />
                             {t}
                           </li>
                         ))}
@@ -451,7 +452,7 @@ export const PatientRecords: React.FC = () => {
                           <div className="bg-white border-2 border-primary/20 rounded-xl p-4 flex-1 min-w-[250px]">
                             <div className="flex items-center gap-3 mb-2">
                               <div className="w-10 h-10 bg-primary-container text-primary rounded-lg flex items-center justify-center">
-                                <span className="material-symbols-outlined text-[20px]">receipt_long</span>
+                                <Icon name="receipt_long" className="text-[20px]" />
                               </div>
                               <div>
                                 <p className="font-bold text-sm text-on-surface">Đơn thuốc ({visit.prescription.medicines.length} loại)</p>
@@ -467,7 +468,7 @@ export const PatientRecords: React.FC = () => {
                               ))}
                             </div>
                             <button className="w-full mt-3 py-2 bg-surface-container text-on-surface font-bold text-xs rounded-lg flex items-center justify-center gap-1 hover:bg-surface-container-high transition-colors">
-                              <span className="material-symbols-outlined text-[16px]">print</span>
+                              <Icon name="print" className="text-[16px]" />
                               In chi tiết
                             </button>
                           </div>
@@ -490,16 +491,14 @@ export const PatientRecords: React.FC = () => {
                                       className="w-full h-full object-cover absolute inset-0" 
                                     />
                                   ) : (
-                                    <span className="material-symbols-outlined z-10 text-[18px]">
-                                      picture_as_pdf
-                                    </span>
+                                    <Icon name="picture_as_pdf" className="z-10 text-[18px]" />
                                   )}
                                 </div>
                                 <div className="flex-1 min-w-0">
                                   <p className="text-sm font-bold text-on-surface truncate group-hover:text-primary transition-colors">{file.title}</p>
                                   <p className="text-[10px] text-on-surface-variant uppercase font-bold">{file.size}</p>
                                 </div>
-                                <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">visibility</span>
+                                <Icon name="visibility" className="text-on-surface-variant group-hover:text-primary transition-colors" />
                               </div>
                             ))}
                           </div>
@@ -514,7 +513,7 @@ export const PatientRecords: React.FC = () => {
               ))}
               {filteredVisits.length === 0 && (
                 <div className="text-center py-16 bg-white rounded-3xl border border-outline-variant/80 p-6 shadow-sm">
-                  <span className="material-symbols-outlined text-[48px] text-outline mb-2">search_off</span>
+                  <Icon name="search_off" className="text-[48px] text-outline mb-2" />
                   <p className="font-bold text-on-surface">Không tìm thấy đợt khám nào</p>
                   <p className="text-xs text-on-surface-variant mt-1">Vui lòng thử từ khóa tìm kiếm khác</p>
                 </div>
@@ -530,11 +529,11 @@ export const PatientRecords: React.FC = () => {
           <div className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden flex flex-col max-h-[90vh]" onClick={(e) => e.stopPropagation()}>
             <div className="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-slate-900 text-white">
               <h3 className="font-bold text-sm flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-[20px]">photo_camera_back</span>
+                <Icon name="photo_camera_back" className="text-primary text-[20px]" />
                 {viewRecord.type === 'image' ? 'Trình xem ảnh y khoa X-Quang' : 'Tài liệu EMR đính kèm'}
               </h3>
               <button onClick={() => setViewRecord(null)} className="p-1.5 hover:bg-white/10 rounded-full cursor-pointer text-white flex items-center justify-center">
-                <span className="material-symbols-outlined">close</span>
+                <Icon name="close" />
               </button>
             </div>
             
@@ -550,7 +549,7 @@ export const PatientRecords: React.FC = () => {
                         className="p-1 bg-white hover:bg-slate-200 border border-outline-variant rounded text-slate-800 flex items-center gap-1 text-[10px] font-bold cursor-pointer animate-none"
                         title="Phóng to"
                       >
-                        <span className="material-symbols-outlined text-[14px]">zoom_in</span>
+                        <Icon name="zoom_in" className="text-[14px]" />
                         Phóng to
                       </button>
                       <button 
@@ -558,7 +557,7 @@ export const PatientRecords: React.FC = () => {
                         className="p-1 bg-white hover:bg-slate-200 border border-outline-variant rounded text-slate-800 flex items-center gap-1 text-[10px] font-bold cursor-pointer animate-none"
                         title="Thu nhỏ"
                       >
-                        <span className="material-symbols-outlined text-[14px]">zoom_out</span>
+                        <Icon name="zoom_out" className="text-[14px]" />
                         Thu nhỏ
                       </button>
                       <button 
@@ -566,7 +565,7 @@ export const PatientRecords: React.FC = () => {
                         className="p-1 bg-white hover:bg-slate-200 border border-outline-variant rounded text-slate-800 flex items-center gap-1 text-[10px] font-bold cursor-pointer animate-none"
                         title="Xoay ảnh"
                       >
-                        <span className="material-symbols-outlined text-[14px]">rotate_right</span>
+                        <Icon name="rotate_right" className="text-[14px]" />
                         Xoay 90°
                       </button>
                       <button 
@@ -574,7 +573,7 @@ export const PatientRecords: React.FC = () => {
                         className="p-1 bg-white hover:bg-slate-200 border border-outline-variant rounded text-slate-800 flex items-center gap-1 text-[10px] font-bold cursor-pointer animate-none"
                         title="Đặt lại"
                       >
-                        <span className="material-symbols-outlined text-[14px]">restart_alt</span>
+                        <Icon name="restart_alt" className="text-[14px]" />
                         Đặt lại
                       </button>
                     </div>
@@ -604,7 +603,7 @@ export const PatientRecords: React.FC = () => {
                 </div>
               ) : (
                 <div className="w-full bg-slate-900 rounded-2xl h-[250px] flex flex-col items-center justify-center relative overflow-hidden mb-6 shadow-inner">
-                  <span className="material-symbols-outlined text-white/20 text-[100px]">description</span>
+                  <Icon name="description" className="text-white/20 text-[100px]" />
                 </div>
               )}
               
@@ -619,7 +618,7 @@ export const PatientRecords: React.FC = () => {
                   onClick={() => alert(`Tải xuống: ${viewRecord.title}`)}
                   className="flex-1 py-3 bg-primary text-on-primary rounded-xl font-bold cursor-pointer hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2 shadow-md text-xs"
                 >
-                  <span className="material-symbols-outlined text-[18px]">download</span>
+                  <Icon name="download" className="text-[18px]" />
                   Tải File Về Máy
                 </button>
                 <button
@@ -645,14 +644,14 @@ export const PatientRecords: React.FC = () => {
             onClick={() => window.print()}
             className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-full font-bold shadow-lg hover:scale-105 transition-transform"
           >
-            <span className="material-symbols-outlined">print</span>
+            <Icon name="print" />
             Xuất Ra Máy In
           </button>
           <button 
             onClick={() => setPrintVisit(null)}
             className="flex items-center justify-center w-12 h-12 bg-white text-on-surface rounded-full font-bold shadow-lg hover:scale-105 transition-transform"
           >
-            <span className="material-symbols-outlined">close</span>
+            <Icon name="close" />
           </button>
         </div>
 
@@ -665,7 +664,7 @@ export const PatientRecords: React.FC = () => {
             <div className="flex justify-between items-start border-b-2 border-black pb-6 mb-6">
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 bg-black text-white flex items-center justify-center rounded-xl print:bg-white print:border-2 print:border-black print:text-black">
-                  <span className="material-symbols-outlined text-4xl">dentistry</span>
+                  <Icon name="dentistry" className="text-4xl" />
                 </div>
                 <div>
                   <h1 className="text-2xl font-black uppercase tracking-widest">Nha Khoa GoodSmile</h1>
@@ -756,14 +755,14 @@ export const PatientRecords: React.FC = () => {
           {/* Header */}
           <div className="bg-slate-900 px-6 py-4 text-white flex justify-between items-center shrink-0">
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary text-[22px]">folder_shared</span>
+              <Icon name="folder_shared" className="text-primary text-[22px]" />
               <div>
                 <h3 className="font-bold text-sm">Chi tiết Hồ sơ Bệnh án EMR Bệnh nhân</h3>
                 <p className="text-[10px] text-slate-400">Mã hồ sơ: #{viewEMRRecord.id} • Ngày lập: {viewEMRRecord.date}</p>
               </div>
             </div>
             <button onClick={() => setViewEMRRecord(null)} className="p-1.5 hover:bg-white/20 rounded-full cursor-pointer flex items-center justify-center border-none bg-transparent text-white">
-              <span className="material-symbols-outlined">close</span>
+              <Icon name="close" />
             </button>
           </div>
 
@@ -775,7 +774,7 @@ export const PatientRecords: React.FC = () => {
               <div className="space-y-4">
                 <div className="bg-white rounded-xl border border-outline-variant p-4 shadow-sm">
                   <h4 className="font-bold text-xs uppercase text-slate-400 tracking-wider mb-3 flex items-center gap-1.5">
-                    <span className="material-symbols-outlined text-[16px] text-primary">clinical_notes</span>
+                    <Icon name="clinical_notes" className="text-[16px] text-primary" />
                     Thông tin chẩn đoán
                   </h4>
                   <div className="space-y-3 text-left">
@@ -837,7 +836,7 @@ export const PatientRecords: React.FC = () => {
                 {viewEMRRecord.teethMap && viewEMRRecord.teethMap.length > 0 && (
                   <div className="bg-white rounded-xl border border-outline-variant p-4 shadow-sm">
                     <h4 className="font-bold text-xs uppercase text-slate-400 tracking-wider mb-4 flex items-center gap-1.5">
-                      <span className="material-symbols-outlined text-[16px] text-primary">dentistry</span>
+                      <Icon name="dentistry" className="text-[16px] text-primary" />
                       Sơ đồ răng điều trị ngày {viewEMRRecord.date}
                     </h4>
                     
@@ -864,7 +863,7 @@ export const PatientRecords: React.FC = () => {
                               }`}
                               title={`Răng ${tooth}: ${match?.treatment || CONDITION_LABELS[cond]?.label || 'Bình thường'}`}
                             >
-                              <span className="material-symbols-outlined text-[11px]">dentistry</span>
+                              <Icon name="dentistry" className="text-[11px]" />
                               <span className="font-bold">{tooth}</span>
                             </div>
                           );
@@ -897,7 +896,7 @@ export const PatientRecords: React.FC = () => {
                               title={`Răng ${tooth}: ${match?.treatment || CONDITION_LABELS[cond]?.label || 'Bình thường'}`}
                             >
                               <span className="font-bold">{tooth}</span>
-                              <span className="material-symbols-outlined text-[11px]">dentistry</span>
+                              <Icon name="dentistry" className="text-[11px]" />
                             </div>
                           );
                         })}
@@ -930,7 +929,7 @@ export const PatientRecords: React.FC = () => {
                   onClick={() => alert(`Đang tải file EMR-${viewEMRRecord.id}.pdf về thiết bị...`)}
                   className="flex-1 py-2.5 bg-primary hover:bg-primary/90 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 active:scale-95 transition-all shadow cursor-pointer border-none"
                 >
-                  <span className="material-symbols-outlined text-[18px]">download</span>Tải PDF bệnh án
+                  <Icon name="download" className="text-[18px]" />Tải PDF bệnh án
                 </button>
                 <button 
                   onClick={() => {
@@ -950,7 +949,7 @@ export const PatientRecords: React.FC = () => {
                   }}
                   className="py-2.5 px-4 border border-outline-variant hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs flex items-center gap-2 active:scale-95 transition-all cursor-pointer bg-white"
                 >
-                  <span className="material-symbols-outlined text-[18px]">print</span>In hồ sơ
+                  <Icon name="print" className="text-[18px]" />In hồ sơ
                 </button>
               </div>
             </div>
@@ -1070,7 +1069,7 @@ export const PatientRecords: React.FC = () => {
                     <p className="text-[8px] text-slate-400 italic">(Đã xác nhận ký số qua Patient App)</p>
                     <div className="h-14 flex items-center justify-center">
                       <span className="text-green-600 text-xs font-bold border border-green-200 bg-green-50 px-2 py-0.5 rounded-full flex items-center gap-1">
-                        <span className="material-symbols-outlined text-[14px]">check_circle</span>
+                        <Icon name="check_circle" className="text-[14px]" />
                         ĐÃ XÁC NHẬN EMR
                       </span>
                     </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useClinic } from '../../context/ClinicContext';
+import { Icon } from '../../components/Icon';
 
 export const BookingPage: React.FC = () => {
   const { services, dentists, addAppointment } = useClinic();
@@ -78,7 +79,7 @@ export const BookingPage: React.FC = () => {
           /* SUCCESS SCREEN */
           <div className="bg-white border-2 border-emerald-500 max-w-2xl mx-auto p-8 md:p-12 text-center shadow-lg animate-in fade-in zoom-in-95 duration-200">
             <div className="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
-              <span className="material-symbols-outlined text-[48px]">check_circle</span>
+              <Icon name="check_circle" className="text-[48px]" />
             </div>
             <h2 className="text-3xl font-extrabold text-[#0f172a] mb-2">Đặt Hẹn Thành Công!</h2>
             <p className="text-emerald-700 font-bold text-sm mb-6">
@@ -141,7 +142,7 @@ export const BookingPage: React.FC = () => {
             <div className="lg:col-span-4 space-y-6">
               <div className="bg-white border border-[#e2e8f0] p-6 shadow-sm">
                 <h3 className="text-[#0f172a] font-bold text-lg mb-4 flex items-center gap-2 border-b border-slate-100 pb-3">
-                  <span className="material-symbols-outlined text-[#005eb8]">info</span>
+                  <Icon name="info" className="text-[#005eb8]" />
                   Hướng Dẫn Đặt Lịch
                 </h3>
                 <ul className="space-y-4 text-sm text-[#475569]">
@@ -168,7 +169,7 @@ export const BookingPage: React.FC = () => {
 
               <div className="bg-gradient-to-br from-[#eff6ff] to-[#f0fdf4] border border-[#bfdbfe] p-6 shadow-sm">
                 <h4 className="text-xs font-bold text-[#1d4ed8] uppercase tracking-wider mb-2 flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[16px]">support_agent</span>
+                  <Icon name="support_agent" className="text-[16px]" />
                   Hỗ Trợ Khẩn Cấp
                 </h4>
                 <p className="text-sm text-[#1e3a8a] leading-relaxed">
@@ -181,7 +182,7 @@ export const BookingPage: React.FC = () => {
             <div className="lg:col-span-8">
               <div className="bg-white border border-[#e2e8f0] p-6 md:p-8 shadow-sm">
                 <h2 className="text-xl font-bold text-[#0f172a] mb-6 pb-3 border-b border-slate-100 flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[#005eb8]">edit_calendar</span>
+                  <Icon name="edit_calendar" className="text-[#005eb8]" />
                   Điền Thông Tin Đăng Ký
                 </h2>
 

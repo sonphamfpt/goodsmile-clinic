@@ -12,6 +12,10 @@ export interface Dentist {
   role: string;
   avatar: string;
   room: string;
+  specialty?: string;
+  degree?: string;
+  education?: string[];
+  experience?: number;
 }
 
 export interface Patient {

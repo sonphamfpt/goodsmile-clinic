@@ -1,4 +1,5 @@
 import React from 'react';
+import { Icon } from '../../components/Icon';
 import { useNavigate } from 'react-router-dom';
 import { useClinic } from '../../context/ClinicContext';
 import { BrandLogo } from '../../components/BrandLogo';
@@ -50,7 +51,7 @@ export const QueueTracking: React.FC = () => {
         {/* Left Row: In chair treatment rooms (8 columns) */}
         <section className="col-span-12 lg:col-span-8 flex flex-col space-y-4">
           <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-            <span className="material-symbols-outlined text-secondary">dentistry</span>
+            <Icon name="dentistry" className="text-secondary" />
             Phòng khám đang điều trị
           </h2>
 
@@ -84,7 +85,7 @@ export const QueueTracking: React.FC = () => {
               ))
             ) : (
               <div className="col-span-2 bg-slate-800/50 border border-dashed border-slate-700 rounded-xl flex flex-col justify-center items-center text-center p-8">
-                <span className="material-symbols-outlined text-5xl mb-2 text-slate-600">block</span>
+                <Icon name="block" className="text-5xl mb-2 text-slate-600" />
                 <p className="text-sm font-bold text-slate-400">Không có phòng khám nào đang điều trị</p>
                 <p className="text-xs text-slate-500 max-w-xs mt-1">Hệ thống sẽ cập nhật tự động khi bác sĩ bắt đầu phiên làm việc.</p>
               </div>
@@ -95,7 +96,7 @@ export const QueueTracking: React.FC = () => {
         {/* Right Row: Waiting lines list (4 columns) */}
         <section className="col-span-12 lg:col-span-4 flex flex-col space-y-4">
           <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-            <span className="material-symbols-outlined text-primary">groups</span>
+            <Icon name="groups" className="text-primary" />
             Hàng chờ đón tiếp
           </h2>
 
@@ -138,7 +139,7 @@ export const QueueTracking: React.FC = () => {
               ) : (
                 !nextPatient && (
                   <div className="h-full flex flex-col justify-center items-center text-slate-500 text-center py-12">
-                    <span className="material-symbols-outlined text-4xl mb-2 text-slate-600">group</span>
+                    <Icon name="group" className="text-4xl mb-2 text-slate-600" />
                     <p className="text-xs font-bold">Không có bệnh nhân chờ khám</p>
                   </div>
                 )

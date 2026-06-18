@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Icon } from '../../../components/Icon';
 import { useClinic } from '../../../context/ClinicContext';
 import { CheckInModal } from '../../../components/CheckInModal';
 
@@ -56,7 +57,7 @@ export const ReceptionistQueue: React.FC = () => {
           onClick={() => setShowCheckinModal(true)}
           className="flex items-center gap-2 px-5 py-3 bg-primary text-on-primary rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all cursor-pointer shadow-md"
         >
-          <span className="material-symbols-outlined">how_to_reg</span>
+          <Icon name="how_to_reg" />
           Check-in bệnh nhân
         </button>
       </div>
@@ -66,7 +67,7 @@ export const ReceptionistQueue: React.FC = () => {
         {stats.map(s => (
           <div key={s.label} className={`rounded-xl border p-4 flex items-center gap-3 ${s.color}`}>
             <div className="relative shrink-0">
-              <span className="material-symbols-outlined text-[26px]">{s.icon}</span>
+              <Icon name={s.icon} className="text-[26px]" />
               {s.pulse && typeof s.value === 'number' && s.value > 0 && (
                 <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-500 rounded-full animate-ping" />
               )}
@@ -172,7 +173,7 @@ export const ReceptionistQueue: React.FC = () => {
                           className="px-2.5 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-bold hover:bg-surface-container-high transition-all cursor-pointer"
                           title="Xem chi tiết"
                         >
-                          <span className="material-symbols-outlined text-[16px]">visibility</span>
+                          <Icon name="visibility" className="text-[16px]" />
                         </button>
                         {item.status === 'Waiting' && (
                           <button
@@ -180,7 +181,7 @@ export const ReceptionistQueue: React.FC = () => {
                             className="px-2.5 py-1.5 bg-primary-container text-on-primary-container rounded-lg text-xs font-bold hover:opacity-90 transition-all cursor-pointer"
                             title="Gọi bệnh nhân"
                           >
-                            <span className="material-symbols-outlined text-[16px]">campaign</span>
+                            <Icon name="campaign" className="text-[16px]" />
                           </button>
                         )}
                       </div>
@@ -193,7 +194,7 @@ export const ReceptionistQueue: React.FC = () => {
 
           {filteredQueue.length === 0 && (
             <div className="text-center py-16">
-              <span className="material-symbols-outlined text-[72px] text-outline/40">queue_play_next</span>
+              <Icon name="queue_play_next" className="text-[72px] text-outline/40" />
               <p className="text-on-surface-variant mt-4">Không có bệnh nhân nào trong hàng chờ</p>
             </div>
           )}
@@ -203,7 +204,7 @@ export const ReceptionistQueue: React.FC = () => {
       {/* ── Dentist room load overview ── */}
       <div className="mt-6 bg-white rounded-2xl border border-outline-variant shadow-sm p-5">
         <h4 className="font-headline-sm text-headline-sm mb-4 flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary">meeting_room</span>
+          <Icon name="meeting_room" className="text-primary" />
           Tải lượng phòng khám theo bác sĩ
         </h4>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

@@ -1,5 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { MdCalendarToday, MdGroup, MdWorkspacePremium, MdHotelClass } from "react-icons/md";
+import { MdVisibility, MdTrackChanges, MdStar } from "react-icons/md";
+import { 
+  MdCleaningServices,
+  MdBiotech,
+  MdAssignmentInd,
+  MdVolunteerActivism 
+} from "react-icons/md";
+import { Icon } from '../../components/Icon';
 
 export const AboutUs: React.FC = () => {
   return (
@@ -28,28 +37,40 @@ export const AboutUs: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left: Stats */}
           <div className="lg:col-span-5 grid grid-cols-2 gap-4">
-            <div className="bg-white border border-[#e2e8f0] p-6 shadow-sm text-center">
-              <span className="material-symbols-outlined text-[#005eb8] text-4xl">calendar_today</span>
-              <p className="text-3xl font-extrabold text-[#0f172a] mt-2">10+</p>
-              <p className="text-xs text-[#64748b] uppercase tracking-wider font-bold mt-1">Năm Thành Lập</p>
-            </div>
-            <div className="bg-white border border-[#e2e8f0] p-6 shadow-sm text-center">
-              <span className="material-symbols-outlined text-[#15803d] text-4xl">group</span>
-              <p className="text-3xl font-extrabold text-[#0f172a] mt-2">20k+</p>
-              <p className="text-xs text-[#64748b] uppercase tracking-wider font-bold mt-1">Khách Hàng</p>
-            </div>
-            <div className="bg-white border border-[#e2e8f0] p-6 shadow-sm text-center">
-              <span className="material-symbols-outlined text-amber-500 text-4xl">workspace_premium</span>
-              <p className="text-3xl font-extrabold text-[#0f172a] mt-2">100%</p>
-              <p className="text-xs text-[#64748b] uppercase tracking-wider font-bold mt-1">Bác Sĩ Chính Quy</p>
-            </div>
-            <div className="bg-white border border-[#e2e8f0] p-6 shadow-sm text-center">
-              <span className="material-symbols-outlined text-[#be185d] text-4xl">hotel_class</span>
-              <p className="text-3xl font-extrabold text-[#0f172a] mt-2">4.9★</p>
-              <p className="text-xs text-[#64748b] uppercase tracking-wider font-bold mt-1">Đánh Giá Google</p>
-            </div>
-          </div>
 
+            <div className="bg-white border border-[#e2e8f0] p-6 shadow-sm text-center">
+              <MdCalendarToday className="text-[#005eb8] text-4xl mx-auto block" />
+              <p className="text-3xl font-extrabold text-[#0f172a] mt-2">10+</p>
+              <p className="text-xs text-[#64748b] uppercase tracking-wider font-bold mt-1">
+                Năm Thành Lập
+              </p>
+            </div>
+
+            <div className="bg-white border border-[#e2e8f0] p-6 shadow-sm text-center">
+              <MdGroup className="text-[#15803d] text-4xl mx-auto block" />
+              <p className="text-3xl font-extrabold text-[#0f172a] mt-2">20k+</p>
+              <p className="text-xs text-[#64748b] uppercase tracking-wider font-bold mt-1">
+                Khách Hàng
+              </p>
+            </div>
+
+            <div className="bg-white border border-[#e2e8f0] p-6 shadow-sm text-center">
+              <MdWorkspacePremium className="text-amber-500 text-4xl mx-auto block" />
+              <p className="text-3xl font-extrabold text-[#0f172a] mt-2">100%</p>
+              <p className="text-xs text-[#64748b] uppercase tracking-wider font-bold mt-1">
+                Bác Sĩ Chính Quy
+              </p>
+            </div>
+
+            <div className="bg-white border border-[#e2e8f0] p-6 shadow-sm text-center">
+              <MdHotelClass className="text-[#be185d] text-4xl mx-auto block" />
+              <p className="text-3xl font-extrabold text-[#0f172a] mt-2">4.9★</p>
+              <p className="text-xs text-[#64748b] uppercase tracking-wider font-bold mt-1">
+                Đánh Giá Google
+              </p>
+            </div>
+
+          </div>
           {/* Right: Narrative */}
           <div className="lg:col-span-7 space-y-6">
             <span className="text-[#005eb8] font-bold text-xs uppercase tracking-widest bg-[#eff6ff] px-3 py-1 border border-[#bfdbfe]">
@@ -76,18 +97,19 @@ export const AboutUs: React.FC = () => {
             {/* Vision */}
             <div className="bg-[#f8fafc] border border-[#e2e8f0] p-8 space-y-4">
               <div className="bg-[#eff6ff] text-[#1d4ed8] w-12 h-12 flex items-center justify-center">
-                <span className="material-symbols-outlined text-[28px]">visibility</span>
+                <MdVisibility className="text-[28px]" />
               </div>
+
               <h3 className="text-xl font-bold text-[#0f172a]">Tầm Nhìn Chiến Lược</h3>
               <p className="text-sm text-[#475569] leading-relaxed">
-                Trở thành thương hiệu nha khoa chuyên sâu kỹ thuật số chuẩn mực hàng đầu Việt Nam, mang đến chất lượng điều trị tương đương các bệnh viện quốc tế lớn ngay tại thị trường nội địa.
+                Trở thành thương hiệu nha khoa chuyên sâu kỹ thuật số chuẩn mực hàng đầu Việt Nam...
               </p>
             </div>
 
             {/* Mission */}
             <div className="bg-[#f8fafc] border border-[#e2e8f0] p-8 space-y-4">
               <div className="bg-[#f0fdf4] text-[#15803d] w-12 h-12 flex items-center justify-center">
-                <span className="material-symbols-outlined text-[28px]">track_changes</span>
+                <MdTrackChanges className="text-[28px]" />
               </div>
               <h3 className="text-xl font-bold text-[#0f172a]">Sứ Mệnh Y Khoa</h3>
               <p className="text-sm text-[#475569] leading-relaxed">
@@ -98,7 +120,7 @@ export const AboutUs: React.FC = () => {
             {/* Core Values */}
             <div className="bg-[#f8fafc] border border-[#e2e8f0] p-8 space-y-4">
               <div className="bg-[#fffbeb] text-[#d97706] w-12 h-12 flex items-center justify-center">
-                <span className="material-symbols-outlined text-[28px]">award_star</span>
+                <MdStar className="text-[28px]" />
               </div>
               <h3 className="text-xl font-bold text-[#0f172a]">Giá Trị Cốt Lõi</h3>
               <p className="text-sm text-[#475569] leading-relaxed">
@@ -126,8 +148,8 @@ export const AboutUs: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="bg-white border border-[#e2e8f0] p-6 md:p-8 flex gap-4 items-start shadow-sm">
-            <div className="bg-[#eff6ff] text-[#1d4ed8] p-3 rounded shrink-0">
-              <span className="material-symbols-outlined text-[28px] block">clean_hands</span>
+            <div className="bg-[#eff6ff] text-[#1d4ed8] p-3 rounded shrink-0 flex items-center justify-center">
+              <MdCleaningServices className="text-[28px]" />
             </div>
             <div>
               <h4 className="text-lg font-bold text-[#0f172a] mb-2">Phòng Khám Vô Trùng Khép Kín</h4>
@@ -138,8 +160,8 @@ export const AboutUs: React.FC = () => {
           </div>
 
           <div className="bg-white border border-[#e2e8f0] p-6 md:p-8 flex gap-4 items-start shadow-sm">
-            <div className="bg-[#eff6ff] text-[#1d4ed8] p-3 rounded shrink-0">
-              <span className="material-symbols-outlined text-[28px] block">biotech</span>
+            <div className="bg-[#eff6ff] text-[#1d4ed8] p-3 rounded shrink-0 flex items-center justify-center">
+              <MdBiotech className="text-[28px]" />
             </div>
             <div>
               <h4 className="text-lg font-bold text-[#0f172a] mb-2">Trang Thiết Bị Kỹ Thuật Số</h4>
@@ -150,8 +172,8 @@ export const AboutUs: React.FC = () => {
           </div>
 
           <div className="bg-white border border-[#e2e8f0] p-6 md:p-8 flex gap-4 items-start shadow-sm">
-            <div className="bg-[#eff6ff] text-[#1d4ed8] p-3 rounded shrink-0">
-              <span className="material-symbols-outlined text-[28px] block">patient_list</span>
+            <div className="bg-[#eff6ff] text-[#1d4ed8] p-3 rounded shrink-0 flex items-center justify-center">
+              <MdAssignmentInd className="text-[28px]" />
             </div>
             <div>
               <h4 className="text-lg font-bold text-[#0f172a] mb-2">Phác Đồ Cá Nhân Hóa</h4>
@@ -162,8 +184,8 @@ export const AboutUs: React.FC = () => {
           </div>
 
           <div className="bg-white border border-[#e2e8f0] p-6 md:p-8 flex gap-4 items-start shadow-sm">
-            <div className="bg-[#eff6ff] text-[#1d4ed8] p-3 rounded shrink-0">
-              <span className="material-symbols-outlined text-[28px] block">volunteer_activism</span>
+            <div className="bg-[#eff6ff] text-[#1d4ed8] p-3 rounded shrink-0 flex items-center justify-center">
+              <MdVolunteerActivism className="text-[28px]" />
             </div>
             <div>
               <h4 className="text-lg font-bold text-[#0f172a] mb-2">Chăm Sóc Chu Đáo Hậu Phẫu</h4>
@@ -192,7 +214,7 @@ export const AboutUs: React.FC = () => {
               to="/book"
               className="bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold px-8 py-3.5 shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 cursor-pointer inline-flex items-center gap-2"
             >
-              <span className="material-symbols-outlined text-[20px]">calendar_month</span>
+              <Icon name="calendar_month" className="text-[20px]" />
               Đặt Lịch Hẹn Ngay
             </Link>
           </div>

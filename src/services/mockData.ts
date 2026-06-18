@@ -16,10 +16,50 @@ export const INITIAL_SERVICES: Service[] = [
 ];
 
 export const INITIAL_DENTISTS: Dentist[] = [
-  { id: 'D-01', name: 'Bác sĩ Lê Minh', role: 'Chuyên gia Nội nha & Điều trị Tủy', avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=150&h=150&q=80', room: 'Phòng 102' },
-  { id: 'D-02', name: 'Bác sĩ Hoàng Nam', role: 'Chuyên gia Phẫu thuật & Nhổ răng khôn', avatar: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=150&h=150&q=80', room: 'Phòng 105' },
-  { id: 'D-03', name: 'Bác sĩ Mai Lan', role: 'Chuyên gia Thẩm mỹ & Tẩy trắng răng', avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=150&h=150&q=80', room: 'Phòng 108' },
-  { id: 'D-04', name: 'Bác sĩ Nguyễn Hương', role: 'Chuyên khoa Chỉnh nha & Niềng răng', avatar: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&w=150&h=150&q=80', room: 'Phòng 110' }
+  {
+    id: 'D-01',
+    name: 'Bác sĩ Lê Minh',
+    role: 'Chuyên gia Nội nha & Điều trị Tủy',
+    avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=200&h=200&q=80',
+    room: 'Phòng 102',
+    specialty: 'Trưởng khoa Bảo tồn & Vi Phẫu răng',
+    degree: 'Thạc Sĩ - Bác Sĩ',
+    education: ['Thạc sĩ Răng Hàm Mặt, Đại học Y Dược TP.HCM'],
+    experience: 12,
+  },
+  {
+    id: 'D-02',
+    name: 'Bác sĩ Hoàng Nam',
+    role: 'Chuyên gia Phẫu thuật & Nhổ răng khôn',
+    avatar: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&w=200&h=200&q=80',
+    room: 'Phòng 105',
+    specialty: 'Giám đốc Phẫu thuật Hàm Mặt & Cấy ghép Implant',
+    degree: 'Bác sĩ Chuyên Khoa II',
+    education: ['Bác sĩ Chuyên khoa II Phẫu thuật Hàm mặt, ĐH Y Hà Nội'],
+    experience: 15,
+  },
+  {
+    id: 'D-03',
+    name: 'Bác sĩ Mai Lan',
+    role: 'Chuyên gia Thẩm mỹ & Tẩy trắng răng',
+    avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=200&h=200&q=80',    
+    room: 'Phòng 108',
+    specialty: 'Trưởng bộ phận Phục Hình Thẩm Mỹ & Thiết kế nụ cười',
+    degree: 'Bác sĩ Chuyên Khoa I',
+    education: ['Bác sĩ Răng Hàm Mặt, Đại học Y Dược Hải Phòng'],
+    experience: 8,
+  },
+  {
+    id: 'D-04',
+    name: 'Bác sĩ Nguyễn Hương',
+    role: 'Chuyên khoa Chỉnh nha & Niềng răng',
+    avatar: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&w=150&h=150&q=80',
+    room: 'Phòng 110',
+    specialty: 'Cố vấn Chỉnh Nha & Chỉnh hình Răng Mặt',
+    degree: 'Thạc Sĩ - Bác Sĩ',
+    education: ['Thạc sĩ Chỉnh nha chuyên sâu, Đại học Nha khoa Quốc gia Seoul (Hàn Quốc)'],
+    experience: 10,
+  },
 ];
 
 export const INITIAL_PATIENTS: Patient[] = [

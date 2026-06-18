@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Icon } from '../../../components/Icon';
 import { useNavigate } from 'react-router-dom';
 import { useClinic } from '../../../context/ClinicContext';
 
@@ -54,7 +55,7 @@ export const DentistQueue: React.FC = () => {
           { label: 'Tổng ca trong ngày', value: dentistQueue.length, icon: 'calendar_today', color: 'text-on-surface bg-surface-container border-outline-variant' },
         ].map(s => (
           <div key={s.label} className={`rounded-xl border p-4 flex items-center gap-4 shadow-sm ${s.color}`}>
-            <span className="material-symbols-outlined text-[32px]">{s.icon}</span>
+            <Icon name={s.icon} className="text-[32px]" />
             <div>
               <p className="text-headline-md font-bold">{s.value}</p>
               <p className="text-xs font-bold uppercase tracking-wider opacity-80">{s.label}</p>
@@ -68,7 +69,7 @@ export const DentistQueue: React.FC = () => {
         {/* Table Toolbar / Filters */}
         <div className="p-4 border-b border-outline-variant bg-surface-container-low flex flex-col sm:flex-row gap-4 justify-between items-center">
           <div className="relative w-full sm:w-96">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+            <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" />
             <input 
               type="text" 
               placeholder="Tìm theo tên hoặc mã bệnh nhân..." 
@@ -133,24 +134,24 @@ export const DentistQueue: React.FC = () => {
                     <td className="p-4">
                       <p className="font-semibold text-on-surface">{item.room}</p>
                       <p className="text-xs text-on-surface-variant flex items-center gap-1 mt-0.5">
-                        <span className="material-symbols-outlined text-[14px]">login</span>
+                        <Icon name="login" className="text-[14px]" />
                         {item.checkInTime}
                       </p>
                     </td>
                     <td className="p-4">
                       {item.status === 'In Chair' ? (
                         <span className="text-primary font-bold flex items-center gap-1 text-xs">
-                          <span className="material-symbols-outlined text-[14px]">timer</span>
+                          <Icon name="timer" className="text-[14px]" />
                           Khám {item.elapsedTimeMin || 0} phút
                         </span>
                       ) : item.status === 'Waiting' ? (
                         <span className="text-amber-700 font-medium flex items-center gap-1 text-xs">
-                          <span className="material-symbols-outlined text-[14px]">schedule</span>
+                          <Icon name="schedule" className="text-[14px]" />
                           Chờ {item.waitTimeMin} phút
                         </span>
                       ) : (
                         <span className="text-on-surface-variant text-xs flex items-center gap-1">
-                          <span className="material-symbols-outlined text-[14px]">done_all</span>
+                          <Icon name="done_all" className="text-[14px]" />
                           Đã khám xong
                         </span>
                       )}
@@ -179,9 +180,10 @@ export const DentistQueue: React.FC = () => {
                               : 'bg-secondary-container text-on-secondary-container hover:bg-secondary-container/80'
                           }`}
                         >
-                          <span className="material-symbols-outlined text-[16px]">
-                            {item.status === 'Waiting' ? 'play_arrow' : 'dashboard'}
-                          </span>
+                          <Icon
+                            name={item.status === 'Waiting' ? 'play_arrow' : 'dashboard'}
+                            className="text-[16px]"
+                          />
                           {item.status === 'Waiting' ? 'Khám ngay' : 'Mở bàn khám'}
                         </button>
                       ) : (
@@ -189,7 +191,7 @@ export const DentistQueue: React.FC = () => {
                           onClick={() => navigate(`/dashboard/dentist?tab=records`)}
                           className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-xs border border-outline-variant text-on-surface hover:bg-surface-container transition-colors"
                         >
-                          <span className="material-symbols-outlined text-[16px]">visibility</span>
+                          <Icon name="visibility" className="text-[16px]" />
                           Xem hồ sơ
                         </button>
                       )}
@@ -202,7 +204,7 @@ export const DentistQueue: React.FC = () => {
           
           {filteredQueue.length === 0 && (
             <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-              <span className="material-symbols-outlined text-[48px] text-outline mb-3">search_off</span>
+              <Icon name="search_off" className="text-[48px] text-outline mb-3" />
               <p className="text-on-surface font-semibold">Không tìm thấy bệnh nhân nào</p>
               <p className="text-on-surface-variant text-sm mt-1">Vui lòng thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
             </div>

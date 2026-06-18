@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useClinic } from '../../context/ClinicContext';
 import { BookingModal } from '../../components/BookingModal';
+import { Icon } from '../../components/Icon';
 
 // Tab page imports
 import { PatientBooking } from './tabs/PatientBooking';
@@ -121,12 +122,12 @@ const PatientHome: React.FC = () => {
               onClick={() => setIsBookingOpen(true)}
               className="bg-secondary-container text-on-secondary-container px-8 py-4 rounded-lg font-bold flex items-center gap-2 hover:scale-105 transition-transform active:scale-95 shadow-lg cursor-pointer"
             >
-              <span className="material-symbols-outlined">calendar_add_on</span>
+              <Icon name="calendar_add_on" />
               Đặt lịch hẹn mới
             </button>
           </div>
           <div className="absolute right-0 top-0 bottom-0 w-1/3 opacity-20 pointer-events-none flex items-center justify-center">
-            <span className="material-symbols-outlined text-[180px] text-white">dentistry</span>
+            <Icon name="dentistry" className="text-[180px] text-white" />
           </div>
         </section>
 
@@ -154,10 +155,8 @@ const PatientHome: React.FC = () => {
                   milestone.active ? 'bg-secondary text-on-secondary animate-pulse' :
                   'bg-surface-container text-outline border border-outline-variant'
                 }`}>
-                  <span className="material-symbols-outlined">
-                    {milestone.done || milestone.active ? (milestone.active ? 'medical_services' : 'check') : 'verified'}
-                  </span>
-                </div>
+                <Icon name={milestone.done || milestone.active ? (milestone.active ? 'medical_services' : 'check') : 'verified'} />
+              </div>
                 <p className={`mt-2 text-label-md font-bold ${milestone.done || milestone.active ? 'text-on-surface' : 'text-on-surface-variant'}`}>
                   {milestone.label}
                 </p>
@@ -170,7 +169,7 @@ const PatientHome: React.FC = () => {
         {pendingInvoices.length > 0 && (
           <section className="bg-amber-50 border border-amber-200 rounded-xl p-5 space-y-4">
             <h4 className="font-bold flex items-center gap-2 text-amber-800">
-              <span className="material-symbols-outlined text-amber-600">payments</span>
+              <Icon name="payments" className="text-amber-600" />
               Hóa đơn cần thanh toán gấp
             </h4>
             <div className="space-y-3">
@@ -206,12 +205,8 @@ const PatientHome: React.FC = () => {
               <div key={rec.id} className="p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors group">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-surface-container rounded-lg flex items-center justify-center text-secondary">
-                    <span className="material-symbols-outlined text-[32px]">
-                      {rec.type === 'pdf' && 'picture_as_pdf'}
-                      {rec.type === 'image' && 'image'}
-                      {rec.type === 'prescription' && 'description'}
-                    </span>
-                  </div>
+                  <Icon name={rec.type === 'pdf' ? 'picture_as_pdf' : (rec.type === 'image' ? 'image' : 'description')} className="text-[32px]" />
+                </div>
                   <div>
                     <p className="font-body-lg font-bold text-on-surface">{rec.title}</p>
                     <p className="text-xs text-on-surface-variant">{rec.date} • {rec.size}</p>
@@ -220,10 +215,10 @@ const PatientHome: React.FC = () => {
                 </div>
                 <button
                   onClick={() => alert(`Xem chi tiết bệnh án: ${rec.title}\n${rec.notes || 'Không có ghi chú.'}`)}
-                  className="p-2 text-primary hover:bg-primary-fixed rounded-lg transition-colors material-symbols-outlined cursor-pointer"
+                  className="p-2 text-primary hover:bg-primary-fixed rounded-lg transition-colors cursor-pointer"
                   title="Xem"
                 >
-                  visibility
+                  <Icon name="visibility" />
                 </button>
               </div>
             ))}
@@ -240,7 +235,7 @@ const PatientHome: React.FC = () => {
         <div className="bg-white rounded-xl border border-outline-variant flex flex-col h-[380px] shadow-sm overflow-hidden">
           <div className="p-4 border-b border-outline-variant flex items-center gap-3 bg-surface-container-low">
             <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white">
-              <span className="material-symbols-outlined text-sm">smart_toy</span>
+              <Icon name="smart_toy" className="text-sm" />
             </div>
             <div>
               <p className="text-label-md font-bold text-on-surface">AI tư vấn sức khỏe</p>
@@ -278,7 +273,7 @@ const PatientHome: React.FC = () => {
               type="submit"
               className="w-10 h-10 bg-primary text-white rounded-lg flex items-center justify-center active:scale-95 transition-all cursor-pointer"
             >
-              <span className="material-symbols-outlined">send</span>
+              <Icon name="send" />
             </button>
           </form>
         </div>
@@ -286,14 +281,14 @@ const PatientHome: React.FC = () => {
         {/* Reminders & Notifications */}
         <section className="bg-white rounded-xl border border-outline-variant p-4 space-y-3">
           <h4 className="font-bold text-on-surface text-label-md uppercase tracking-wider flex items-center gap-1">
-            <span className="material-symbols-outlined text-primary text-[18px]">notifications</span>
+            <Icon name="notifications" className="text-primary text-[18px]" />
             Lịch nhắc & Thông báo
           </h4>
           <div className="space-y-2">
             {activeMedicines.length > 0 ? (
               activeMedicines.map((med, index) => (
                 <div key={index} className="flex items-start gap-3 p-3 bg-error-container/15 rounded-xl border border-error/10">
-                  <span className="material-symbols-outlined text-error mt-0.5">medication</span>
+                  <Icon name="medication" className="text-error mt-0.5" />
                   <div className="min-w-0 flex-1">
                     <p className="text-xs font-black text-on-error-container truncate">Thuốc: {med.name}</p>
                     <p className="text-[11px] text-on-error-container/85 font-bold mt-0.5">{med.dose}</p>
@@ -303,7 +298,7 @@ const PatientHome: React.FC = () => {
               ))
             ) : (
               <div className="flex items-start gap-3 p-3 bg-emerald-50 rounded-xl border border-emerald-100/50">
-                <span className="material-symbols-outlined text-emerald-600 mt-0.5">verified</span>
+                <Icon name="verified" className="text-emerald-600 mt-0.5" />
                 <div>
                   <p className="text-xs font-bold text-emerald-800">Không có đơn thuốc hiện tại</p>
                   <p className="text-[11px] text-emerald-700/85 mt-0.5 font-medium">Bạn không có lịch uống thuốc trong thời gian này. Hãy luôn giữ gìn vệ sinh răng miệng nhé!</p>
@@ -311,7 +306,7 @@ const PatientHome: React.FC = () => {
               </div>
             )}
             <div className="flex items-start gap-3 p-3 bg-surface-container rounded-xl border border-outline-variant/40">
-              <span className="material-symbols-outlined text-primary mt-0.5">event</span>
+              <Icon name="event" className="text-primary mt-0.5" />
               <div className="min-w-0 flex-1">
                 <p className="text-xs font-black text-on-surface">Lịch hẹn tái khám chỉnh nha</p>
                 <p className="text-[11px] text-on-surface-variant mt-0.5 font-medium">Khám ngày mai lúc 09:00 AM — Bác sĩ Nguyễn Hương</p>

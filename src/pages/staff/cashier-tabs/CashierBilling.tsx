@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Icon } from '../../../components/Icon';
 import { useClinic } from '../../../context/ClinicContext';
 
 export const CashierBilling: React.FC = () => {
@@ -135,7 +136,7 @@ export const CashierBilling: React.FC = () => {
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="bg-blue-50 p-2.5 rounded-xl border border-blue-150">
-                <span className="material-symbols-outlined text-blue-600 font-bold text-2xl">receipt_long</span>
+                <Icon name="receipt_long" className="text-blue-600 font-bold text-2xl" />
               </div>
               <div>
                 <h3 className="font-bold text-slate-800 text-lg">Danh Sách Chờ Thanh Toán</h3>
@@ -147,7 +148,7 @@ export const CashierBilling: React.FC = () => {
 
             {/* Global Search Input */}
             <div className="relative w-full md:w-80">
-              <span className="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-sm">search</span>
+              <Icon name="search" className="absolute left-3 top-2.5 text-slate-400 text-sm" />
               <input
                 type="text"
                 placeholder="Tìm tên khách hàng hoặc mã HD..."
@@ -162,7 +163,7 @@ export const CashierBilling: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-650 flex items-center justify-center border border-emerald-150 shrink-0">
-                <span className="material-symbols-outlined text-lg font-bold">payments</span>
+                <Icon name="payments" className="text-lg font-bold" />
               </div>
               <div>
                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Doanh thu hôm nay</p>
@@ -172,7 +173,7 @@ export const CashierBilling: React.FC = () => {
 
             <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-650 flex items-center justify-center border border-blue-150 shrink-0">
-                <span className="material-symbols-outlined text-lg font-bold">pending_actions</span>
+                <Icon name="pending_actions" className="text-lg font-bold" />
               </div>
               <div>
                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Số ca chờ thanh toán</p>
@@ -182,7 +183,7 @@ export const CashierBilling: React.FC = () => {
 
             <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-teal-50 text-teal-650 flex items-center justify-center border border-teal-150 shrink-0">
-                <span className="material-symbols-outlined text-lg font-bold">wallet</span>
+                <Icon name="wallet" className="text-lg font-bold" />
               </div>
               <div>
                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Tiền mặt thực thu</p>
@@ -192,7 +193,7 @@ export const CashierBilling: React.FC = () => {
 
             <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-650 flex items-center justify-center border border-indigo-150 shrink-0">
-                <span className="material-symbols-outlined text-lg font-bold">account_balance</span>
+                <Icon name="account_balance" className="text-lg font-bold" />
               </div>
               <div>
                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Ví / Thẻ / Chuyển khoản</p>
@@ -204,7 +205,7 @@ export const CashierBilling: React.FC = () => {
           {/* Filter Bar: Select Dropdowns for Room and Doctor */}
           <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-wrap gap-4 items-center">
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-sm text-slate-500">filter_list</span>
+              <Icon name="filter_list" className="text-sm text-slate-500" />
               <span className="text-xs font-bold text-slate-700">Bộ lọc nhanh:</span>
             </div>
 
@@ -242,7 +243,7 @@ export const CashierBilling: React.FC = () => {
                 onClick={() => { setSelectedRoom('All'); setSelectedDentist('All'); }}
                 className="text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors flex items-center gap-1 cursor-pointer"
               >
-                <span className="material-symbols-outlined text-xs">close</span>
+                <Icon name="close" className="text-xs" />
                 Xóa bộ lọc
               </button>
             )}
@@ -317,7 +318,7 @@ export const CashierBilling: React.FC = () => {
                               className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold rounded-xl shadow transition-all cursor-pointer flex items-center gap-1.5 mx-auto text-xs"
                             >
                               Thanh toán
-                              <span className="material-symbols-outlined text-xs">arrow_forward</span>
+                              <Icon name="arrow_forward" className="text-xs" />
                             </button>
                           </td>
                         </tr>
@@ -326,7 +327,7 @@ export const CashierBilling: React.FC = () => {
                       <tr>
                         <td colSpan={7} className="text-center py-20 text-slate-400">
                           <div className="flex flex-col items-center justify-center">
-                            <span className="material-symbols-outlined text-4xl mb-2 text-slate-300">verified</span>
+                            <Icon name="verified" className="text-4xl mb-2 text-slate-300" />
                             <p className="text-sm font-bold text-slate-600">Không có hóa đơn nào khớp bộ lọc!</p>
                             <p className="text-[10px] text-slate-400 mt-0.5">Mọi ca khám khớp với bộ lọc đã hoàn tất thanh toán.</p>
                           </div>
@@ -342,7 +343,7 @@ export const CashierBilling: React.FC = () => {
             {recentlyPaidInvoices.length > 0 && (
               <div className="bg-slate-50 rounded-2xl border border-slate-200 p-5 space-y-4 shadow-sm">
                 <h4 className="font-bold text-xs text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-                  <span className="material-symbols-outlined text-emerald-600 text-base">check_circle</span>
+                  <Icon name="check_circle" className="text-emerald-600 text-base" />
                   Giao Dịch Vừa Hoàn Tất (In Nhanh Biên Lai)
                 </h4>
 
@@ -372,7 +373,7 @@ export const CashierBilling: React.FC = () => {
                         }}
                         className="w-full py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-[10px] font-bold rounded-lg border border-blue-200 flex items-center justify-center gap-1 transition-all cursor-pointer"
                       >
-                        <span className="material-symbols-outlined text-xs">print</span>
+                        <Icon name="print" className="text-xs" />
                         In lại biên lai
                       </button>
                     </div>
@@ -394,7 +395,7 @@ export const CashierBilling: React.FC = () => {
                 onClick={() => setSelectedInvoiceId(null)}
                 className="w-10 h-10 border border-slate-200 text-slate-600 rounded-xl flex items-center justify-center hover:bg-slate-50 transition-all cursor-pointer shadow-sm shrink-0"
               >
-                <span className="material-symbols-outlined text-lg">arrow_back</span>
+                <Icon name="arrow_back" className="text-lg" />
               </button>
               
               <div className="space-y-1">
@@ -514,7 +515,7 @@ export const CashierBilling: React.FC = () => {
                         : 'border-slate-200 hover:border-blue-600/20 text-slate-500'
                     }`}
                   >
-                    <span className="material-symbols-outlined text-2xl">payments</span>
+                    <Icon name="payments" className="text-2xl" />
                     <span className="text-[10px] font-extrabold">Tiền mặt</span>
                   </button>
 
@@ -527,7 +528,7 @@ export const CashierBilling: React.FC = () => {
                         : 'border-slate-200 hover:border-blue-600/20 text-slate-500'
                     }`}
                   >
-                    <span className="material-symbols-outlined text-2xl">qr_code_2</span>
+                    <Icon name="qr_code_2" className="text-2xl" />
                     <span className="text-[10px] font-extrabold">Chuyển khoản</span>
                   </button>
 
@@ -540,7 +541,7 @@ export const CashierBilling: React.FC = () => {
                         : 'border-slate-200 hover:border-blue-600/20 text-slate-500'
                     }`}
                   >
-                    <span className="material-symbols-outlined text-2xl">credit_card</span>
+                    <Icon name="credit_card" className="text-2xl" />
                     <span className="text-[10px] font-extrabold">Thẻ / POS</span>
                   </button>
                 </div>
@@ -553,7 +554,7 @@ export const CashierBilling: React.FC = () => {
                   <div className="bg-gradient-to-br from-blue-700 via-blue-800 to-slate-900 text-white rounded-2xl p-5 shadow-lg border border-blue-500/30 relative overflow-hidden flex flex-col items-center">
                     <div className="w-full flex justify-between items-center mb-3">
                       <div className="flex items-center gap-1.5">
-                        <span className="material-symbols-outlined text-sm text-blue-300">account_balance</span>
+                        <Icon name="account_balance" className="text-sm text-blue-300" />
                         <span className="text-xs font-black tracking-wider text-blue-100">MB BANK</span>
                       </div>
                       <div className="px-2 py-0.5 bg-white/10 rounded-md text-[8px] font-bold text-blue-200 border border-white/20">
@@ -632,7 +633,7 @@ export const CashierBilling: React.FC = () => {
 
               {paymentMethod === 'Card' && (
                 <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2 text-xs text-slate-600 animate-in slide-in-from-top-3 duration-200 flex items-start gap-2.5">
-                  <span className="material-symbols-outlined text-blue-650 font-bold">info</span>
+                  <Icon name="info" className="text-blue-650 font-bold" />
                   <div>
                     <p className="font-bold text-slate-700">Yêu cầu quẹt thẻ ngân hàng</p>
                     <p className="text-[11px] text-slate-500 mt-0.5">
@@ -644,7 +645,7 @@ export const CashierBilling: React.FC = () => {
 
               {paymentMethod === 'Cash' && (
                 <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2 text-xs text-slate-600 animate-in slide-in-from-top-3 duration-200 flex items-start gap-2.5">
-                  <span className="material-symbols-outlined text-blue-650 font-bold">payments</span>
+                  <Icon name="payments" className="text-blue-650 font-bold" />
                   <div>
                     <p className="font-bold text-slate-700">Yêu cầu thu tiền mặt</p>
                     <p className="text-[11px] text-slate-500 mt-0.5">
@@ -733,12 +734,12 @@ export const CashierBilling: React.FC = () => {
                 >
                   {isProcessing ? (
                     <>
-                      <span className="material-symbols-outlined animate-spin text-sm">progress_activity</span>
+                      <Icon name="progress_activity" className="animate-spin text-sm" />
                       Đang thực hiện thanh toán...
                     </>
                   ) : (
                     <>
-                      <span className="material-symbols-outlined text-sm">check_circle</span>
+                      <Icon name="check_circle" className="text-sm" />
                       Hoàn Tất Đóng Phí (₫{payVal.toLocaleString()})
                     </>
                   )}
@@ -754,7 +755,7 @@ export const CashierBilling: React.FC = () => {
                   }}
                   className="w-full py-2.5 border border-slate-200 text-slate-700 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-slate-50 transition-all cursor-pointer text-xs"
                 >
-                  <span className="material-symbols-outlined text-sm">print</span>
+                  <Icon name="print" className="text-sm" />
                   Xem trước & In hóa đơn K80
                 </button>
               </div>
@@ -771,7 +772,7 @@ export const CashierBilling: React.FC = () => {
           showToast ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0 pointer-events-none'
         }`}
       >
-        <span className="material-symbols-outlined text-emerald-500">check_circle</span>
+        <Icon name="check_circle" className="text-emerald-500" />
         <div>
           <p className="font-bold text-xs text-white">Xử lý thành công</p>
           <p className="text-[10px] text-slate-300 mt-0.5">{toastMessage}</p>
