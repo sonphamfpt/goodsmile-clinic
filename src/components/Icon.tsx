@@ -151,6 +151,20 @@ import {
   MdDelete,
   MdWorkspacePremium,
   MdSecurity,
+  MdSpa,
+  MdAccessibility,
+  MdCleaningServices,
+  MdConstruction,
+  MdScience,
+  MdDiamond,
+  MdMilitaryTech,
+  MdCleanHands,
+  MdBrightnessHigh,
+  MdRebaseEdit,
+  MdGridView,
+  MdChildCare,
+  MdLensBlur,
+  MdImageSearch,
 } from 'react-icons/md';
 
 export type IconName =
@@ -316,7 +330,21 @@ export type IconName =
   | 'visibility_off'
   | 'delete'
   | 'workspace_premium'
-  | 'security';
+  | 'security'
+  | 'spa'
+  | 'accessibility'
+  | 'cleaning_services'
+  | 'construction'
+  | 'science'
+  | 'diamond'
+  | 'military_tech'
+  | 'clean_hands'
+  | 'brightness_high'
+  | 'rebase'
+  | 'grid_view'
+  | 'child_care'
+  | 'lens_blur'
+  | 'image_search';
 
 const ICON_MAP: Record<IconName, IconType> = {
   search: MdSearch,
@@ -482,6 +510,20 @@ const ICON_MAP: Record<IconName, IconType> = {
   delete: MdDelete,
   workspace_premium: MdWorkspacePremium,
   security: MdSecurity,
+  spa: MdSpa,
+  accessibility: MdAccessibility,
+  cleaning_services: MdCleaningServices,
+  construction: MdConstruction,
+  science: MdScience,
+  diamond: MdDiamond,
+  military_tech: MdMilitaryTech,
+  clean_hands: MdCleanHands,
+  brightness_high: MdBrightnessHigh,
+  rebase: MdRebaseEdit,
+  grid_view: MdGridView,
+  child_care: MdChildCare,
+  lens_blur: MdLensBlur,
+  image_search: MdImageSearch,
 };
 
 export interface IconProps {
