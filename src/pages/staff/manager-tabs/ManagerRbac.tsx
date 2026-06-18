@@ -18,7 +18,7 @@ interface StaffMember {
 const INITIAL_STAFF: StaffMember[] = [
   {
     id: 'STF-001',
-    name: 'Dr. Lê Minh',
+    name: 'Bác sĩ Lê Minh',
     role: 'dentist',
     roleName: 'Bác sĩ nha khoa',
     avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=150&h=150&q=80',
@@ -27,7 +27,16 @@ const INITIAL_STAFF: StaffMember[] = [
   },
   {
     id: 'STF-002',
-    name: 'Dr. Nguyễn An',
+    name: 'Bác sĩ Hoàng Nam',
+    role: 'dentist',
+    roleName: 'Bác sĩ nha khoa',
+    avatar: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=150&h=150&q=80',
+    status: 'Active',
+    permissions: { admission: false, clinical: true, checkout: false, settings: false }
+  },
+  {
+    id: 'STF-003',
+    name: 'Bác sĩ Mai Lan',
     role: 'dentist',
     roleName: 'Bác sĩ nha khoa',
     avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=150&h=150&q=80',
@@ -35,7 +44,7 @@ const INITIAL_STAFF: StaffMember[] = [
     permissions: { admission: false, clinical: true, checkout: false, settings: false }
   },
   {
-    id: 'STF-003',
+    id: 'STF-004',
     name: 'Lê Thuỳ Chi',
     role: 'receptionist',
     roleName: 'Lễ tân trưởng',
@@ -44,7 +53,7 @@ const INITIAL_STAFF: StaffMember[] = [
     permissions: { admission: true, clinical: false, checkout: false, settings: false }
   },
   {
-    id: 'STF-004',
+    id: 'STF-005',
     name: 'Trần Văn Cường',
     role: 'cashier',
     roleName: 'Thu ngân chính',
@@ -53,7 +62,7 @@ const INITIAL_STAFF: StaffMember[] = [
     permissions: { admission: false, clinical: false, checkout: true, settings: false }
   },
   {
-    id: 'STF-005',
+    id: 'STF-006',
     name: 'Hoàng Văn Hải',
     role: 'manager',
     roleName: 'Giám đốc vận hành',

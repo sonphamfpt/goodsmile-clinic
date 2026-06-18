@@ -1,128 +1,255 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useClinic } from '../../context/ClinicContext';
+import { DOCTOR_PROFILES } from '../../services/doctorProfiles';
 import { BookingModal } from '../../components/BookingModal';
+
+const CATEGORIES = ['Tất cả chuyên khoa', 'Bảo tồn & Vi Phẫu', 'Phẫu thuật Hàm Mặt & Implant', 'Phục Hình Thẩm Mỹ', 'Chỉnh Nha & Niềng Răng'];
+
+// Map to professional display titles & bios for the card view
+const CARD_DISPLAY_DATA: Record<string, { displayTitle: string; displayName: string; shortBio: string }> = {
+  'D-01': {
+    displayTitle: 'Thạc sĩ - Bác sĩ',
+    displayName: 'ThS. BS Lê Minh',
+    shortBio: 'Trưởng khoa Bảo tồn & Vi Phẫu răng. Chuyên sâu điều trị tủy vi phẫu, bảo tồn răng thật tối đa.'
+  },
+  'D-02': {
+    displayTitle: 'Bác sĩ CKII',
+    displayName: 'BS. CKII Hoàng Nam',
+    shortBio: 'Giám đốc Phẫu thuật Hàm Mặt & Cấy ghép Implant. Chuyên gia Implant toàn hàm All-on-4/6.'
+  },
+  'D-03': {
+    displayTitle: 'Bác sĩ CKI',
+    displayName: 'BS. CKI Mai Lan',
+    shortBio: 'Trưởng bộ phận Phục Hình Thẩm Mỹ. Chuyên sâu thiết kế nụ cười, dán sứ Veneer Emax.'
+  },
+  'D-04': {
+    displayTitle: 'Thạc sĩ - Bác sĩ',
+    displayName: 'ThS. BS Nguyễn Hương',
+    shortBio: 'Cố vấn Chỉnh Nha & Niềng Răng. Bác sĩ hạng Diamond Provider của Invisalign toàn cầu.'
+  }
+};
 
 export const Doctors: React.FC = () => {
   const { dentists } = useClinic();
+  const [activeCategory, setActiveCategory] = useState('Tất cả chuyên khoa');
   const [isBookingOpen, setIsBookingOpen] = useState(false);
 
-  const doctorDetails: Record<string, { education: string; experience: string; bio: string }> = {
-    'D-01': {
-      education: 'Tốt nghiệp Đại học Y Dược TP.HCM, Thạc sĩ Nội nha Đại học Pennsylvania (Hoa Kỳ).',
-      experience: '12 năm kinh nghiệm điều trị nội nha lâm sàng.',
-      bio: 'Bác sĩ Lê Minh là chuyên gia đầu ngành về bảo tồn răng. Với sự kiên trì và tỉ mỉ, bác sĩ đã cứu chữa thành công hàng ngàn ca viêm tủy răng phức tạp, giảm thiểu tối đa việc phải nhổ bỏ răng thật của bệnh nhân.'
-    },
-    'D-02': {
-      education: 'Tốt nghiệp ĐH Y Hà Nội, Bác sĩ Nội trú Ngoại khoa, Chứng chỉ cấy ghép Implant Đại học Bordeaux (Pháp).',
-      experience: '10 năm chuyên sâu phẫu thuật trong miệng và cấy ghép Implant.',
-      bio: 'Bác sĩ Hoàng Nam nổi tiếng với kỹ thuật phẫu thuật nhổ răng khôn mọc ngầm không đau bằng sóng siêu âm. Bác sĩ cũng là chuyên gia uy tín trong việc cấy ghép Implant tức thì giúp khôi phục nụ cười nhanh chóng cho bệnh nhân.'
-    },
-    'D-03': {
-      education: 'Tốt nghiệp ĐH Y Dược Hải Phòng, Chứng chỉ Nha khoa Thẩm mỹ chuyên sâu từ Hiệp hội Nha khoa Thẩm mỹ Châu Á.',
-      experience: '8 năm kinh nghiệm phục hình thẩm mỹ.',
-      bio: 'Bác sĩ Mai Lan có gu thẩm mỹ tinh tế, chuyên về thiết kế nụ cười, bọc răng sứ thẩm mỹ và tẩy trắng răng công nghệ cao. Bác sĩ luôn lắng nghe tâm tư của khách hàng để tạo ra nụ cười hài hòa, tự nhiên nhất.'
-    },
-    'D-04': {
-      education: 'Tốt nghiệp Đại học Nha khoa Quốc gia Seoul (Hàn Quốc), Chứng chỉ Chỉnh nha Invisalign Bạch Kim từ Hoa Kỳ.',
-      experience: '15 năm chuyên sâu Chỉnh nha & Niềng răng.',
-      bio: 'Bác sĩ Nguyễn Hương có kinh nghiệm dày dặn trong việc nắn chỉnh răng lệch lạc, sai khớp cắn từ đơn giản đến phức tạp cho cả trẻ em lẫn người lớn. Bác sĩ luôn áp dụng những kỹ thuật chỉnh nha tiên tiến nhất thế giới để rút ngắn thời gian điều trị cho bệnh nhân.'
-    }
-  };
+  // Merge context data
+  const enrichedDentists = dentists.map(d => {
+    const staticProfile = DOCTOR_PROFILES[d.id];
+    const displayData = CARD_DISPLAY_DATA[d.id] || {
+      displayTitle: 'Bác sĩ nha khoa',
+      displayName: d.name,
+      shortBio: d.role
+    };
+
+    return {
+      ...d,
+      displayTitle: displayData.displayTitle,
+      displayName: displayData.displayName,
+      shortBio: displayData.shortBio,
+      profile: staticProfile || {
+        specialty: d.role,
+        degree: 'Bác sĩ',
+        education: [],
+        experience: 5,
+        cases: '1,000+',
+        clinicalStrengths: [],
+        certifications: [],
+        universityLogo: 'school',
+        bio: '',
+        motto: '',
+        workHistory: []
+      }
+    };
+  });
+
+  const filtered = enrichedDentists.filter(doc => {
+    if (activeCategory === 'Tất cả chuyên khoa') return true;
+    // Match based on specialty name
+    return doc.profile.specialty.toLowerCase().includes(activeCategory.replace('Tất cả ', '').toLowerCase()) ||
+           doc.role.toLowerCase().includes(activeCategory.replace('Tất cả ', '').toLowerCase());
+  });
 
   return (
-    <div className="bg-background min-h-screen py-stack-lg px-container-padding-desktop">
-      <div className="max-w-7xl mx-auto space-y-stack-lg animate-in fade-in duration-200">
+    <div className="bg-[#f8fafc] min-h-screen font-body-md">
+      
+      {/* ── Premium Hero Banner (Consistent across public pages) ── */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#00478d] via-[#005fa8] to-[#006d33] py-20 px-6 md:px-16">
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-white/5 -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-72 h-72 rounded-full bg-white/5 translate-y-1/2 -translate-x-1/4 pointer-events-none"></div>
         
-        {/* Title */}
-        <div className="text-center max-w-2xl mx-auto space-y-stack-sm">
-          <h1 className="font-headline-lg text-headline-lg text-primary">Đội Ngũ Bác Sĩ Chuyên Gia</h1>
-          <p className="text-body-lg text-on-surface-variant">
-            Quy tụ những y bác sĩ có chuyên môn cao, được đào tạo bài bản trong và ngoài nước, tận tâm chăm sóc vì sức khỏe nụ cười của bạn.
+        <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-center text-center space-y-4">
+          <span className="text-white/80 font-bold tracking-widest uppercase text-xs bg-white/10 px-3 py-1 rounded-full border border-white/20">
+            Hội Đồng Y Khoa GoodSmile
+          </span>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-white leading-tight">
+            Đội Ngũ Bác Sĩ <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-green-300">Chuyên Môn Cao</span>
+          </h1>
+          <p className="text-white/80 text-lg max-w-2xl mx-auto leading-relaxed">
+            Quy tụ các chuyên gia nha khoa đầu ngành, tốt nghiệp và tu nghiệp tại các trường y khoa danh tiếng trong và ngoài nước.
           </p>
         </div>
+      </section>
 
-        {/* Doctors Profiles Card Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
-          {dentists.map((doc) => {
-            const details = doctorDetails[doc.id] || { education: 'Đang cập nhật', experience: 'Đang cập nhật', bio: 'Đang cập nhật' };
-            return (
-              <div
-                key={doc.id}
-                className="bg-white rounded-xl border border-outline-variant p-6 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row gap-6 relative overflow-hidden"
-              >
-                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-primary"></div>
-                
-                {/* Image */}
-                <div className="w-full md:w-44 h-48 rounded-lg overflow-hidden flex-shrink-0 border border-outline-variant">
-                  <img
-                    alt={doc.name}
-                    src={doc.avatar}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-
-                {/* Details */}
-                <div className="flex-1 flex flex-col justify-between space-y-4">
-                  <div className="space-y-2">
-                    <div>
-                      <h3 className="font-headline-sm text-headline-sm text-primary">{doc.name}</h3>
-                      <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">{doc.role}</p>
-                    </div>
-                    
-                    <p className="text-xs text-secondary font-bold flex items-center gap-1">
-                      <span className="material-symbols-outlined text-sm">room</span>
-                      Phòng trực: {doc.room}
-                    </p>
-
-                    <p className="text-body-md text-on-surface-variant leading-relaxed">
-                      {details.bio}
-                    </p>
-
-                    <div className="pt-2 space-y-1 text-xs text-on-surface-variant">
-                      <p><strong>Học vấn:</strong> {details.education}</p>
-                      <p><strong>Kinh nghiệm:</strong> {details.experience}</p>
-                    </div>
-                  </div>
-
-                  <div className="pt-2">
-                    <button
-                      onClick={() => setIsBookingOpen(true)}
-                      className="bg-primary text-on-primary hover:bg-primary-container px-6 py-2 rounded-lg font-bold text-xs flex items-center gap-2 active:scale-95 transition-all cursor-pointer"
-                    >
-                      <span className="material-symbols-outlined text-[16px]">calendar_today</span>
-                      Đặt lịch khám với {doc.name.split(' ').slice(-2).join(' ')}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Doctor trust row */}
-        <div className="bg-surface-container rounded-xl p-6 text-center space-y-4">
-          <h3 className="font-headline-sm text-headline-sm text-on-surface">Đạt chuẩn quốc tế trong quy trình điều trị y khoa</h3>
-          <p className="text-body-md text-on-surface-variant max-w-3xl mx-auto">
-            100% đội ngũ y bác sĩ và phụ tá tại nha khoa GoodSmile thường xuyên tham gia các khóa tập huấn, chuyển giao công nghệ điều trị mới và đào tạo an toàn y tế định kỳ, đảm bảo quy trình vô trùng tuyệt đối theo chuẩn quốc tế.
-          </p>
-          <div className="flex justify-center gap-6 flex-wrap pt-2">
-            <span className="inline-flex items-center gap-1 text-xs font-bold text-primary bg-white border border-outline-variant px-3 py-1.5 rounded-full shadow-sm">
-              <span className="material-symbols-outlined text-sm">workspace_premium</span> ISO 13485:2016
-            </span>
-            <span className="inline-flex items-center gap-1 text-xs font-bold text-primary bg-white border border-outline-variant px-3 py-1.5 rounded-full shadow-sm">
-              <span className="material-symbols-outlined text-sm">health_and_safety</span> Vô trùng chuẩn Bộ Y tế
-            </span>
-            <span className="inline-flex items-center gap-1 text-xs font-bold text-primary bg-white border border-outline-variant px-3 py-1.5 rounded-full shadow-sm">
-              <span className="material-symbols-outlined text-sm">verified_user</span> Bảo hành Implant trọn đời
-            </span>
-          </div>
+      {/* ── Filter Bar ── */}
+      <div className="bg-white border-b border-[#e2e8f0] sticky top-0 z-30 shadow-sm">
+        <div className="max-w-6xl mx-auto px-6 py-4 overflow-x-auto custom-scrollbar flex gap-2 justify-start md:justify-center">
+          {CATEGORIES.map(cat => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`shrink-0 px-5 py-2 text-sm font-bold border transition-all cursor-pointer ${
+                activeCategory === cat
+                  ? 'bg-[#005eb8] text-white border-[#005eb8]'
+                  : 'bg-white text-[#475569] border-[#cbd5e1] hover:bg-[#f1f5f9]'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
       </div>
 
-      <BookingModal
-        isOpen={isBookingOpen}
+      {/* ── Main Content: Grid of Vertical Cards ── */}
+      <section className="py-16 px-6">
+        <div className="max-w-6xl mx-auto">
+          {filtered.length === 0 ? (
+            <div className="text-center py-12 bg-white border border-[#e2e8f0] p-8">
+              <span className="material-symbols-outlined text-slate-400 text-5xl mb-2">search_off</span>
+              <p className="text-[#64748b] font-bold">Không tìm thấy bác sĩ nào thuộc chuyên khoa này.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              {filtered.map(doc => (
+                <Link
+                  to={`/doctors/${doc.id}`}
+                  key={doc.id}
+                  className="bg-white border-2 border-slate-200 hover:border-amber-400 hover:scale-[1.02] transition-all duration-300 shadow-sm hover:shadow-md flex flex-col overflow-hidden text-center group cursor-pointer"
+                >
+                  {/* Photo Section with Zoom Effect */}
+                  <div className="aspect-[4/5] bg-slate-50 overflow-hidden relative border-b border-slate-100">
+                    <img 
+                      src={doc.avatar} 
+                      alt={doc.name} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                    />
+                    {/* Hover Overlay */}
+                    <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                      <span className="bg-[#005eb8] text-white text-xs font-bold px-3 py-1.5 flex items-center gap-1 shadow-sm">
+                        Xem hồ sơ chi tiết
+                        <span className="material-symbols-outlined text-[12px]">arrow_forward</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Info Section */}
+                  <div className="p-5 flex flex-col flex-1">
+                    {/* Doctor Title / Degree */}
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
+                      {doc.displayTitle}
+                    </span>
+
+                    {/* Doctor Name in Bold Blue */}
+                    <h2 className="text-lg font-extrabold text-[#00478d] group-hover:text-[#005eb8] transition-colors mb-3 line-clamp-1">
+                      {doc.displayName}
+                    </h2>
+
+                    {/* Short Role / Bio */}
+                    <p className="text-xs text-slate-600 leading-relaxed line-clamp-3 mt-auto">
+                      {doc.shortBio}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ── Section: Clinical Standards ── */}
+      <section className="py-16 bg-white border-t border-[#e2e8f0]">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="text-[#005eb8] font-bold text-xs uppercase tracking-widest bg-[#eff6ff] px-3 py-1 border border-[#bfdbfe]">
+              Tiêu Chuẩn Lâm Sàng
+            </span>
+            <h2 className="text-3xl font-extrabold text-[#0f172a] mt-3">
+              Cam Kết Chất Lượng Y Khoa GoodSmile
+            </h2>
+            <p className="text-[#64748b] text-sm mt-2">
+              Chúng tôi không chỉ có đội ngũ y bác sĩ giỏi chuyên môn mà còn duy trì những quy chuẩn nghiêm ngặt nhất để mang lại sự an tâm tuyệt đối cho khách hàng.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Standard 1 */}
+            <div className="bg-[#f8fafc] border border-[#e2e8f0] p-8 hover:shadow-sm transition-shadow">
+              <div className="bg-[#eff6ff] text-[#1d4ed8] w-12 h-12 flex items-center justify-center mb-6">
+                <span className="material-symbols-outlined text-[28px]">verified</span>
+              </div>
+              <h3 className="text-lg font-bold text-[#0f172a] mb-2">100% Bác Sĩ Chính Quy</h3>
+              <p className="text-sm text-[#475569] leading-relaxed">
+                Tất cả bác sĩ tại hệ thống đều tốt nghiệp chính quy chuyên ngành Răng Hàm Mặt từ các trường đại học y danh tiếng, có đầy đủ chứng chỉ hành nghề hợp pháp.
+              </p>
+            </div>
+
+            {/* Standard 2 */}
+            <div className="bg-[#f8fafc] border border-[#e2e8f0] p-8 hover:shadow-sm transition-shadow">
+              <div className="bg-[#f0fdf4] text-[#15803d] w-12 h-12 flex items-center justify-center mb-6">
+                <span className="material-symbols-outlined text-[28px]">health_and_safety</span>
+              </div>
+              <h3 className="text-lg font-bold text-[#0f172a] mb-2">Vô Trùng Tiêu Chuẩn Quốc Tế</h3>
+              <p className="text-sm text-[#475569] leading-relaxed">
+                Áp dụng quy trình kiểm soát nhiễm khuẩn khép kín nghiêm ngặt. Mỗi khách hàng sử dụng một bộ tay khoan và bộ dụng cụ riêng biệt đã hấp sấy vô trùng tuyệt đối.
+              </p>
+            </div>
+
+            {/* Standard 3 */}
+            <div className="bg-[#f8fafc] border border-[#e2e8f0] p-8 hover:shadow-sm transition-shadow">
+              <div className="bg-[#fdf2f8] text-[#be185d] w-12 h-12 flex items-center justify-center mb-6">
+                <span className="material-symbols-outlined text-[28px]">psychology</span>
+              </div>
+              <h3 className="text-lg font-bold text-[#0f172a] mb-2">Công Nghệ Đi Đầu</h3>
+              <p className="text-sm text-[#475569] leading-relaxed">
+                Hệ thống trang thiết bị tối tân như máy chụp phim Conebeam CT 3D, máy nhổ răng khôn Piezotome, kính hiển vi vi phẫu phục vụ chẩn đoán chính xác tuyệt đối.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Section: Call to Action Banner ── */}
+      <section className="relative overflow-hidden bg-gradient-to-r from-[#00478d] to-[#006d33] py-16 px-6 md:px-16 text-center text-white">
+        <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-white/5 -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-white/5 translate-y-1/3 -translate-x-1/4 pointer-events-none"></div>
+
+        <div className="relative z-10 max-w-4xl mx-auto space-y-6">
+          <h2 className="text-3xl md:text-4xl font-extrabold leading-tight">
+            Đăng Ký Tư Vấn Trực Tiếp Cùng Hội Đồng Y Khoa
+          </h2>
+          <p className="text-white/80 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+            Nhận lịch khám ưu tiên, miễn phí chụp phim X-Quang khảo sát răng và nhận phác đồ điều trị chi tiết từ các chuyên gia đầu ngành của chúng tôi.
+          </p>
+          <div className="pt-2">
+            <button
+              onClick={() => setIsBookingOpen(true)}
+              className="bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold px-8 py-3.5 shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 cursor-pointer inline-flex items-center gap-2"
+            >
+              <span className="material-symbols-outlined text-[20px]">calendar_month</span>
+              Đặt Lịch Hẹn Ngay
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Booking Modal */}
+      <BookingModal 
+        isOpen={isBookingOpen} 
         onClose={() => setIsBookingOpen(false)}
       />
+
     </div>
   );
 };

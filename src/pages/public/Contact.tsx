@@ -23,19 +23,28 @@ export const Contact: React.FC = () => {
   };
 
   return (
-    <div className="bg-background min-h-screen py-stack-lg px-container-padding-desktop">
-      <div className="max-w-5xl mx-auto space-y-stack-lg animate-in fade-in duration-200">
+    <div className="bg-background min-h-screen">
+      {/* ── Hero Banner ── */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#00478d] via-[#005fa8] to-[#006d33] py-20 px-6 md:px-16">
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-white/5 -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-72 h-72 rounded-full bg-white/5 translate-y-1/2 -translate-x-1/4 pointer-events-none"></div>
         
-        {/* Title */}
-        <div className="text-center space-y-stack-sm">
-          <h1 className="font-headline-lg text-headline-lg text-primary">Liên Hệ Với GoodSmile</h1>
-          <p className="text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+        <div className="relative z-10 max-w-7xl mx-auto text-center space-y-4">
+          <span className="text-white/80 font-bold tracking-widest uppercase text-xs bg-white/10 px-3 py-1 rounded-full border border-white/20">
+            Hỗ Trợ 24/7
+          </span>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-white leading-tight">
+            Liên Hệ Với <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-green-300">GoodSmile</span>
+          </h1>
+          <p className="text-white/80 text-lg max-w-2xl mx-auto">
             Hệ thống phòng khám mở cửa đón tiếp tất cả các ngày trong tuần. Hãy để lại tin nhắn hoặc gọi điện trực tiếp để nhận tư vấn kịp thời.
           </p>
         </div>
+      </section>
 
-        {/* Contact Content Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+      {/* ── Main Content ── */}
+      <div className="max-w-6xl mx-auto px-6 md:px-16 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Contact Details & Info */}
           <div className="space-y-6">
             <div className="bg-white rounded-xl border border-outline-variant p-6 shadow-sm space-y-6">

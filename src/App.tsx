@@ -1,6 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { ClinicProvider } from './context/ClinicContext';
 import { MainLayout } from './layouts/MainLayout';
 import { DashboardLayout } from './layouts/DashboardLayout';
@@ -8,8 +8,10 @@ import { DashboardLayout } from './layouts/DashboardLayout';
 // Public pages
 import { Home } from './pages/public/Home';
 import { Services } from './pages/public/Services';
-import { PriceList } from './pages/public/PriceList';
 import { Doctors } from './pages/public/Doctors';
+import { DoctorDetail } from './pages/public/DoctorDetail';
+import { BookingPage } from './pages/public/BookingPage';
+import { AboutUs } from './pages/public/AboutUs';
 import { Contact } from './pages/public/Contact';
 import { LoginRegister } from './pages/public/LoginRegister';
 
@@ -25,21 +27,46 @@ import { ManagerDashboard } from './pages/staff/ManagerDashboard';
 // Waiting Room board
 import { QueueTracking } from './pages/queue-tracking/QueueTracking';
 
-// Route Helper wrappers
-const PublicRoute: React.FC<{ component: React.ComponentType }> = ({ component: Component }) => {
-  return (
-    <MainLayout>
-      <Component />
-    </MainLayout>
-  );
-};
+// ── Route Wrappers ──
 
-const DashboardRoute: React.FC<{ component: React.ComponentType }> = ({ component: Component }) => {
+const PublicRoute: React.FC<{ component: React.ComponentType }> = ({ component: Component }) => (
+  <MainLayout>
+    <Component />
+  </MainLayout>
+);
+
+const DashboardRoute: React.FC<{ component: React.ComponentType }> = ({ component: Component }) => (
+  <DashboardLayout>
+    <Component />
+  </DashboardLayout>
+);
+
+// Protected route — redirect to /login if not authenticated
+const ProtectedRoute: React.FC<{ component: React.ComponentType }> = ({ component: Component }) => {
+  const { isAuthenticated } = useAuth();
+  const location = useLocation();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
   return (
     <DashboardLayout>
       <Component />
     </DashboardLayout>
   );
+};
+
+// Redirect logged-in users away from login page
+const GuestOnlyRoute: React.FC<{ component: React.ComponentType }> = ({ component: Component }) => {
+  const { isAuthenticated, role } = useAuth();
+
+  if (isAuthenticated) {
+    const dest = role === 'patient' ? '/patient' : `/dashboard/${role}`;
+    return <Navigate to={dest} replace />;
+  }
+
+  return <Component />;
 };
 
 export default function App() {
@@ -50,25 +77,29 @@ export default function App() {
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<PublicRoute component={Home} />} />
+            <Route path="/about" element={<PublicRoute component={AboutUs} />} />
             <Route path="/services" element={<PublicRoute component={Services} />} />
-            <Route path="/prices" element={<PublicRoute component={PriceList} />} />
             <Route path="/doctors" element={<PublicRoute component={Doctors} />} />
+            <Route path="/doctors/:id" element={<PublicRoute component={DoctorDetail} />} />
             <Route path="/contact" element={<PublicRoute component={Contact} />} />
-            <Route path="/login" element={<PublicRoute component={LoginRegister} />} />
+            <Route path="/book" element={<PublicRoute component={BookingPage} />} />
 
-            {/* Waiting Room TV Board */}
+            {/* Auth — redirect away if already logged in */}
+            <Route path="/login" element={<GuestOnlyRoute component={LoginRegister} />} />
+
+            {/* Waiting Room TV Board — public display screen */}
             <Route path="/queue-board" element={<QueueTracking />} />
 
-            {/* Patient Portal */}
-            <Route path="/patient" element={<DashboardRoute component={PatientDashboard} />} />
+            {/* Protected: Patient Portal */}
+            <Route path="/patient" element={<ProtectedRoute component={PatientDashboard} />} />
 
-            {/* Staff Workspaces */}
-            <Route path="/dashboard/receptionist" element={<DashboardRoute component={ReceptionistDashboard} />} />
-            <Route path="/dashboard/dentist" element={<DashboardRoute component={DentistDashboard} />} />
-            <Route path="/dashboard/cashier" element={<DashboardRoute component={CashierDashboard} />} />
-            <Route path="/dashboard/manager" element={<DashboardRoute component={ManagerDashboard} />} />
+            {/* Protected: Staff Workspaces */}
+            <Route path="/dashboard/receptionist" element={<ProtectedRoute component={ReceptionistDashboard} />} />
+            <Route path="/dashboard/dentist"       element={<ProtectedRoute component={DentistDashboard} />} />
+            <Route path="/dashboard/cashier"       element={<ProtectedRoute component={CashierDashboard} />} />
+            <Route path="/dashboard/manager"       element={<ProtectedRoute component={ManagerDashboard} />} />
 
-            {/* Catch-all redirect */}
+            {/* Catch-all */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Router>

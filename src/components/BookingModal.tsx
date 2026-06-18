@@ -6,20 +6,25 @@ interface BookingModalProps {
   onClose: () => void;
   defaultPatientName?: string;
   defaultPatientPhone?: string;
+  defaultDentistName?: string;
 }
 
 export const BookingModal: React.FC<BookingModalProps> = ({
   isOpen,
   onClose,
   defaultPatientName = '',
-  defaultPatientPhone = ''
+  defaultPatientPhone = '',
+  defaultDentistName = ''
 }) => {
   const { services, dentists, addAppointment } = useClinic();
   
   const [patientName, setPatientName] = useState(defaultPatientName);
   const [patientPhone, setPatientPhone] = useState(defaultPatientPhone);
   const [selectedServiceId, setSelectedServiceId] = useState('');
-  const [selectedDentistId, setSelectedDentistId] = useState('');
+  
+  // Find dentist ID from the provided name
+  const initialDentistId = dentists.find(d => d.name === defaultDentistName)?.id || '';
+  const [selectedDentistId, setSelectedDentistId] = useState(initialDentistId);
   const [date, setDate] = useState('2026-06-06');
   const [timeSlot, setTimeSlot] = useState('09:00 AM');
 

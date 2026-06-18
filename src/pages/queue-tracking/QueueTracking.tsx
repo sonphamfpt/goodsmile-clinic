@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useClinic } from '../../context/ClinicContext';
+import { BrandLogo } from '../../components/BrandLogo';
 
 export const QueueTracking: React.FC = () => {
   const { queue } = useClinic();
@@ -20,9 +21,9 @@ export const QueueTracking: React.FC = () => {
       
       {/* Screen Header */}
       <header className="flex justify-between items-center border-b border-slate-800 pb-4 shrink-0">
-        <div className="flex items-center gap-3">
-          <span className="material-symbols-outlined text-3xl text-secondary animate-pulse" style={{ fontVariationSettings: "'FILL' 1" }}>sensors</span>
-          <div>
+        <div className="flex items-center gap-4">
+          <BrandLogo size="md" variant="white" />
+          <div className="border-l border-slate-700 pl-4">
             <h1 className="text-xl font-bold font-headline-md text-white">Bảng Theo Dõi Hàng Chờ Tự Động</h1>
             <p className="text-[10px] uppercase font-bold text-slate-400">Hệ Thống Nha Khoa GoodSmile</p>
           </div>

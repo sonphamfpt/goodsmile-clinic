@@ -15,7 +15,7 @@ const UPCOMING_APPOINTMENTS = [
     service: 'Tái khám chỉnh nha (Khay 8)',
     dentist: 'Bác sĩ Nguyễn Hương',
     room: 'Phòng 110',
-    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBmHutcEoE3mwWFVbj6-D885N2zpuS8LPlvU948W1H-5jeUPhYBnMBB_CRq9-VbH_Lx2DEtBvh4ku53cmX0vzgOAf_phuCv9lM_ZJ0ieExhjUn8f_EApgUXYCQamjHIIfWq6GrNSKfwvIfDZcdwphKG4FzsNk6dxltIaCbUwLe8uaJHakXN06OuYT8CGQVXg3htUAiDYISAWsTkf65jZqZUcMO2oCjZmJKRreWSVBl31EzaZ9VLfzbjmmJrqQcf3t8A8FNsHkGI2Ck',
+    avatar: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&w=150&h=150&q=80',
     date: 'Thứ Ba, 10/06/2026', // Lịch gần nhất (giả định hôm nay)
     time: '09:00 AM',
     status: 'Confirmed' as const,
@@ -29,7 +29,7 @@ const UPCOMING_APPOINTMENTS = [
     service: 'Lấy cao răng & Vệ sinh',
     dentist: 'Bác sĩ Mai Lan',
     room: 'Phòng 108',
-    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDhaw7V_InEw7itBcn2U2FCLbVMfY6ToR72hEQjPoqMMcnnOEzlLAk0vMqxaZ3S8CaOXn9NHrJYN5zAktYjA75RPhrwlXLWM47508ReMq1fm7ZFUvdIoVaDCiVy8RoS9cZs1UkYw7ZHaPPtbghmhluy2nqYXNF8cIKwyf7Yr4hvLSZXWQKMm0ouD5hIuAlFSEFrcoP1pckD5ibmDN6oK2qKoKonjhJWbPs9I2MwXObu0P-vpNncAolr2XOC3bkSZBS9noMehcRJHhY',
+    avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=150&h=150&q=80',
     date: 'Thứ Sáu, 14/06/2026',
     time: '11:00 AM',
     status: 'Confirmed' as const,

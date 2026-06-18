@@ -73,12 +73,12 @@ export default {
         "container-padding-desktop": "32px"
       },
       fontFamily: {
-        "headline-lg": ["Manrope", "sans-serif"],
-        "label-md": ["Inter", "sans-serif"],
-        "headline-md": ["Manrope", "sans-serif"],
-        "body-md": ["Inter", "sans-serif"],
-        "body-lg": ["Inter", "sans-serif"],
-        "headline-sm": ["Manrope", "sans-serif"],
+        "headline-lg": ["Be Vietnam Pro", "sans-serif"],
+        "label-md": ["Be Vietnam Pro", "sans-serif"],
+        "headline-md": ["Be Vietnam Pro", "sans-serif"],
+        "body-md": ["Be Vietnam Pro", "sans-serif"],
+        "body-lg": ["Be Vietnam Pro", "sans-serif"],
+        "headline-sm": ["Be Vietnam Pro", "sans-serif"],
         "data-mono": ["JetBrains Mono", "monospace"]
       },
       fontSize: {

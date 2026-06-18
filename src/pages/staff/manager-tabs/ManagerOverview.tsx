@@ -133,7 +133,7 @@ export const ManagerOverview: React.FC = () => {
             const barData = weekDays.map((day) => {
               const dayStr = day.toDateString();
               // Đếm appointments trong ngày
-              const apptCount = appointments.filter((a) => {
+              const apptCount = appointments.filter(() => {
                 // appointments không có date field đủ — dùng invoices.createdAt thay thế
                 return false;
               }).length;
