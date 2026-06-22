@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Icon } from '../../components/Icon';
 import { useSearchParams } from 'react-router-dom';
 import { useClinic } from '../../context/ClinicContext';
+import { useAuth } from '../../context/AuthContext';
 import { DentalChart } from '../../components/DentalChart';
 import { ToothState } from '../../types/clinic';
 
@@ -38,9 +39,10 @@ const TEMPLATE_PRESETS: Record<string, Array<{ name: string; quantity: number; u
 const DentistHome: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { queue, patients, medicalRecords, services, startTreatment, completeTreatment } = useClinic();
+  const { user } = useAuth();
 
-  const dentistId = 'D-04';
-  const dentistName = 'Bác sĩ Nguyễn Hương';
+  const dentistId = user?.id || 'D-04';
+  const dentistName = user?.name || 'Bác sĩ Nguyễn Hương';
 
   const initialQueueId = searchParams.get('queueId');
   const inChairItem = queue.find(q => q.dentistId === dentistId && q.status === 'In Chair');

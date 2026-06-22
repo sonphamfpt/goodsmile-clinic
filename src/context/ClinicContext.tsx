@@ -45,6 +45,7 @@ interface ClinicContextType {
   swapShifts: (shiftId1: string, shiftId2: string) => void;
   transferShift: (shiftId: string, targetDentistId: string) => void;
   changeShiftRoom: (shiftId: string, newRoom: string) => void;
+  addDoctorShift: (shift: Omit<DoctorShift, 'id'>) => void;
 }
 
 const ClinicContext = createContext<ClinicContextType | undefined>(undefined);
@@ -501,6 +502,22 @@ export const ClinicProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     });
   };
 
+  const addDoctorShift = (shiftData: Omit<DoctorShift, 'id'>) => {
+    const id = `S-${Math.floor(1000 + Math.random() * 9000)}`;
+    const newShift: DoctorShift = {
+      ...shiftData,
+      id
+    };
+    setDoctorShifts(prev => [...prev, newShift]);
+    addLog(
+      'SYSTEM',
+      'SUCCESS',
+      `Đăng ký ca trực thành công: ${newShift.dentistName} trực ca ${
+        newShift.shiftType === 'Morning' ? 'Sáng' : newShift.shiftType === 'Afternoon' ? 'Chiều' : 'Cả ngày'
+      } ngày ${newShift.date} tại phòng ${newShift.room}`
+    );
+  };
+
   return (
     <ClinicContext.Provider
       value={{
@@ -528,7 +545,8 @@ export const ClinicProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         doctorShifts,
         swapShifts,
         transferShift,
-        changeShiftRoom
+        changeShiftRoom,
+        addDoctorShift
       }}
     >
       {children}
